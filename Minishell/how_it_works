@@ -1,0 +1,12 @@
+lexer:
+	parse:		(runs alone and doesnt expand anything)
+		quotes check
+		pipes check
+		redirects check
+	tokenization????
+
+expansion:
+	
+
+
+executer:		(basically pipex)

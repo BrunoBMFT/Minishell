@@ -1,0 +1,6 @@
+
+normal:bash
+➜  Minishell $?ASDASD
+zsh: command not found: 0ASDASD
+➜  Minishell $?ASDASD
+zsh: command not found: 127ASDASD
