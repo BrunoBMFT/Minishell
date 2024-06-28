@@ -1,26 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split_free.c                                    :+:      :+:    :+:   */
+/*   ft_strcat.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/18 23:55:16 by bruno             #+#    #+#             */
-/*   Updated: 2024/06/28 16:50:01 by bruno            ###   ########.fr       */
+/*   Created: 2024/06/28 16:29:07 by bruno             #+#    #+#             */
+/*   Updated: 2024/06/28 16:29:32 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_split_free(char **str)
+void	ft_strcat(char *dest, char *src)
 {
-	int	i;
-
-	i = 0;
-	while (str[i])
+	while (*dest)
+		dest++;
+	while(*src)
 	{
-		free(str[i]);
-		i++;
+		*dest =*src;
+		src++;
+		dest++;
 	}
-	free (str);
+	*dest = '\0';
 }

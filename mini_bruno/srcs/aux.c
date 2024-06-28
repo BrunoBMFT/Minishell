@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 21:30:07 by bruno             #+#    #+#             */
-/*   Updated: 2024/06/21 20:26:53 by bruno            ###   ########.fr       */
+/*   Updated: 2024/06/28 12:22:14 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ bool	parse_quotation_mark(char *input)
 {
 	int	closed1;
 	int	closed2;
-	
+
 	closed1 = 0;
 	closed2 = 0;
 	int	i = 0, j = 0;

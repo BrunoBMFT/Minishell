@@ -14,6 +14,12 @@
 # define WRITE 1
 # define READ 0
 
+typedef	struct	s_shell
+{
+	char	**env;
+}				t_shell;
+
+
 //done
 bool	parse_quotation_mark(char *input);
 

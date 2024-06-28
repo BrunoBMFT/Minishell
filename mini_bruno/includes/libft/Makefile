@@ -10,7 +10,7 @@ get_next_line_utils.c ft_atol.c ft_lstadd_back.c ft_lstadd_front.c \
 ft_lstclear.c ft_lstiter.c ft_lstlast.c ft_lstmap.c ft_lstnew.c \
 ft_lstsize.c ft_lstdelone.c ft_putchar_fd.c ft_putchar.c ft_putendl_fd.c \
 ft_putendl.c ft_putnbr_fd.c ft_putnbr.c ft_putstr_fd.c ft_putstr.c ft_nl.c \
-ft_split_free.c ft_is_even.c
+ft_split_free.c ft_is_even.c ft_strcmp.c ft_strcat.c
 
 OBJDIR = ./objs
 OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))

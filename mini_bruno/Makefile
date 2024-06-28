@@ -38,6 +38,6 @@ re: fclean all
 run: all
 	clear && ./minishell
 vrun: all
-	clear && valgrind ./minishell
+	clear && valgrind --leak-check=full --show-leak-kinds=all ./minishell
 
 .PHONY: all fclean clean re
