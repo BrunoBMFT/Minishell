@@ -1,35 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   frees.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/06/28 12:07:58 by ycantin          ###   ########.fr       */
+/*   Created: 2024/06/28 15:18:01 by ycantin           #+#    #+#             */
+/*   Updated: 2024/06/28 17:07:44 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
-int main (void)
+void	clear_list(t_token **lst)
 {
-    char *line;
-    char *dir;
-    char *prompt;
-    while (1)
-    {
-        dir = getcwd(NULL, 0);
-        prompt = ft_strjoin(dir, "$ ");
-        free(dir);
-        line = readline(prompt);
-        free(prompt);
-        //tokenize(line);
-        if (ft_strcmp(line, "exit") == 0)
-        {
-            free(line);
-            break;
-        }
-    }
-    return (0);
+	t_token	*temp;
+	t_token	*current;
+
+	current = *lst;
+	while (current)
+	{
+		temp = current->next;
+		free(current->token);
+        free(current);
+		current = temp;
+	}
+	*lst = NULL;
+}
+
+void	free_all(t_token **list, char **array, char *message, int len)
+{
+	free_array(array);
+	clear_list(list);
+	write(1, message, len);
+	exit(1);
 }

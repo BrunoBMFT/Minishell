@@ -6,7 +6,7 @@
 #    By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/23 16:39:56 by ycantin           #+#    #+#              #
-#    Updated: 2024/06/28 12:09:23 by ycantin          ###   ########.fr        #
+#    Updated: 2024/06/28 16:57:17 by ycantin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ CC = cc
 FLAGS = -Wall -Werror -Wextra -g
 DEPS = -lreadline
 RM = rm -f
-SRC = 	parser/main.c #tokenize.c \
+SRC = 	main.c lexer/lexer.c lexer/lexer_utils.c frees.c \
 
 all: $(NAME)
 
