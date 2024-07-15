@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/07/15 01:13:37 by bruno            ###   ########.fr       */
+/*   Updated: 2024/07/15 03:38:52 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,9 @@ char	*find_path(char *command, char **env)
 bool	execute_job(char **command, char **env)
 {
 	char	*path = find_path(command[0], env);
+//	ft_putstr_fd("command: ", 2);
+//	ft_putstr_fd(command[0], 2);
+//	ft_putstr_fd("\n", 2);
 	if (!path)
 		return (printf("no command\n"), false);//free the commands
 	execve(path, command, env);
@@ -79,25 +82,37 @@ int	simple_process(t_jobs *job, char **env)
 	}
 	int status = 0;
 	waitpid(pid, &status, 0);
-	printf("status: %d\n", WEXITSTATUS(status));
+//	printf("status: %d\n", WEXITSTATUS(status));
 	return (WEXITSTATUS(status));
 }
 
 void	run_execution(t_jobs *curr, char **env)
 {
 	int status = 0;
-//	printf("command: %s", curr->job[0]);
-	while (curr)
+	while (curr && curr->next)
 	{
 //		printf("cmd: %s\t  execd: %s\t  type:%d\n", curr->cmd, curr->execd, curr->type);
-		if (curr->type == 2)//(&&)
+		if (curr->next->type == 1)//(|)
 		{
+			child_process(curr, env);
 			curr = curr->next;
 		}
+		if (curr->next->type == 2)//(&&)
+		{
+			simple_process(curr, env);
+			curr = curr->next;
+		}
+/* 		if (curr->next->type == 3)//(||)
+		{
+			if (simple_process(curr, env) != 0)
+			{
+				curr = curr->next;
+				simple_process(curr, env);
+			}
+		} */
 //		child_process(curr, env);
-		status = simple_process(curr, env);
 		curr = curr->next;
 	}
-//	status = simple_process(curr, env);
+	status = simple_process(curr, env);
 //	printf("final status: %d\n", status);
 }

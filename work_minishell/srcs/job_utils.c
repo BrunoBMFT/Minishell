@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   job_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/07/10 22:06:02 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/07/15 02:45:50 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,18 +59,19 @@ int count_jobs(t_token *tokens)
     return (num);
 }
 
-t_jobs	*addjob(void *content)
+t_jobs    *addjob(void *content)
 {
-	t_jobs	*list;
+    t_jobs    *list;
 
-	list = malloc(sizeof(t_jobs));
-	if (!list)
-		return (NULL);
-	list->cmd = content;
+    list = malloc(sizeof(t_jobs));
+    if (!list)
+        return (NULL);
+    list->cmd = NULL;
     list->execd = NULL;
     list->job = NULL;
-	list->next = NULL;
-	return (list);
+    list->type = 0;
+    list->next = NULL;
+    return (list);
 }
 
 t_jobs	*get_last_job(t_jobs *lst)

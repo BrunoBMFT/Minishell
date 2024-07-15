@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/07/12 20:27:53 by bruno            ###   ########.fr       */
+/*   Updated: 2024/07/15 03:05:08 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int main (int ac, char **av, char **envp)
 		prompt = update_prompt();
 		line = readline(prompt);
 		free(prompt);
-		check_exit(line);
+//		check_exit(line);
 		add_history(line);
 		jobs = build(line);
 		curr = jobs;
