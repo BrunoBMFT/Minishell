@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/07/15 03:38:52 by bruno            ###   ########.fr       */
+/*   Updated: 2024/07/15 17:25:27 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,20 @@ int	simple_process(t_jobs *job, char **env)
 //	printf("status: %d\n", WEXITSTATUS(status));
 	return (WEXITSTATUS(status));
 }
+// TODO
+/* struct cmd *pipecmd(struct cmd *left, struct cmd *right)
+{
+	struct pipecmd *cmd;
 
-void	run_execution(t_jobs *curr, char **env)
+	cmd = malloc(sizeof(*cmd));
+	memset(cmd, 0, sizeof(*cmd));
+	cmd->type = PIPE;
+	cmd->left = left;
+	cmd->right = right;
+	return (struct cmd *)cmd;
+} */
+
+void	run_execution(t_jobs *curr, char **env)//
 {
 	int status = 0;
 	while (curr && curr->next)
@@ -102,7 +114,7 @@ void	run_execution(t_jobs *curr, char **env)
 			simple_process(curr, env);
 			curr = curr->next;
 		}
-/* 		if (curr->next->type == 3)//(||)
+/* 		if (curr->next->type == 3)//(||) not working for now cause of last process running
 		{
 			if (simple_process(curr, env) != 0)
 			{
