@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/07/15 03:05:08 by bruno            ###   ########.fr       */
+/*   Updated: 2024/07/19 15:53:01 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,15 @@ int main (int ac, char **av, char **envp)
 	while (1)
 	{
 		prompt = update_prompt();
+//		if (set_up_signal(ctrl_c_idle) < 0)
+//			clean_exit(jobs, line, prompt);
 		line = readline(prompt);
 		free(prompt);
 //		check_exit(line);
 		add_history(line);
 		jobs = build(line);
 		curr = jobs;
-		run_execution(curr, env);
+		start_executor(curr, env);
 //		free(prompt);
 		clear_jobs(&jobs);//edited by bruno
 	}

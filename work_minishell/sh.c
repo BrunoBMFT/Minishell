@@ -302,7 +302,7 @@ int peek(char **ps, char *es, char *toks)
 
 	str = *ps;
 	while (str < es && strchr(whitespace, *str))
-		s++;
+		str++;
 	*ps = str;
 	return *str && strchr(toks, *str);
 }
@@ -320,42 +320,42 @@ struct cmd *parsecmd(char *str)
 	endstr = str + strlen(str);
 	cmd = parseline(&str, endstr);
 	peek(&str, endstr, "");
-	if (str != endstr)
+/* 	if (str != endstr)
 	{
 		printf(2, "leftovers: %s\n", str);
 		panic("syntax");
-	}
+	} */
 	nulterminate(cmd);
 	return cmd;
 }
 
-struct cmd *parseline(char **ps, char *es)
+struct cmd *parseline(char **str, char *endstr)
 {
 	struct cmd *cmd;
 
-	cmd = parsepipe(ps, es);
-	while (peek(ps, es, "&"))
+	cmd = parsepipe(str, endstr);
+	while (peek(str, endstr, "&"))
 	{
-		gettoken(ps, es, 0, 0);
+		gettoken(str, endstr, 0, 0);
 		cmd = backcmd(cmd);
 	}
-	if (peek(ps, es, ";"))
+	if (peek(str, endstr, ";"))
 	{
-		gettoken(ps, es, 0, 0);
-		cmd = listcmd(cmd, parseline(ps, es));
+		gettoken(str, endstr, 0, 0);
+		cmd = listcmd(cmd, parseline(str, endstr));
 	}
 	return cmd;
 }
 
-struct cmd *parsepipe(char **ps, char *es)
+struct cmd *parsepipe(char **str, char *endstr)
 {
 	struct cmd *cmd;
 
-	cmd = parseexec(ps, es);
-	if (peek(ps, es, "|"))
+	cmd = parseexec(str, endstr);
+	if (peek(str, endstr, "|"))
 	{
-		gettoken(ps, es, 0, 0);
-		cmd = pipecmd(cmd, parsepipe(ps, es));
+		gettoken(str, endstr, 0, 0);
+		cmd = pipecmd(cmd, parsepipe(str, endstr));
 	}
 	return cmd;
 }

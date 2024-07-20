@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/07/12 22:55:12 by bruno            ###   ########.fr       */
+/*   Updated: 2024/07/16 22:34:44 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,13 +75,13 @@ char **job_array(t_jobs *node)
 		new_array[i] = ft_strdup(array[i]);
 		i++;
 	}
-	if (node->execd)//edited by bruno
-	{//edited by bruno
+	if (node->execd)//edited by bruno (created if statement)
+	{
 		new_array[i] = ft_strdup(node->execd);//edited by bruno
 		new_array[i + 1] = NULL;//edited by bruno
-	}//edited by bruno
+	}
 	else//edited by bruno
-        new_array[i] = NULL;//edited by bruno
+        new_array[i] = NULL;//edited by bruno (if no execd, cant do do new_array[i + 1] = NULL, it's unallocated)
 	free_array(array);
 	return (new_array);
 }
@@ -96,6 +96,8 @@ void make_job_list(t_jobs **job_list, t_token **tok_list)
     while (cur)
     {
         new = addjob(NULL);
+        if (cur->type < 0 || cur->type > 7)//edited by bruno (added)
+			cur->type = 0;//edited by bruno (added)
         if (cur && cur->type != TOKEN_WORD)
         {
             new->type = give_type(cur);
@@ -111,10 +113,8 @@ void make_job_list(t_jobs **job_list, t_token **tok_list)
         free(cmd);
         if (cur && cur->type == TOKEN_WORD)
             new->execd = get_execd(&cur);
-        if (new->cmd && new->execd)
+        if (new->cmd)//edited by bruno (removed: && new->execd)
             new->job = job_array(new);
-		else if (!new->execd)//edited by bruno
-			new->job = job_array(new);//edited by bruno
         else
             new->job = NULL;
         go_to_next_job(job_list, new);

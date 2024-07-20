@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/07/15 02:45:50 by bruno            ###   ########.fr       */
+/*   Updated: 2024/07/16 22:24:53 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ int give_type(t_token *token)
         return (TOKEN_REDIR_IN);
     else if(token->type == TOKEN_REDIR_OUT)
         return (TOKEN_REDIR_OUT);
-    else if(token->type == TOKEN_REDIR_APPEND_OUT)
-        return (TOKEN_REDIR_APPEND_OUT);
     else if(token->type == TOKEN_REDIR_HEREDOC)
         return (TOKEN_REDIR_HEREDOC);
+    else if(token->type == TOKEN_REDIR_APPEND_OUT)
+        return (TOKEN_REDIR_APPEND_OUT);
     return (0);
 }
 

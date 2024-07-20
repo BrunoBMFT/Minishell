@@ -3,14 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   frees.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:18:01 by ycantin           #+#    #+#             */
-/*   Updated: 2024/07/10 22:08:28 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/07/16 17:36:37 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	clean_exit(t_jobs *jobs, char *line, char *prompt)
+{
+	if (jobs)
+		clear_jobs(&jobs);
+	else
+		(void)jobs;
+	if (line)
+		free (line);
+	else
+		(void)line;
+	if (prompt)
+		free (prompt);
+	else
+		(void)prompt;
+	exit (0);
+}
 
 void	clear_list(t_token **lst)
 {
