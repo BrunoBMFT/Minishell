@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 12:42:55 by yohan             #+#    #+#             */
-/*   Updated: 2024/07/20 00:10:58 by bruno            ###   ########.fr       */
+/*   Updated: 2024/07/20 17:08:22 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	ft_split_wordcount(char **split)
 	int	i;
 
 	i = 0;
-	if (!split[0])
+	if (!split)
 		return (0);
 	while (split[i])
 		i++;

@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/07/20 01:13:32 by bruno            ###   ########.fr       */
+/*   Updated: 2024/07/20 17:24:03 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,16 @@ char	**variable_declaration(char *str, char **vars)//will work with expand_vars
 {
 	int i = 0;
 	char **temp_vars;
+	int	var_count = ft_split_wordcount(vars);
 
-	temp_vars = ft_calloc(sizeof(char *), ft_split_wordcount(vars) + 1);//broken
-	while (temp_vars[i])
+	temp_vars = ft_calloc(sizeof(char *), var_count + 2);//broken
+	if (!temp_vars)
+		panic("malloc\n");
+	while (i < var_count)
+	{
+		temp_vars[i] = ft_strdup(vars[i]);
 		i++;
+	}
 	temp_vars[i] = ft_strdup(str);
 	i = 0;
 	while (temp_vars[i])
@@ -46,13 +52,9 @@ char	**variable_declaration(char *str, char **vars)//will work with expand_vars
 
 int	start_executor(t_jobs *job, char **env)
 {
-	char	**temp_vars = NULL;
-
 	while (job)//pipes, && and ||
 	{
 //		printf("cmd: %s\t  execd: %s\t  type:%d\n", job->cmd, job->execd, job->type);
-		if (ft_strnstr(job->cmd, "=", ft_strlen(job->cmd)) && !job->execd)//cmd: "export=" doesnt export or save anything
-			temp_vars = variable_declaration(job->cmd, temp_vars);
 		if (try_builtins(job, env) == 200)
 			run_execution(job, env);
 		job = job->next;
