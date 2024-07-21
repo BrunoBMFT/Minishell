@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/07/20 17:37:36 by bruno            ###   ########.fr       */
+/*   Updated: 2024/07/21 17:20:20 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ int main (int ac, char **av, char **envp)
 	char	*prompt;
 	t_jobs	*jobs;
 	char	**temp_vars = NULL;
+	int i = 0;
 	while (1)
 	{
 		prompt = update_prompt();
@@ -38,12 +39,14 @@ int main (int ac, char **av, char **envp)
 //			clean_exit(jobs, line, prompt);
 		line = readline(prompt);
 		free(prompt);
-		line = expand_env_vars(line, env);
+//*		line = expand_env_vars(line, env);//has to expand temp_vars
 //		check_exit(line);
 		add_history(line);
+		i++;
+		printf("job: %d\n", i);
 		jobs = build(line);
-		if (ft_strnstr(jobs->cmd, "=", ft_strlen(jobs->cmd)) && !jobs->execd)//cmd: "export=" doesnt export or save anything
-			temp_vars = variable_declaration(jobs->cmd, temp_vars);
+//*		if (ft_strnstr(jobs->cmd, "=", ft_strlen(jobs->cmd)) && !jobs->execd)//cmd: "export=" doesnt export or save anything
+//*			temp_vars = variable_declaration(jobs->cmd, temp_vars);
 		start_executor(jobs, env);
 //		free(prompt);
 		clear_jobs(&jobs);//edited by bruno

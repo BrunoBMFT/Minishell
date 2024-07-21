@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/07/16 22:34:44 by bruno            ###   ########.fr       */
+/*   Updated: 2024/07/21 17:21:37 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void make_job_list(t_jobs **job_list, t_token **tok_list)
     while (cur)
     {
         new = addjob(NULL);
-        if (cur->type < 0 || cur->type > 7)//edited by bruno (added)
+		if (cur->type < 0 || cur->type > 7)//edited by bruno (added)
 			cur->type = 0;//edited by bruno (added)
         if (cur && cur->type != TOKEN_WORD)
         {

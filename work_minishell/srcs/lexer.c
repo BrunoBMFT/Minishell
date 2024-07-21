@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/07/10 22:06:25 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/07/21 17:24:44 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,28 +103,28 @@ int assign_i(char *str, int i)
 
 char **token_array(char *str)
 {
-    t_holder h;
+    t_holder lst;
     
-    h.i = 0;
-    h.j = 0;
-    h.k = 0;
-    h.wc = count_words(str);
-    h.array = malloc (sizeof (char *) * (h.wc + 1));
-    if (!h.array)
+    lst.i = 0;
+    lst.j = 0;
+    lst.k = 0;
+    lst.wc = count_words(str);
+    lst.array = malloc(sizeof (char *) * (lst.wc + 1));
+    if (!lst.array)
         return (NULL);
-    while (str[h.i])
+    while (str[lst.i])
     {
-        while (str[h.i] && (str[h.i] == ' ' || 
-            str[h.i] == '\t' || str[h.i] == '\n'))
-            h.i++;
-        h.j = h.i;
-        h.i = assign_i(str, h.i);
-        if (h.i > h.j)
+        while (str[lst.i] && (str[lst.i] == ' ' || 
+            str[lst.i] == '\t' || str[lst.i] == '\n'))
+            lst.i++;
+        lst.j = lst.i;
+        lst.i = assign_i(str, lst.i);
+        if (lst.i > lst.j)
         {
-            h.array[h.k] = ft_substr(str, h.j, h.i - h.j);
-            h.k++;
+            lst.array[lst.k] = ft_substr(str, lst.j, lst.i - lst.j);
+            lst.k++;
         }
     }
-    h.array[h.k] = NULL;
-    return (h.array);
+    lst.array[lst.k] = NULL;
+    return (lst.array);
 }
