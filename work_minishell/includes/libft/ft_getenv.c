@@ -6,13 +6,23 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 18:16:48 by bruno             #+#    #+#             */
-/*   Updated: 2024/07/19 23:44:31 by bruno            ###   ########.fr       */
+/*   Updated: 2024/07/24 20:53:00 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_env_var(char *str)//wrong size allocated
+int	len_to_equal(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] && str[i] != '=')
+		i++;
+	return (i);
+}
+
+char	*ft_env_var(char *str)
 {
 	int		i;
 	int		j;
@@ -32,17 +42,8 @@ char	*ft_env_var(char *str)//wrong size allocated
 		j++;
 		i++;
 	}
+	new[j] = 0;
 	return (new);
-}
-
-int	len_to_equal(char *str)
-{
-	int i;
-
-	i = 0;
-	while (str[i] && str[i] != '=')
-		i++;
-	return (i);
 }
 
 char	*ft_getenv(char *str, char **env)
@@ -50,12 +51,17 @@ char	*ft_getenv(char *str, char **env)
 	char	*temp;
 	int		i;
 
+	if (!str || !*str || !env || !*env)
+		return (NULL);
 	i = 0;
 	while (env[i])
 	{
 		temp = ft_strndup(env[i], len_to_equal(env[i]));
-		if (ft_strncmp(str, temp, ft_strlen(temp)) == 0)
-			return (ft_env_var(env[i]));
+		if (!temp)
+			return (NULL);
+		if (ft_strncmp(str, temp, ft_strlen(temp) + 1) == 0)
+			return (free (temp), ft_env_var(env[i]));
+		free (temp);
 		i++;
 	}
 	return (NULL);

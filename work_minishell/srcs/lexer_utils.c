@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 16:52:00 by ycantin           #+#    #+#             */
-/*   Updated: 2024/07/10 22:06:22 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/07/21 18:03:09 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,21 +49,21 @@ int	define_type(char *str)
 {
 	int type;
 
-	if (strncmp(str, "||", 2) == 0)
-		type = TOKEN_OR;
-	else if (ft_strncmp(str, "&&", 2) == 0)
-		type = TOKEN_AND;
-	else if (ft_strncmp(str, "|", 1) == 0)
-		type = TOKEN_PIPE;
-	else if(ft_strncmp(str, "<", 1) == 0)
-		type = TOKEN_REDIR_IN;
-	else if(ft_strncmp(str, ">", 1) == 0)
-		type = TOKEN_REDIR_OUT;
-	else if(ft_strncmp(str, "<<", 2) == 0)
-		type = TOKEN_REDIR_HEREDOC;
-	else if(ft_strncmp(str, ">>", 2) == 0)
-		type = TOKEN_REDIR_APPEND_OUT;
+	if (strcmp(str, "||") == 0)
+		type = OR;
+	else if (ft_strcmp(str, "&&") == 0)
+		type = AND;
+	else if (ft_strcmp(str, "|") == 0)
+		type = PIPE;
+	else if(ft_strcmp(str, "<") == 0)
+		type = INPUT;
+	else if(ft_strcmp(str, ">") == 0)
+		type = OUTPUT;
+	else if(ft_strcmp(str, "<<") == 0)
+		type = HEREDOC;
+	else if(ft_strcmp(str, ">>") == 0)
+		type = APPEND_OUT;
 	else
-		type = TOKEN_WORD;
+		type = WORD;
 	return (type);
 }

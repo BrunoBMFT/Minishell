@@ -6,23 +6,12 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/07/21 17:20:20 by bruno            ###   ########.fr       */
+/*   Updated: 2024/07/27 20:59:06 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-void	check_exit(char *line)// wrong for cmd1 | exit
-{
-	if (ft_strcmp(line, "exit") == 0)
-	{
-		free(line);
-//		rl_clear_history();
-		exit(0);
-	}
-}
-
-
+//change strncmp for strcmp
 int main (int ac, char **av, char **envp)
 {
 	char	**env = envp;
@@ -31,7 +20,7 @@ int main (int ac, char **av, char **envp)
 	char	*prompt;
 	t_jobs	*jobs;
 	char	**temp_vars = NULL;
-	int i = 0;
+
 	while (1)
 	{
 		prompt = update_prompt();
@@ -39,17 +28,26 @@ int main (int ac, char **av, char **envp)
 //			clean_exit(jobs, line, prompt);
 		line = readline(prompt);
 		free(prompt);
-//*		line = expand_env_vars(line, env);//has to expand temp_vars
-//		check_exit(line);
+		if (!line || !line[0])
+			continue ;
 		add_history(line);
-		i++;
-		printf("job: %d\n", i);
+		check_exit(line);
+		line = expand_env_vars(line, env, temp_vars);
 		jobs = build(line);
-//*		if (ft_strnstr(jobs->cmd, "=", ft_strlen(jobs->cmd)) && !jobs->execd)//cmd: "export=" doesnt export or save anything
-//*			temp_vars = variable_declaration(jobs->cmd, temp_vars);
-		start_executor(jobs, env);
-//		free(prompt);
-		clear_jobs(&jobs);//edited by bruno
+		if (ft_strnstr(jobs->cmd, "=", ft_strlen(jobs->cmd)))
+			temp_vars = add_to_env(jobs->job, temp_vars);
+/* 		int i = 0;
+ 		if (temp_vars)
+		{
+			
+			while(temp_vars[i])
+			{
+				printf("%d: %s\n", i, temp_vars[i]);
+				i++;
+			}
+		} */
+		start_executor(jobs, env, temp_vars);
+		clear_jobs(&jobs);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 12:42:55 by yohan             #+#    #+#             */
-/*   Updated: 2024/07/20 17:08:22 by bruno            ###   ########.fr       */
+/*   Updated: 2024/07/27 21:54:13 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	**ft_split(char const *s, char c)
 	var.start = 0;
 	var.str_index = 0;
 	var.dest = (char **)malloc((var.word_count + 1) * sizeof(char *));
-	if (var.dest == NULL)
+	if (!s || var.dest == NULL)
 		return (NULL);
 	while (s[var.i])
 	{
