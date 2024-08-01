@@ -6,74 +6,94 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/07/25 00:34:33 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/01 19:03:26 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+int	test(t_jobs *job, char **env)
+{
+	int status;
+	while (job){
+/* 		if (job->next && job->next->type == APPEND_OUT){
+			status = append_to_file(job, env);
+            job = job->next->next;
+		}
+		else if (job->next && job->next->type == OUTPUT){
+			status = update_output(job, env);
+            job = job->next->next;
+		}
+		else if (job->type == INPUT){
+			update_input(job);
+			job = job->next;
+		}
+		else if (job->type == HEREDOC){
+			start_heredoc(job);
+			job = job->next;
+		} */
+		if (job->next && job->next->type == PIPE){
+			//child process
+			job = job->next->next;
+		}
+		else if (job->next && job->next->type == AND){
+			//simple process
+			job = job->next;
+		}
+		else{
+			//simple process
+            job = job->next;
+        }
+	}
+}
 
 int	start_executor(t_jobs *job, char **env, char **temp_vars)
 {
-	int status = try_builtins(job, env, temp_vars);
-//	printf("final status: %d\n", status);
-	
-/* 	while (job && job->next)// && job->next
+	int status = 0;
+	int stdin = dup(STDIN_FILENO);
+//	return (print_jobs(job), 0);
+	while (job)
 	{
-//		printf("cmd: %s\t  execd: %s\t  type:%d\n", job->cmd, job->execd, job->type);
-//		run_execution(job, env);
- 		if (job->next->type == PIPE)
-		{ 
- 			if (try_builtins(job, env) == 200)
-				printf("executor\n");
-			printf("processing pipe\n");
-			child_process(job, env);
+		if (job->next && job->next->type == PIPE) {
+			child_process(job, env, temp_vars);
+			job = job->next->next;
+		}
+/* 		if (job->next && job->next->type == APPEND_OUT)
+		{
+			status = append_to_file(job, env);
+			dup2(stdin, STDIN_FILENO);
+            job = job->next->next;
+		}
+		else if (job->next && job->next->type == OUTPUT)
+		{
+			status = update_output(job, env);
+			dup2(stdin, STDIN_FILENO);
+            job = job->next->next;
+		}
+		else if (job->type == INPUT)
+		{
+			update_input(job);
 			job = job->next;
 		}
-		else if (job->next->type == AND)
+		else if (job->type == HEREDOC)
 		{
- 			if (try_builtins(job, env) == 200)
-				printf("executor\n")
-			simple_process(job, env);
+			start_heredoc(job);
 			job = job->next;
 		}
-//		if (job->type == HEREDOC)
-//			start_heredoc(job);
- 		else if (job->next->type == OR)//(||) not working for now cause of last process running
-		{
-			if (simple_process(job, env) != 0)
-			{
-				job = job->next;
-				simple_process(job, env);
-			}
+ 		
+		else if (job->next && job->next->type == AND) {
+			simple_process(job, env, temp_vars);
+			dup2(stdin, STDIN_FILENO);
+			job = job->next;
+		} */
+		else {
+			status = simple_process(job, env, temp_vars);//dont like temp_vars here but it has to be?
+			dup2(stdin, STDIN_FILENO);
+			job = job->next;
 		}
-		job = job->next;
 	}
-	int status = simple_process(job, env);
-//	printf("final status: %d\n", status);*/
+	printf("status: %d\n", status);
+	close (stdin);
 	return (1);
 }
 
-/* void	run_execution(t_jobs *job, char **env)//
-{
-	if (job->next->type == 1)//(|)
-	{
-		printf("processing pipe\n");
-		child_process(job, env);
-		job = job->next;
-		job = job->next;
-	}
-	if (job->next->type == 2)//(&&)
-	{
-		simple_process(job, env);
-		job = job->next;
-	}
-	if (job->next->type == 3)//(||) not working for now cause of last process running
-	{
-		if (simple_process(job, env) != 0)
-		{
-			job = job->next;
-			simple_process(job, env);
-		}
-	}
-} */

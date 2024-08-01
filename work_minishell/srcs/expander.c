@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 03:18:24 by bruno             #+#    #+#             */
-/*   Updated: 2024/07/27 20:59:27 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/01 22:17:51 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,92 +48,106 @@ char	*expand_env_vars(char *input, char **env, char **temp_vars)//take care of $
 	free_array(vars);
 	if (input[ft_strlen(input) - 1] == '$')//! dont hardcode like this
 		ft_strcat(output, "$");
-	output[ft_strlen(output)] = 0;
+	if (output)
+		output[ft_strlen(output)] = 0;
+	else
+		output = "";
 	return (output);
 }
 
-char	**add_to_env(char **strs, char **temp_vars)
+char	**add_to_env(char **strs, char **env)//minishell env has to import all variables declared in shell
 {
 	char	**new_env;
-	new_env = ft_calloc(sizeof(char *), ft_split_wordcount(temp_vars) + ft_split_wordcount(strs) + 1);//errorcheck
+
+	new_env = ft_calloc(sizeof(char *), ft_split_wordcount(env) + ft_split_wordcount(strs) + 1);//errorcheck
+	if (!new_env)
+		panic ("env calloc\n");
 	int i = 0;
-	if (temp_vars)
-	{
-		while (temp_vars[i])
-		{
-			new_env[i] = ft_strdup(temp_vars[i]);
+	if (env) {
+		while (env[i]) {
+			new_env[i] = ft_strdup(env[i]);
+			if (!new_env[i])
+				panic ("env dup\n");
 			i++;
 		}
 	}
-	while (*strs)
-	{
-		int j = 0;
-		bool found = false;
-		while (new_env[j])
-        {
-            if (ft_strncmp(new_env[j], *strs, len_to_equal(new_env[j]) + 1) == 0) 
-			{
-                new_env[j] = ft_strdup(*strs);
-                found = true;
-                break;
-            }
-			j++;
-        }
-        if (found == false)
-            new_env[i] = ft_strdup(*strs);
+	while (*strs) {
+		new_env[i] = ft_strdup(*strs);
+		if (!new_env[i])
+			panic ("dup strs\n");
 		i++;
 		strs++;
 	}
 	new_env[i] = NULL;
 	return (new_env);
 }
-
-/* char	**variable_declaration(char **str, char **vars)//fix "export hello=world && hello=hi", env hello has to become hi
+/* char	**old_add_to_env(char **strs, char **temp_vars, char **env)
 {
-	char **temp_vars;
-	int		var_count = ft_split_wordcount(vars);
-	int		str_count = ft_split_wordcount(str);
-	temp_vars = ft_calloc(sizeof(char *), var_count + str_count + 1);
-	if (!temp_vars)
-		panic("malloc\n");
-	int i = 0;
-	while (i < var_count)
-	{
-        bool found = false;
-		int j = 0;
-		while (j < str_count)
-        {
-            if (ft_strncmp(vars[i], str[j], len_to_equal(vars[i])) == 0) 
-			{
-                temp_vars[i] = ft_strdup(str[j]);
+	char	**new_env;
+
+	new_env = ft_calloc(sizeof(char *), ft_split_wordcount(temp_vars) + ft_split_wordcount(env) + ft_split_wordcount(strs) + 1);//errorcheck
+	if (!new_env)
+		panic ("1\n");
+	int i = 0, j = 0;
+	if (env) {
+        while (env[i]) {
+            new_env[i] = ft_strdup(env[i]);
+            if (!new_env[i])
+                return NULL;
+            i++;
+        }
+    }
+	if (temp_vars) {
+		while (temp_vars[j]) {
+			new_env[i] = ft_strdup(temp_vars[j]);
+            if (!new_env[i])
+                panic ("3\n");
+			i++;
+			j++;
+		}
+	}
+	
+	while (*strs) {
+		j = 0;
+		bool found = false;
+		while (new_env[j]) {
+            if (ft_strncmp(new_env[j], *strs, len_to_equal(new_env[j])) == 0) {
+				free(new_env[j]);
+                new_env[j] = ft_strdup(*strs);
+        	    if (!new_env[j])
+             	   panic ("4\n");
                 found = true;
                 break;
             }
 			j++;
         }
-        if (found == false)
-            temp_vars[i] = ft_strdup(vars[i]);
+        if (found == false){
+            new_env[i] = ft_strdup(*strs);
+            if (!new_env[i])
+                panic ("5\n");
+		}
+			i++;
+		strs++;
+	}
+	new_env[i] = NULL;
+	i = 0;
+	while (env && env[i]) {
+		env[i] = ft_strdup(new_env[i]);
+		if (!env[i])
+			panic ("6\n"); // Handle allocation error
 		i++;
-    }
-	int j = 0;
-	while (j < str_count)
+	}
+	i = 0;
+	while (ft_strncmp(env[i], new_env[i], len_to_equal(new_env[i])) == 0)//not working, trying this to not dup env every time
+		i++;
+	while (new_env[i])
 	{
-        bool found = false;
-		int k = 0;
-		while (k < var_count)
-        {
-            if (ft_strncmp(str[j], vars[k], len_to_equal(vars[k])) == 0) 
-			{
-                found = true;
-                break;
-            }
-			k++;
-        }
-        if (found == false)
-            temp_vars[i++] = ft_strdup(str[j]);
+		new_env[j] = ft_strdup(new_env[i]);
+		if (!new_env[j])
+			panic ("7\n"); // Handle allocation error
+		i++;
 		j++;
-    }
-	temp_vars[var_count + str_count] = NULL;
-	return (temp_vars);
+	}
+	new_env[j] = NULL;
+	return (new_env);
 } */
-

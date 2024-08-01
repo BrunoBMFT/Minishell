@@ -6,89 +6,18 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/07/27 20:59:16 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/01 17:05:25 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-//check env vars problems (cd includesdadasd OR unset PATHASDHASDHASD)
-
-int	caught_export(t_jobs *job, char **env, char **temp_vars)
-{//take care of env-i
-	char	**vars = NULL;
-	char	*temp = NULL;
-	char	**new_env = NULL;
-	int		i;
-	int		j;
-
-	if (ft_strnstr(job->execd, "=", ft_strlen(job->execd)))
-	{
-		if (!job->execd)
-			return (caught_env(job, env));
-/* 		i = 0;
-		while (job->job[i + 1])//shift job to skip export
-		{
-			job->job[i] = job->job[i + 1];
-			i++;
-		}
-		job->job[i] = job->job[i + 1];//shift */
-/* 		i = 0;
-		while (job->job[i])
-		{
-			printf("%d: %s\n", i, job->job[i]);
-			i++;
-		} */
-		vars = ft_split(job->job[1], ' ');//error check
-		new_env = add_to_env(vars, env);//errorcheck and free
-		i = 0;
-		while (new_env[i])
-		{
-			env[i] = ft_strdup(new_env[i]);//errorcheck and free
-			i++;
-		}
-		env[i] = NULL;
-/* 		i = 0;
-		while (env[i])
-		{
-			if (new_env[i])
-				printf("new_env: %d: %s\n", i, new_env[i]);
-			if (env[i])
-				printf("env: %d: %s\n", i, env[i]);
-			i++;
-		} */
-/* 		printf("env: %d\n", ft_split_wordcount(env));
-		printf("new_env: %d\n", ft_split_wordcount(new_env)); */
-		//free stuff
-	}
-	else
-	{
-		vars = ft_split(job->execd, ' ');//error check
-		i = 0;
-		while (env[i])
-			i++;
-		j = 0;
-		while (vars[j])
-		{
-			temp = ft_getenv(vars[j], temp_vars);//error check
-			vars[j] = ft_strjoin(vars[j], "=");
-			temp = ft_strjoin(vars[j], temp);
-			env[i] = ft_strdup(temp);//error check
-			j++;
-			i++;
-		}
-		env[i] = NULL;
-		//free stuff
-	}
-	
-	return (0);
-}
 
 int	try_builtins(t_jobs *job, char **env, char **temp_vars)
 {
-	if (ft_strcmp(job->cmd, "cd") == 0)
-		return (caught_cd(job, env));
 	if (ft_strcmp(job->cmd, "echo") == 0)
 		return (caught_echo(job));
+/* 	if (ft_strcmp(job->cmd, "cd") == 0)
+		return (caught_cd(job, env));
 	else if (ft_strcmp(job->cmd, "env") == 0)
 		return (caught_env(job, env));
 	else if (ft_strcmp(job->cmd, "pwd") == 0)
@@ -96,9 +25,9 @@ int	try_builtins(t_jobs *job, char **env, char **temp_vars)
 	else if (ft_strcmp(job->cmd, "unset") == 0)//has to unset temp_vars as well
 		return (caught_unset(job, env, temp_vars));
 	else if (ft_strcmp(job->cmd, "export") == 0)//"hello=world && export hello=mi", which stays?
-		return (caught_export(job, env, temp_vars));
-	else if (ft_strcmp(job->cmd, "clear") == 0)// * REMOVE
-		return (clear_proc(env));// * REMOVE
+		return (caught_export(job, env, temp_vars)); */
+/* 	else if (ft_strcmp(job->cmd, "clear") == 0)// * REMOVE
+		return (clear_proc(env));// * REMOVE */
 	return (200);
 }
 //has to unset temp_vars
@@ -154,8 +83,8 @@ void	cd_update_pwd(char **env, bool when)
 		env[i] = ft_strjoin("PWD=", temp);//error check
 	}
 }
-int	caught_cd(t_jobs *job, char **env)//check return values
-{
+int	caught_cd(t_jobs *job, char **env)//cd supposedly cant exit process, needs to be called before fork
+{//check return values
 	char 	*directory;
 	
 	cd_update_pwd(env, BEFORE);
@@ -211,7 +140,6 @@ int	caught_pwd(t_jobs *job, char **env)//make better
 	free (pwd);
 	return (0);
 }
-
 //echo
 int	caught_echo(t_jobs *job)
 {
@@ -228,5 +156,52 @@ int	caught_echo(t_jobs *job)
 		ft_printf("%s", job->execd);
 	if (nl == true)
 		ft_nl_fd(1);
-	return (0);
+	exit (0);
 }
+
+
+/* int	caught_export(t_jobs *job, char **env, char **temp_vars)
+{//take care of env-i
+	char	**vars = NULL;
+	char	*temp = NULL;
+	char	**new_env = NULL;
+	int		i;
+	int		j;
+
+	if (ft_strnstr(job->execd, "=", ft_strlen(job->execd)))
+	{
+		if (!job->execd)
+			return (caught_env(job, env));
+		vars = ft_split(job->job[1], ' ');//error check
+		new_env = add_to_env(vars, env);//errorcheck and free
+		i = 0;
+		while (new_env[i])
+		{
+			env[i] = ft_strdup(new_env[i]);//errorcheck and free
+			i++;
+		}
+		env[i] = NULL;
+		//free stuff
+	}
+	else
+	{
+		vars = ft_split(job->execd, ' ');//error check
+		i = 0;
+		while (env[i])
+			i++;
+		j = 0;
+		while (vars[j])
+		{
+			temp = ft_getenv(vars[j], temp_vars);//error check
+			vars[j] = ft_strjoin(vars[j], "=");
+			temp = ft_strjoin(vars[j], temp);
+			env[i] = ft_strdup(temp);//error check
+			j++;
+			i++;
+		}
+		env[i] = NULL;
+		//free stuff
+	}
+	
+	return (0);
+} */

@@ -6,43 +6,103 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/07/21 18:03:33 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/01 18:37:50 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-//goal-> loop over all jobs in order to find redirections. if > is found, 
-
-void    inspect(t_jobs **job)
+void    print_file(int fd)
 {
-    if ((*job)->type == WORD)
-        *job = (*job)->next;
-    else if((*job)->type == AND)
-        job_and(&job);
-    else if ((*job)->type == OR)
-        job_or(&job);
-    else if ((*job)->type == PIPE)
-        job_bruno(&job);
-    else if ((*job)->type == INPUT)
-        job_redir_input(&job);
-    else if ((*job)->next->type == OUTPUT)
-        job_redir_output(&job);
-    else if ((*job)->next->type == APPEND_OUT)
-        append_to_file(&job);
+    char *line;
+    
+    while (1)
+    {
+        if (!(line = get_next_line(fd)))
+            break ;
+        ft_printf("%s", line);
+    }
 }
-//current_file is the cmd  of node->next->next and execd is th execd of the output of the last command
-int    append_to_file(t_jobs **node) 
+
+void    update_input(t_jobs *job)
 {
     int fd;
 
-    if (access((*node)->next->next->cmd, F_OK) != 0)
-        fd = open((*node)->next->next->cmd, O_CREAT | O_RDWR, 0644);
+    fd = open(job->execd, O_RDONLY);
+    if (fd < 0)
+    {
+        perror("open error input redir\n");
+        clean_exit(job, NULL, NULL);
+    }
+    if (job->next)
+    {
+        if (dup2(fd, STDIN_FILENO) == -1)
+        {
+            perror("dup2 error input redir\n");
+            clean_exit(job, NULL, NULL);
+        }
+    }
     else
-        fd = open((*node)->next->next->cmd, O_APPEND | O_RDWR);
+        print_file(fd);
+    close (fd);
+}
+
+int update_output(t_jobs *job, char **env)
+{
+    int fd;
+    int status;
+    int stdout;
+
+    stdout = dup(STDOUT_FILENO);
+    if (access(job->next->execd, F_OK) == 0)
+        remove(job->next->execd);
+    fd = open(job->next->execd, O_CREAT | O_RDWR, 0644);
+    if (fd < 0)
+        perror("error during output redir\n");
+    if (dup2(fd, STDOUT_FILENO) < 0)
+    {
+        perror("dup2 error output redir\n");
+        clean_exit(job, NULL, NULL);
+    }
+    close (fd);
+    if (job->type < INPUT)
+        status = simple_process(job, env);
+	if (dup2(stdout, STDOUT_FILENO) < 0)
+    {
+        perror("dup2 error append redir\n");
+        clean_exit(job, NULL, NULL);
+    }
+    close (stdout);
+    return (status);
+}
+
+int    append_to_file(t_jobs *job, char **env) 
+{
+    int fd;
+    int status;
+    int stdout;
+
+	stdout = dup(STDOUT_FILENO);
+/*     if (access(job->next->execd, F_OK) != 0)
+        fd = open(job->next->execd, O_CREAT | O_RDWR, 0644);
+    else
+        fd = open(job->next->execd, O_APPEND | O_RDWR); */
+    fd = open(job->next->execd, O_CREAT | O_APPEND | O_RDWR, 0644);
     if (fd < 0)
         perror("appending file error");
-    //ft_putendl_fd((*node)->execd, fd);
-    *node = (*node)->next->next;
-    return (fd);
+    if (dup2(fd, STDOUT_FILENO) < 0)
+    {
+        perror("dup2 error append redir\n");
+        clean_exit(job, NULL, NULL);
+    }
+    close (fd);
+    if (job->type < INPUT)
+        status = simple_process(job, env);
+	if (dup2(stdout, STDOUT_FILENO) < 0)
+    {
+        perror("dup2 error append redir\n");
+        clean_exit(job, NULL, NULL);
+    }
+    close (stdout);
+    return (status);
 }

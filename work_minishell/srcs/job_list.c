@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/07/21 18:02:53 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/01 18:37:25 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,44 @@ char **job_array(t_jobs *node)
 	return (new_array);
 }
 
+// void make_job_list(t_jobs **job_list, t_token **tok_list)
+// {
+//     t_token *cur;
+//     t_jobs *new;
+//     char *cmd;
+
+//     cur = *tok_list;
+//     while (cur)
+//     {
+//         new = addjob(NULL);
+//         if (cur && cur->type != WORD)
+//         {
+//             new->type = give_type(cur);
+//             new->type = give_type(cur);
+//             new->cmd = ft_strdup("token"); // Handle token types separately
+//             go_to_next_job(job_list, new);
+//             cur = cur->next;
+//             continue;
+//         }
+//         // else
+//         // {
+//             cmd = full_cmd(&cur);
+//             new->cmd = ft_strdup(cmd);
+//             new->type = WORD;
+//             free(cmd);
+//         // }
+//         if (cur && cur->type == WORD)
+//             new->execd = get_execd(&cur);
+//         if (new->cmd && new->execd)
+//             new->job = job_array(new);
+// 		else if (!new->execd)//edited by bruno
+// 			new->job = job_array(new);//edited by bruno
+//         else
+//             new->job = NULL;
+//         go_to_next_job(job_list, new);
+//     }
+// }
+
 char *assign_cmd(t_jobs *cur)
 {
     if (cur->type == AND)
@@ -102,6 +140,8 @@ char *assign_cmd(t_jobs *cur)
         return ("<");   
     else if (cur->type == OUTPUT)
         return (">");  
+    else if (cur->type == EXPORT)
+        return ("export");
     return (NULL);
 }
 
@@ -139,7 +179,7 @@ void make_job_list(t_jobs **job_list, t_token **tok_list)
         new = addjob(NULL);
         if (cur && cur->type != WORD)
         {
-            handle_non_word_tokens(&new, &cur); //deals with redirections, &&, | and ||
+            handle_non_word_tokens(&new, &cur); //deals with redirections, &&, |, || and export
             go_to_next_job(job_list, new);
             cur = cur->next;
             continue;

@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/07/23 16:54:28 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/01 23:21:15 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,18 @@ char	*find_path(char *command, char **env)
 	return (NULL);
 }
 
-bool	execute_job(char **command, char **env)
+int	execute_job(char **command, char **env)
 {
 	char	*path = find_path(command[0], env);
 	if (!path)
-		return (printf("no command\n"), false);//free the commands
+		exit (127);//free the commands and exit
 	execve(path, command, env);
 	printf("execve failed\n");
 	free_array(command);
-	return true;
+	exit (0);//free fds
 }
 
-int	child_process(t_jobs *job, char **env)
+int	child_process(t_jobs *job, char **env, char **temp_vars)
 {
 	int		fd[2];
 	int		status = 0;
@@ -56,14 +56,11 @@ int	child_process(t_jobs *job, char **env)
 	pid_t pid = new_fork();
 	if (pid == 0)
 	{
-/* 		sig = 1;
-		if (set_up_signal(handle_sigint) < 0);
-			clean_exit(job, NULL, NULL); */
 		close(fd[READ]);
 		dup2(fd[WRITE], STDOUT_FILENO);
 		close(fd[WRITE]);
-		if (!execute_job(job->job, env))
-			panic("execute");
+//		if (try_builtins(job, env, temp_vars) == 200)
+			execute_job(job->job, env);
 	}
 	close(fd[WRITE]);
 	dup2(fd[READ], STDIN_FILENO);
@@ -72,19 +69,19 @@ int	child_process(t_jobs *job, char **env)
 	return WEXITSTATUS(status);
 }
 
-int	simple_process(t_jobs *job, char **env)
+int	simple_process(t_jobs *job, char **env, char **temp_vars)
 {
-	int	pid = new_fork();
+	int	pid;
+	int	status;
+
+	status = 0;
+	pid = new_fork();
 	if (pid == 0)
 	{
-/* 		sig = 1;
-		if (set_up_signal(handle_sigint) < 0);
-			clean_exit(job, NULL, NULL); */
-		if (!execute_job(job->job, env))
-			panic("simple execute failed\n");//free fds, show exit code and perror
+//		if (try_builtins(job, env, temp_vars) == 200)
+			execute_job(job->job, env);//has to take in temp_vars as well
+		
 	}
-	int status = 0;
 	waitpid(pid, &status, 0);
-//	printf("status: %d\n", WEXITSTATUS(status));
 	return (WEXITSTATUS(status));
 }

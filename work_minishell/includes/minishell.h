@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/07/27 20:59:03 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/01 18:38:40 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ typedef enum types
     INPUT,
     OUTPUT,
     HEREDOC,
-    APPEND_OUT
+    APPEND_OUT,
+    EXPORT
 }               types;
 
 typedef struct s_holder
@@ -59,12 +60,11 @@ typedef struct s_token
     char                *token;
     int                 pos;
     int                 type;
-    struct  s_token     *prev;
     struct  s_token     *next;
 }t_token;
 
 typedef struct s_jobs
-{//have fdin and fdout and redirs always here?
+{
 	int				type;
 	char			*cmd;
 	char			*execd;
@@ -84,16 +84,16 @@ char	*update_prompt();
 void	cd_update_pwd(char **env, bool when);
 
 //char	**add_to_env(char **strs, char **temp_vars, char **env, bool is_export);
-char	**add_to_env(char **strs, char **temp_vars);
+//char	**add_to_env(char **strs, char **temp_vars, char **env);
+char	**add_to_env(char **strs, char **env);
 char	*expand_env_vars(char *input, char **env, char **temp_vars);
 //char	**variable_declaration(char **str, char **vars);
 
 //executor
 int	    start_executor(t_jobs *job, char **env, char **temp_vars);
-//void	run_execution(t_jobs *curr, char **env);
 int     try_builtins(t_jobs *job, char **env, char **temp_vars);
-int	    child_process(t_jobs *job, char **env);
-int	    simple_process(t_jobs *job, char **env);
+int	child_process(t_jobs *job, char **env, char **temp_vars);
+int     simple_process(t_jobs *job, char **env, char **temp_vars);
 char	*find_path(char *command, char **env);
 int	    new_fork(void);
 void	panic(char *s);
