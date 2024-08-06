@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/01 19:03:26 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/02 15:31:08 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,12 @@ int	start_executor(t_jobs *job, char **env, char **temp_vars)
 		{
 			start_heredoc(job);
 			job = job->next;
-		}
- 		
+		} */
 		else if (job->next && job->next->type == AND) {
 			simple_process(job, env, temp_vars);
 			dup2(stdin, STDIN_FILENO);
 			job = job->next;
-		} */
+		}
 		else {
 			status = simple_process(job, env, temp_vars);//dont like temp_vars here but it has to be?
 			dup2(stdin, STDIN_FILENO);

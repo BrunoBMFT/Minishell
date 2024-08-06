@@ -6,30 +6,11 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:15:54 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/01 17:07:59 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/02 16:30:08 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-//temp_vars should be an exact copy of env, and then when vars are exported, it should place them in env.
-//to check if a new variable was declared, it should do a strncmp till = sign to see if there is a variable with that name
-char	**variable_declaration(t_jobs *job, char **temp_vars, char **env)//problem when declaring 3 variables
-{
-	if (ft_strnstr(job->cmd, "=", ft_strlen(job->cmd)))
-	{
-		char	**strs = ft_split(job->job[0], ' ');//error check
-		temp_vars = add_to_env(strs, temp_vars);//error check
-		if (job->job[1])
-		{
-			char	**strs = ft_split(job->job[1], ' ');//error check
-			temp_vars = add_to_env(strs, temp_vars);//error check
-		}
-	}
-	if (temp_vars)
-		return (temp_vars);
-	return (NULL);
-}
 
 void print_jobs(t_jobs *jobs) 
 {

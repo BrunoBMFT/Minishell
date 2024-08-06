@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 12:43:19 by yohan             #+#    #+#             */
-/*   Updated: 2024/04/24 18:24:27 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/08/04 18:20:07 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,30 @@ int	ft_strncmp(const char *s1, char *s2, size_t n)
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
 
-/*
+int	ft_envnamecmp(char *s1, char *s2)
+{
+	size_t	i;
+	int		calc;
+
+	i = 0;
+	if (!s1 || !s2)
+		return (-1);
+	while (s1[i] && s2[i] && s1[i] == s2[i] && s1[i] != '=' && s2[i] != '=')
+		i++;
+	calc = (unsigned char)s1[i] - (unsigned char)s2[i];
+	if (calc == 0)
+		return (0);
+	return (1);
+}
+/* 
+
 int main (void)
 {
 	char	*x;
 	char	*y;
 
-	x = "test\200";
-	y = "test\0";
-	printf("%d\n", ft_strncmp(x, y, 40));
-	printf("%d", strncmp(x, y, 40));
+	x = "he=a";
+	y = "hell=world";
+	printf("%d\n", ft_envnamecmp(x, y));
 	return (0);
-}
-*/
+} */
