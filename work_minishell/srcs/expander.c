@@ -6,12 +6,14 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 03:18:24 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/04 20:37:17 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/07 17:10:40 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-// ! USE ENVNAMECMP
+
+
+
 char	*expand_env_vars(char *input, char **env, char **temp_vars)//take care of $$
 {
 	int 	i;
@@ -55,48 +57,71 @@ char	*expand_env_vars(char *input, char **env, char **temp_vars)//take care of $
 	return (output);
 }
 
-int add_env_to_env(char **new_env, char **env)
+int temp_env_to_env(char **new_env, char **temp_vars)//check duplicates in normal env
 {
 	bool	found;
-	int		i;
+	int		i = 0, j = 0;
 	
-	i = 0;//can increment with pointers???
-	while (*env)
+	while (*temp_vars)
 	{
 		found = false;
 		int j = 0;
-		while (new_env[j])
+		while (!found && new_env[j])
 		{
-			if (ft_envnamecmp(new_env[j], *env) == 0)
+			if (ft_envnamecmp(new_env[j], *temp_vars) == 0)
 			{
-				found = true;
-				new_env[j] = ft_strdup(*env);
+				new_env[j] = ft_strdup(*temp_vars);
 				if (!new_env[i])
-					panic ("strdup1 env\n");
+					panic ("strdup1 temp_vars\n");
+				found = true;
 				break;
 			}
 			j++;
 		}
-        if (found == false){
-            new_env[i] = ft_strdup(*env);
+        if (!found) {
+            new_env[i] = ft_strdup(*temp_vars);
             if (!new_env[i])
                 panic ("strdup2 env\n");
 		}
-		env++;
+		temp_vars++;
 		i++;
 	}
-	return (i);
+	return (i);//find a way for the 2nd one to work without returning this pointer
 }
 
-int	add_variables_to_env(char **new_env, char **vars, int i)
+int	temp_vars_to_env(char **new_env, char **vars, char **env, int i)
 {
+/* 	while (i < ft_split_wordcount(env))
+	{
+		printf("here\n");
+		if (ft_envnamecmp(new_env[i], *env) == 0)//find better logic
+		{
+			new_env[i] = ft_strdup(*env);
+			if (!new_env[i])
+				panic ("strdup1vars \n");
+		}
+		else if (ft_envnamecmp(new_env[i], *vars) == 0)//find better logic
+		{
+			new_env[i] = ft_strdup(*vars);
+			if (!new_env[i])
+				panic ("strdup1vars \n");
+		}
+		i++;
+	}
+	while (*vars && new_env[i])
+	{
+		new_env[i] = ft_strdup(*vars);//check order
+		if (!new_env[i])
+			panic ("strdup2 vars\n");
+		i++;
+	} */
 	while (*vars)
 	{
 		bool found = false;
 		int j = 0;
 		while (new_env[j])
 		{
-			if (ft_envnamecmp(new_env[j], *vars) == 0)
+			if (ft_envnamecmp(new_env[j], *vars) == 0)//find better logic
 			{
                 new_env[j] = ft_strdup(*vars);
             	if (!new_env[j])
@@ -106,8 +131,7 @@ int	add_variables_to_env(char **new_env, char **vars, int i)
 			}
 			j++;
 		}
-		if (!found)
-		{
+		if (!found) {
 			new_env[i] = ft_strdup(*vars);
 			if (!new_env[i])
 				panic ("strdup2 vars\n");
@@ -119,8 +143,8 @@ int	add_variables_to_env(char **new_env, char **vars, int i)
 	return (i);
 }
 
-char	**vars_declaration(char *input, char **temp_vars)//minishell env has to import all variables declared in shell
-{
+char	**vars_declaration(char *input, char **temp_vars, char **env)//minishell env has to import all variables declared in shell
+{//parse
 	char	**strs = ft_split(input, ' ');
 	if (!strs)
 		panic ("strs split\n");
@@ -128,9 +152,9 @@ char	**vars_declaration(char *input, char **temp_vars)//minishell env has to imp
 
 	int i = 0;
 	if (temp_vars)
-		i = add_env_to_env(new_env, temp_vars);//error check, find better way
+		i = temp_env_to_env(new_env, temp_vars);//error check, find better way
 	if (strs)
-		add_variables_to_env(new_env, strs, i);//error check
+		temp_vars_to_env(new_env, strs, env, i);//error check
 	return (new_env);
 }
 //import minishell tempvars

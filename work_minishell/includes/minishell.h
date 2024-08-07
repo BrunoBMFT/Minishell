@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/02 18:47:11 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/07 17:19:22 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	cd_update_pwd(char **env, bool when);
 
 char	**dup_env(char **env, char **dups);
 char	*expand_env_vars(char *input, char **env, char **temp_vars);
-char	**vars_declaration(char *input, char **temp_vars);
+char	**vars_declaration(char *input, char **temp_vars, char **env);
 //char	**add_to_env(char **strs, char **temp_vars, char **env, bool is_export);
 //char	**add_to_env(char **strs, char **temp_vars, char **env);
 //char	**add_to_env(char **strs, char **env);
@@ -99,6 +99,10 @@ int     simple_process(t_jobs *job, char **env, char **temp_vars);
 char	*find_path(char *command, char **env);
 int	    new_fork(void);
 void	panic(char *s);
+void    update_input(t_jobs *job);
+int update_output(t_jobs *job, char **env, char **temp_vars);
+int    append_to_file(t_jobs *job, char **env, char **temp_vars);
+
 
 //to remove
 int	clear_proc(char **env);
@@ -108,7 +112,7 @@ void	clear_list(t_token **lst);
 void	clean_exit(t_jobs *jobs, char *line, char *prompt);
 void	free_all(t_token **list, char **array, char *message, int len);
 void print_jobs(t_jobs *jobs);
-void    parse(t_token **token);
+int    parse(t_token **token);
 int         count(char *str);
 char        *split_complex_args(char *str);
 char        **token_array(char *str);

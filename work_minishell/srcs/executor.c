@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/02 15:31:08 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/07 17:17:01 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,13 @@ int	start_executor(t_jobs *job, char **env, char **temp_vars)
 		}
 /* 		if (job->next && job->next->type == APPEND_OUT)
 		{
-			status = append_to_file(job, env);
+			status = append_to_file(job, env, temp_vars);
 			dup2(stdin, STDIN_FILENO);
             job = job->next->next;
-		}
+		} */
 		else if (job->next && job->next->type == OUTPUT)
 		{
-			status = update_output(job, env);
+			status = update_output(job, env, temp_vars);
 			dup2(stdin, STDIN_FILENO);
             job = job->next->next;
 		}
@@ -75,7 +75,7 @@ int	start_executor(t_jobs *job, char **env, char **temp_vars)
 			update_input(job);
 			job = job->next;
 		}
-		else if (job->type == HEREDOC)
+/* 		else if (job->type == HEREDOC)
 		{
 			start_heredoc(job);
 			job = job->next;
@@ -83,7 +83,7 @@ int	start_executor(t_jobs *job, char **env, char **temp_vars)
 		else if (job->next && job->next->type == AND) {
 			simple_process(job, env, temp_vars);
 			dup2(stdin, STDIN_FILENO);
-			job = job->next;
+			job = job->next->next;
 		}
 		else {
 			status = simple_process(job, env, temp_vars);//dont like temp_vars here but it has to be?
@@ -91,7 +91,7 @@ int	start_executor(t_jobs *job, char **env, char **temp_vars)
 			job = job->next;
 		}
 	}
-	printf("status: %d\n", status);
+//	printf("status: %d\n", status);
 	close (stdin);
 	return (1);
 }

@@ -6,25 +6,37 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/02 16:25:00 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/07 01:44:31 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+// ! AFTER UNSETTING PWD, THE PWD COMMAND HAS TO STILL WORK
+int	caught_pwd(t_jobs *job, char **env)//make better
+{
+	char buffer[4096];
+
+	if (job->execd)//error and exit code
+	{
+		ft_putendl_fd("pwd: too many arguments", 2);
+		return (1);
+	}
+	ft_putendl_fd(getcwd(buffer, 4096), 2);//error check?
+	return (0);
+}
+
 int	try_builtins(t_jobs *job, char **env, char **temp_vars)
 {
 	if (ft_strcmp(job->cmd, "echo") == 0)
 		return (caught_echo(job));
-/* 	if (ft_strcmp(job->cmd, "cd") == 0)
-		return (caught_cd(job, env));
 	else if (ft_strcmp(job->cmd, "env") == 0)
 		return (caught_env(job, env));
 	else if (ft_strcmp(job->cmd, "pwd") == 0)
 		return (caught_pwd(job, env));
 	else if (ft_strcmp(job->cmd, "unset") == 0)//has to unset temp_vars as well
 		return (caught_unset(job, env, temp_vars));
-	else if (ft_strcmp(job->cmd, "export") == 0)//"hello=world && export hello=mi", which stays?
+/* 	else if (ft_strcmp(job->cmd, "export") == 0)//"hello=world && export hello=mi", which stays?
 		return (caught_export(job, env, temp_vars)); */
 /* 	else if (ft_strcmp(job->cmd, "clear") == 0)// * REMOVE
 		return (clear_proc(env));// * REMOVE */
@@ -118,28 +130,6 @@ int	caught_env(t_jobs *job, char **env)//make better
 	}
 	return (0);
 }
-//pwd
-// ! AFTER UNSETTING PWD, THE PWD COMMAND HAS TO STILL WORK
-int	caught_pwd(t_jobs *job, char **env)//make better
-{
-	int		i;
-	char	*pwd;
-
-	if (job->execd)//error and exit code
-	{
-		ft_putendl_fd("pwd: too many arguments", 2);
-		return (1);
-	}
-	i = 0;
-	while (env[i] && ft_strncmp(env[i], "PWD", 3))
-		i++;
-	if (!env[i])
-		return (1);
-	pwd = ft_strrem(env[i], "PWD=");
-	ft_putendl_fd(pwd, 2);//error check?
-	free (pwd);
-	return (0);
-}
 //echo
 int	caught_echo(t_jobs *job)
 {
@@ -158,11 +148,13 @@ int	caught_echo(t_jobs *job)
 		ft_nl_fd(1);
 	exit (0);
 }
+//pwd
 
 
-/* int	caught_export(t_jobs *job, char **env, char **temp_vars)
+
+int	caught_export(t_jobs *job, char **env, char **temp_vars)
 {//take care of env-i
-	char	**vars = NULL;
+/* 	char	**vars = NULL;
 	char	*temp = NULL;
 	char	**new_env = NULL;
 	int		i;
@@ -202,6 +194,6 @@ int	caught_echo(t_jobs *job)
 		env[i] = NULL;
 		//free stuff
 	}
-	
+	 */
 	return (0);
-} */
+}

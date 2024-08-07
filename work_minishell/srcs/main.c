@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/02 18:49:34 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/07 17:10:49 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,25 +41,30 @@ int main (int ac, char **av, char **envp)
 		line = readline(prompt);
 		if (!line || !line[0])//find better way
 			continue ;
-/* 		free(prompt);
+		free(prompt);
 		check_exit(line);
-		add_history(line); */
+		add_history(line);
 		line = expand_env_vars(line, env, temp_vars);
-		temp_vars = vars_declaration(line, temp_vars);
-		if (temp_vars)
+//		if (ft_strnstr(line, "=", ft_strlen(line)))
+//			temp_vars = vars_declaration(line, temp_vars, env);
+/*		if (ft_strnstr(line, "=", ft_strlen(line)))
 		{
-			int i = 0;
-			while (temp_vars[i])
+			temp_vars = vars_declaration(line, temp_vars, env);//needs to be taken care of in process so exit code doesnt change
+			if (temp_vars)
 			{
-				printf("%d: %s\n", i, temp_vars[i]);
-				i++;
+				int i = 0;
+				while (temp_vars[i])
+				{
+					printf("%d: %s\n", i, temp_vars[i]);
+					i++;
+				}
 			}
 		}
 		if (ft_strncmp(line, "env", 3) == 0)
-			printenv(env);
-//		jobs = build(line);
-//		start_executor(jobs, env, temp_vars);
-//		clear_jobs(&jobs);
+			printenv(env); */
+		jobs = build(line);
+		start_executor(jobs, env, temp_vars);
+		clear_jobs(&jobs);
 	}
 	return (0);
 }

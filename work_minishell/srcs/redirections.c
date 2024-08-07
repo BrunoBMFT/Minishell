@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/01 18:37:50 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/07 17:16:28 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void    update_input(t_jobs *job)
     close (fd);
 }
 
-int update_output(t_jobs *job, char **env)
+int update_output(t_jobs *job, char **env, char **temp_vars)
 {
     int fd;
     int status;
@@ -66,7 +66,7 @@ int update_output(t_jobs *job, char **env)
     }
     close (fd);
     if (job->type < INPUT)
-        status = simple_process(job, env);
+        status = simple_process(job, env, temp_vars);
 	if (dup2(stdout, STDOUT_FILENO) < 0)
     {
         perror("dup2 error append redir\n");
@@ -76,7 +76,7 @@ int update_output(t_jobs *job, char **env)
     return (status);
 }
 
-int    append_to_file(t_jobs *job, char **env) 
+int    append_to_file(t_jobs *job, char **env, char **temp_vars) 
 {
     int fd;
     int status;
@@ -97,7 +97,7 @@ int    append_to_file(t_jobs *job, char **env)
     }
     close (fd);
     if (job->type < INPUT)
-        status = simple_process(job, env);
+        status = simple_process(job, env, temp_vars);
 	if (dup2(stdout, STDOUT_FILENO) < 0)
     {
         perror("dup2 error append redir\n");

@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 12:58:00 by yohan             #+#    #+#             */
-/*   Updated: 2024/08/04 17:50:38 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/07 17:21:05 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,5 +104,7 @@ int		len_to_equal(char *str);
 char	*ft_env_var(char *str);
 int		ft_arraycmp(char **arr1, char **arr2);
 int		ft_envnamecmp(char *s1, char *s2);
+char	*get_next_line(int fd);
+char	*gnl_ft_strjoin(char *line, char *buf);
 
 #endif
