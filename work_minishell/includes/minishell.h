@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/08 02:50:40 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/08 23:13:14 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ t_jobs	    *get_last_job(t_jobs *lst);
 void	    go_to_next_job(t_jobs **lst, t_jobs *new); 
 void        make_job_list(t_jobs **job_list, t_token **tok_list);
 void	    clear_jobs(t_jobs **lst);
-t_jobs      *build(char *command_line);
+t_jobs *build(char *command_line);
 void        ctrl_c_idle(int sig);
 int         set_signal(int sig, void f(int));
 void	check_exit(char *line);

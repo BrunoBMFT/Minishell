@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/08 03:39:56 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/08 23:13:56 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ int	start_executor(t_jobs *job, char **env, char **temp_vars)
 	while (job)
 //	return (print_jobs(job), 0);
 	{
-		printf("here\n");
 		if (job->next && job->next->type == PIPE) {
 			child_process(job, env, temp_vars);
 			job = job->next->next;

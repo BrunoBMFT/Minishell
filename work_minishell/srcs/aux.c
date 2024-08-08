@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:15:54 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/08 22:40:00 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/08 23:13:00 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,48 +73,64 @@ char	*update_prompt()
 	return (prompt);
 }
 
-t_token *developed_cmdline_tokenization(char *command_line, char **env)
+void	clean_up_build(t_token **list, char *cmd_line)
 {
-	char	*converted;
-	char	*simplified;
-	t_token	*list;
-
-	list = NULL;
-	simplified = split_complex_args(command_line);
-	converted = unquote_and_direct(simplified, env, NULL);
-	free(simplified);
-	tokenize(&list, converted);
-	free(converted);
-    if (parse(&list) == -1) 
-	{
-        clear_list(&list);
-        return (NULL);
-    }
-	return (list);
+	clear_list(list);
+	free(cmd_line);
 }
 
-t_jobs *build(char *command_line, char **env)
+int parse_last_token(char **cmd_line, t_token **list, t_token **last)
+{
+	char *line;
+	char *new;
+	char *converted;
+
+	line = readline("> ");
+	if (!line)
+	{
+		clean_up_build(list, *cmd_line);
+		return (-1);
+	}
+	new = ft_strjoin(*cmd_line, line);
+	free(*cmd_line);
+	free(line);
+	*cmd_line = new;
+	clear_list(list);
+	converted = split_complex_args(*cmd_line);
+	tokenize(list, converted);
+	free(converted);
+	*last = get_last_tok(*list);
+	if (parse(list) == -1)
+	{
+		clean_up_build(list, *cmd_line);
+		return (-1);
+	}
+	return (0);
+}
+
+t_jobs *build(char *command_line)
 {
     t_jobs *jobs;
     t_token *list;
     t_token *last;
+    char *converted;
+
 	jobs = NULL;
 	list  = NULL;
 	last = NULL;
-
-	list = developed_cmdline_tokenization(command_line, env);
+    converted = split_complex_args(command_line);
+    tokenize(&list, converted);
+    free(converted);
+    last = get_last_tok(list);
     if (parse(&list) == -1) 
 	{
         clear_list(&list);
         return (NULL);
     }
-	last = get_last_tok(list);
     while (last && last->type >= PIPE && last->type <= OR && !last->next)
 		if (parse_last_token(&command_line, &list, &last) == -1)
 			return (NULL);
-    make_job_list(&jobs, &list, env);
-	t_jobs *temp;
-	temp = jobs;
+    make_job_list(&jobs, &list);
     clean_up_build(&list, command_line);
     return (jobs); 
 }
