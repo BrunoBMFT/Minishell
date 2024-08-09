@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/01 18:37:25 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/09 01:16:59 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,28 +169,28 @@ void handle_non_word_tokens(t_jobs **cur, t_token **tok_cur)
 
 void make_job_list(t_jobs **job_list, t_token **tok_list)
 {
-    t_token *cur;
-    t_jobs *new;
-    char *cmd;
+	t_token *cur;
+	t_jobs *new;
+	char *cmd;
 
-    cur = *tok_list;
-    while (cur)
-    {
-        new = addjob(NULL);
-        if (cur && cur->type != WORD)
-        {
-            handle_non_word_tokens(&new, &cur); //deals with redirections, &&, |, || and export
-            go_to_next_job(job_list, new);
-            cur = cur->next;
-            continue;
-        }
-        cmd = full_cmd(&cur);
-        new->cmd = ft_strdup(cmd);
-        new->type = WORD;
-        free(cmd);
-        if (cur && cur->type == WORD)
-            new->execd = get_execd(&cur);
-        new->job = job_array(new);
-        go_to_next_job(job_list, new);
-    }
+	cur = *tok_list;
+	while (cur)
+	{
+		new = addjob(NULL);
+		if (cur && cur->type != WORD)
+		{
+			handle_non_word_tokens(&new, &cur); //deals with redirections, &&, |, || and export
+			go_to_next_job(job_list, new);
+			cur = cur->next;
+			continue;
+		}
+		cmd = full_cmd(&cur);
+		new->cmd = ft_strdup(cmd);
+		new->type = WORD;
+		free(cmd);
+		if (cur && cur->type == WORD)
+			new->execd = get_execd(&cur);
+		new->job = job_array(new);
+		go_to_next_job(job_list, new);
+	}
 }

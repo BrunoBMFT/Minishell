@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/07 02:54:32 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/09 04:27:11 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,32 @@
 
 char	*find_path(char *command, char **env)
 {
-	//use strcmp
 	char	**paths;
 	char	*path;
+	char	*temp;
+	int		i;
 
+	i = 0;
 	while (*env && ft_strnstr(*env, "PATH", 4) == 0)
 		env++;
 	if (!*env)
 		return NULL;
-	paths = ft_split(*env, ':');
-	while (*paths)
+	paths = ft_split(*env, ':');//error check
+	while (paths[i])
 	{
-		*paths = ft_strjoin(*paths, "/");
-		path = ft_strjoin(*paths, command);
-		free (*paths);
+		temp = ft_strjoin(paths[i], "/");
+		path = ft_strjoin(temp, command);
+		free (temp);
 		if (access(path, F_OK) == 0)
+		{
+			free_array(paths);
 			return (path);
+		}
 		free (path);
-		paths++;
+		i++;
 	}
 	free_array(paths);
+	printf("minishell: command not found: %s\n", command);
 	return (NULL);
 }
 

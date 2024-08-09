@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/08 23:13:21 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/09 02:32:44 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ int main (int ac, char **av, char **envp)
 /* 		if (set_signal(SIGINT, ctrl_c_idle) < 0 || set_signal(SIGQUIT, SIG_IGN) < 0)
 			clean_exit(jobs, line, prompt); */
 		line = readline(prompt);
+		free(prompt);
 		if (!line || !line[0])//find better way
 			continue ;
-		free(prompt);
 		check_exit(line);
 		add_history(line);
 		line = expand_env_vars(line, env, temp_vars);

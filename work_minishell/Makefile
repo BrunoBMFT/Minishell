@@ -6,7 +6,7 @@
 #    By: bruno <bruno@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/23 16:39:56 by ycantin           #+#    #+#              #
-#    Updated: 2024/08/08 23:13:30 by bruno            ###   ########.fr        #
+#    Updated: 2024/08/09 01:14:42 by bruno            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,7 +56,7 @@ re: fclean all
 run: all
 	clear && ./minishell
 vrun: all
-	clear && valgrind --leak-check=full ./minishell
+	clear && valgrind --leak-check=full --suppressions=readline.supp ./minishell
 fullvrun: all
 	clear && valgrind --leak-check=full --suppressions=readline.supp --show-leak-kinds=all --track-origins=yes ./minishell
 
