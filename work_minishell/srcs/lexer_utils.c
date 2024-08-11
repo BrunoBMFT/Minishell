@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 16:52:00 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/01 18:37:39 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/10 13:23:55 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ t_token	*addtok(void *content)
 	list->next = NULL;
 	return (list);
 }
+
 t_token	*get_last_tok(t_token *lst)
 {
 	if (!lst)
@@ -55,13 +56,13 @@ int	define_type(char *str)
 		type = AND;
 	else if (ft_strcmp(str, "|") == 0)
 		type = PIPE;
-	else if(ft_strcmp(str, "<") == 0)
+	else if (ft_strcmp(str, "<") == 0)
 		type = INPUT;
-	else if(ft_strcmp(str, ">") == 0)
+	else if (ft_strcmp(str, ">") == 0)
 		type = OUTPUT;
-	else if(ft_strcmp(str, "<<") == 0)
+	else if (ft_strcmp(str, "<<") == 0)
 		type = HEREDOC;
-	else if(ft_strcmp(str, ">>") == 0)
+	else if (ft_strcmp(str, ">>") == 0)
 		type = APPEND_OUT;
 	else
 		type = WORD;

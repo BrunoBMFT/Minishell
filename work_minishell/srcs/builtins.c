@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/08 21:39:34 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/09 18:28:22 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	caught_pwd(t_jobs *job, char **env)//make better
 {
 	char buffer[4096];
 
-	if (job->execd)//error and exit code
+	if (job->job[1])//error and exit code
 	{
 		ft_putendl_fd("pwd: too many arguments", 2);
 		return (1);
@@ -28,19 +28,17 @@ int	caught_pwd(t_jobs *job, char **env)//make better
 
 int	try_builtins(t_jobs *job, char **env, char **temp_vars)
 {
-	if (ft_strcmp(job->cmd, "echo") == 0)
+	if (ft_strcmp(job->job[0], "echo") == 0)
 		return (caught_echo(job));
-	else if (ft_strcmp(job->cmd, "env") == 0)
+	else if (ft_strcmp(job->job[0], "env") == 0)
 		return (caught_env(job, env));
-	else if (ft_strcmp(job->cmd, "pwd") == 0)
+	else if (ft_strcmp(job->job[0], "pwd") == 0)
 		return (caught_pwd(job, env));
-	else if (ft_strcmp(job->cmd, "unset") == 0)//has to unset temp_vars as well
+	else if (ft_strcmp(job->job[0], "unset") == 0)//has to unset temp_vars as well
 		return (caught_unset(job, env, temp_vars));
-/* 	else if (ft_strcmp(job->cmd, "export") == 0)//"hello=world && export hello=mi", which stays?
+/* 	else if (ft_strcmp(job->job[0], "export") == 0)//"hello=world && export hello=mi", which stays?
 		return (caught_export(job, env, temp_vars)); */
-/* 	else if (ft_strcmp(job->cmd, "clear") == 0)// * REMOVE
-		return (clear_proc(env));// * REMOVE */
-	return (200);
+	return (200);//check if builtins fail, everything goes correct
 }
 //has to unset temp_vars
 int	unset_aux(char **to_remove, char **env)
@@ -68,7 +66,7 @@ int	caught_unset(t_jobs *job, char **env, char **temp_vars)//segfault if var doe
 	int		i;
 	char	**to_remove;
 
-	to_remove = ft_split(job->execd, ' ');//error check
+	to_remove = ft_split(job->job[1], ' ');//error check
 	if (unset_aux(to_remove, env))
 		unset_aux(to_remove, temp_vars);
 	return (0);
@@ -100,8 +98,8 @@ int	caught_cd(t_jobs *job, char **env)//cd supposedly cant exit process, needs t
 	char 	*directory;
 	
 	cd_update_pwd(env, BEFORE);
-	directory = job->execd;
- 	if (!job->execd)
+	directory = job->job[1];
+ 	if (!job->job[1])
 	{
 		if (chdir(ft_getenv("HOME", env)) < 0)
 			return (ft_putendl_fd("cd home failed", 2), 1);// * need to fix perror
@@ -116,7 +114,7 @@ int	caught_env(t_jobs *job, char **env)//make better
 {//env SHELL var has to be different
 	int	i;
 
-	if (job->execd)//error and exit code
+	if (job->job[1])//error and exit code
 	{
 		ft_putendl_fd("minishell env doesnt take that many args\n", 2);//permission denied
 		return (126);
@@ -135,22 +133,30 @@ int	caught_echo(t_jobs *job)
 {
 	bool	nl;
 
-	if (!job->execd)
+	if (!job->job[1])
 		return (ft_nl_fd(1), 0);
 	nl = true;
-	if (ft_strncmp(job->cmd, "echo -n ", 8) == 0)
+	if (ft_strncmp(job->job[0], "echo -n ", 8) == 0)
 		nl = false;
-	else if (ft_strncmp(job->cmd, "echo -n", 7) == 0)
-		ft_printf("%s", job->cmd + 5);
+	else if (ft_strncmp(job->job[0], "echo -n", 7) == 0)
+		ft_printf("%s", job->job[0] + 5);
 	else
-		ft_printf("%s", job->execd);
+		ft_printf("%s", job->job[1]);
 	if (nl == true)
 		ft_nl_fd(1);
 	exit (0);
 }
-//pwd
 
 
+void	check_exit(char *line)// wrong for job[0]1 | exit
+{
+	if (ft_strcmp(line, "exit") == 0)
+	{
+		free(line);
+		rl_clear_history();
+		exit(0);
+	}
+}
 
 int	caught_export(t_jobs *job, char **env, char **temp_vars)
 {//take care of env-i
@@ -160,9 +166,9 @@ int	caught_export(t_jobs *job, char **env, char **temp_vars)
 	int		i;
 	int		j;
 
-	if (ft_strnstr(job->execd, "=", ft_strlen(job->execd)))
+	if (ft_strnstr(job->job[1], "=", ft_strlen(job->job[1])))
 	{
-		if (!job->execd)
+		if (!job->job[1])
 			return (caught_env(job, env));
 		vars = ft_split(job->job[1], ' ');//error check
 		new_env = add_to_env(vars, env);//errorcheck and free
@@ -177,7 +183,7 @@ int	caught_export(t_jobs *job, char **env, char **temp_vars)
 	}
 	else
 	{
-		vars = ft_split(job->execd, ' ');//error check
+		vars = ft_split(job->job[1], ' ');//error check
 		i = 0;
 		while (env[i])
 			i++;

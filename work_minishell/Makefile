@@ -6,7 +6,7 @@
 #    By: bruno <bruno@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/23 16:39:56 by ycantin           #+#    #+#              #
-#    Updated: 2024/08/09 01:14:42 by bruno            ###   ########.fr        #
+#    Updated: 2024/08/09 17:53:26 by bruno            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ SRCS_DIR = ./srcs
 SRCS =	main.c aux.c builtins.c executor.c process.c \
 		redirections.c heredoc.c signal.c smooth_usrexp.c \
 		lexer.c lexer_utils.c frees.c job_list.c job_utils.c \
-		parse.c expander.c
+		parse.c expansion.c
 
 OBJS_DIR = ./objs
 OBJS = $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))

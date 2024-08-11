@@ -6,12 +6,12 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/08 23:13:14 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/10 13:21:44 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL
-# define MINISHELL
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
 # include "libft/libft.h"
 # include <stdio.h>
@@ -25,7 +25,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-static volatile sig_atomic_t sig = 0;
+static volatile sig_atomic_t	sig = 0;
 
 # define WRITE 1
 # define READ 0
@@ -33,108 +33,128 @@ static volatile sig_atomic_t sig = 0;
 # define BEFORE 0
 # define AFTER 1
 
-typedef enum types
+typedef enum s_types
 {
-    WORD,
-    PIPE,
-    AND,
-    OR,
-    INPUT,
-    OUTPUT,
-    HEREDOC,
-    APPEND_OUT,
-    EXPORT
-}               types;
+	WORD,
+	PIPE,
+	AND,
+	OR,
+	INPUT,
+	OUTPUT,
+	HEREDOC,
+	APPEND_OUT,
+	EXPORT
+}			t_types;
 
-typedef struct s_holder
+typedef struct variable_holder
 {
-    int i;
-    int j;
-    int wc;
-    int k;
-    char **array;
-}t_holder;
+	char	*new;
+	char	*before;
+	char	*quoted;
+	char	*after;
+	char	*temp;
+	char	*temp2;
+	char	*expanded;
+	char	*result;
+	int		i;
+	int		start;
+	int		j;
+	int		wc;
+	int		k;
+	char	**array;
+}				t_var_holder;
 
 typedef struct s_token
 {
-    char                *token;
-    int                 pos;
-    int                 type;
-    struct  s_token     *next;
-}t_token;
+	char			*token;
+	int				type;
+//    int                 quote;//not used
+	struct s_token	*next;
+}				t_token;
 
 typedef struct s_jobs
 {
 	int				type;
-	char			*cmd;
-	char			*execd;
+//	char			*cmd;
+//	char			*execd;
 	char			**job;
 	struct s_jobs	*next;
-}t_jobs;
+}				t_jobs;
 
-//bruno:
-int	caught_echo(t_jobs *job);
-int	caught_cd(t_jobs *job, char **env);
-int	caught_pwd(t_jobs *job, char **env);
-int	caught_env(t_jobs *job, char **env);
-int	caught_unset(t_jobs *job, char **env, char **temp_vars);
-int	caught_export(t_jobs *job, char **env, char **temp_vars);
+//builtins:
+int		caught_echo(t_jobs *job);
+int		caught_cd(t_jobs *job, char **env);
+int		caught_pwd(t_jobs *job, char **env);
+int		caught_env(t_jobs *job, char **env);
+int		caught_unset(t_jobs *job, char **env, char **temp_vars);
+int		caught_export(t_jobs *job, char **env, char **temp_vars);
 
-char	*update_prompt();
-void	cd_update_pwd(char **env, bool when);
+//prompt:
+char	*update_prompt(void);
 
-char	**dup_env(char **env, char **dups);
+//expansions:
+char	*ft_env_var(char *str);
+char	*ft_getenv(char *str, char **env);
 char	*expand_env_vars(char *input, char **env, char **temp_vars);
-char	**vars_declaration(char *input, char **temp_vars, char **env);
-//char	**add_to_env(char **strs, char **temp_vars, char **env, bool is_export);
-//char	**add_to_env(char **strs, char **temp_vars, char **env);
-//char	**add_to_env(char **strs, char **env);
-//char	**variable_declaration(char **str, char **vars);
+char	*no_expansion(char *str, t_var_holder h);
+char	*expansion(char *str, t_var_holder *h, char **env, char **temp_vars);
+char	*unquote_and_direct(char *str, char **env, char **temp_vars);
 
 //executor
-int	    start_executor(t_jobs *job, char **env, char **temp_vars);
-int     try_builtins(t_jobs *job, char **env, char **temp_vars);
-int	child_process(t_jobs *job, char **env, char **temp_vars);
-int     simple_process(t_jobs *job, char **env, char **temp_vars);
+int		start_executor(t_jobs *job, char **env, char **temp_vars);
+int		try_builtins(t_jobs *job, char **env, char **temp_vars);
+int		child_process(t_jobs *job, char **env, char **temp_vars);
+int		simple_process(t_jobs *job, char **env, char **temp_vars);
 char	*find_path(char *command, char **env);
-int	    new_fork(void);
+int		new_fork(void);
 void	panic(char *s);
-int    update_input(t_jobs *job);
-int update_output(t_jobs *job, char **env, char **temp_vars);
-int    append_to_file(t_jobs *job, char **env, char **temp_vars);
 
-
-//to remove
-int	clear_proc(char **env);
+//redirections
+void	redirections(t_jobs *job);
+void	update_input(t_jobs *job);
+int		update_output(t_jobs *job, char **env, char **temp_vars);
+int		append_to_file(t_jobs *job, char **env, char **temp_vars);
+void	start_heredoc(t_jobs *curr);
 
 //free:
 void	clear_list(t_token **lst);
 void	clean_exit(t_jobs *jobs, char *line, char *prompt);
 void	free_all(t_token **list, char **array, char *message, int len);
-void print_jobs(t_jobs *jobs);
-int    parse(t_token **token);
-int         count(char *str);
-char        *split_complex_args(char *str);
-char        **token_array(char *str);
-void        tokenize(t_token **list, char *str);
-int	        define_type(char *str);
-//lexer:
-t_token	    *addtok(void *content);
-t_token	    *get_last_tok(t_token *lst);
-void	    go_to_next(t_token **lst, t_token *new);
-int         peek_next(t_token *list);
-char        *full_cmd(t_token **cur);
-int         give_type(t_token *token);
-t_jobs	    *addjob(void *content);
-t_jobs	    *get_last_job(t_jobs *lst);
-void	    go_to_next_job(t_jobs **lst, t_jobs *new); 
-void        make_job_list(t_jobs **job_list, t_token **tok_list);
-void	    clear_jobs(t_jobs **lst);
-t_jobs *build(char *command_line);
-void        ctrl_c_idle(int sig);
-int         set_signal(int sig, void f(int));
-void	check_exit(char *line);
-void        start_heredoc(t_jobs *curr);
+void	clear_jobs(t_jobs **lst);
+void	clean_up_build(t_token **list, char *cmd_line);
 
+//aux:
+void	print_jobs(t_jobs *jobs);
+
+//parser:
+int		parse(t_token **token);
+char	*parse_quotes(char *line);
+int		parse_last_token(char **cmd_line, t_token **list, t_token **last);
+
+//tokenizer:
+int		count(char *str);
+char	*split_complex_args(char *str);
+int		assign_i(char *str, int i);
+int		count_words(char *str);
+char	**token_array(char *str);
+void	tokenize(t_token **list, char *str);
+int		define_type(char *str);
+t_token	*addtok(void *content);
+t_token	*get_last_tok(t_token *lst);
+void	go_to_next(t_token **lst, t_token *new);
+
+//job list:
+t_jobs	*addjob(void *content);
+t_jobs	*get_last_job(t_jobs *lst);
+void	go_to_next_job(t_jobs **lst, t_jobs *new);
+void	make_job_list(t_jobs **job_list, t_token **tok_list, char **env);
+t_jobs	*build(char *command_line, char **env);
+
+//signals:
+void	ctrl_c_idle(int sig);
+int		set_signal(int sig, void f(int));
+void	sigquit(int sig);
+
+void	check_exit(char *line);
 
 #endif

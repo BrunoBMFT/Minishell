@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 18:16:48 by bruno             #+#    #+#             */
-/*   Updated: 2024/07/24 20:53:00 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/10 13:15:39 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,8 @@ char	*ft_env_var(char *str)
 	if (!new)
 		return (NULL);
 	while (str[i])
-	{
-		new[j] = str[i];
-		j++;
-		i++;
-	}
-	new[j] = 0;
+		new[j++] = str[i++];
+	new[j] = '\0';
 	return (new);
 }
 
@@ -50,16 +46,20 @@ char	*ft_getenv(char *str, char **env)
 {
 	char	*temp;
 	int		i;
+	int		len;
 
 	if (!str || !*str || !env || !*env)
 		return (NULL);
 	i = 0;
 	while (env[i])
 	{
-		temp = ft_strndup(env[i], len_to_equal(env[i]));
+		len = 0;
+		while (env[i][len] && env[i][len] != '=')
+			len++;
+		temp = ft_strndup(env[i], len);
 		if (!temp)
 			return (NULL);
-		if (ft_strncmp(str, temp, ft_strlen(temp) + 1) == 0)
+		if (ft_strncmp(str, temp, ft_strlen(temp)) == 0)
 			return (free (temp), ft_env_var(env[i]));
 		free (temp);
 		i++;

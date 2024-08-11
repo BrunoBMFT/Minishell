@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 16:51:17 by ycantin           #+#    #+#             */
-/*   Updated: 2024/07/27 21:54:57 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/10 13:15:53 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	ft_arraycmp(char **arr1, char **arr2)
 	while (arr1[i] && arr2[i])
 	{
 		if (ft_strcmp(arr1[i], arr2[i]) != 0)
-			break;
+			break ;
 		i++;
 	}
 	if (i != ft_split_wordcount(arr1))
