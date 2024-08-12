@@ -1,8 +1,13 @@
 #include <stdio.h>
 
-int	main(void)
+int	main(int ac, char **av)
 {
-	printf("hello world\n");
+	int i = 1;
+	while (i < ac)
+	{
+		printf("%s\n", av[i]);
+		i++;
+	}
 	return (0);
 }
 

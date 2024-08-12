@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/09 18:28:22 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/11 18:21:20 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ int	caught_unset(t_jobs *job, char **env, char **temp_vars)//segfault if var doe
 	return (0);
 }
 // cd 
+// cd can happen with just ..
 void	cd_update_pwd(char **env, bool when)
 {
 	char	cwd[100];
