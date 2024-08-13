@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/12 22:25:09 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/13 03:48:26 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ char	*fix_command(char *command)
 		newcommand = command;
 	return (newcommand);
 }
-
+//this function shouldnt run
 char	*find_executable_path(char *command, char **env)//handle ./ ../ ~/ and ./.././../ & work/minishell has to work
 {
 	char	*path = NULL;
@@ -142,8 +142,9 @@ char	*find_executable_path(char *command, char **env)//handle ./ ../ ~/ and ./..
 		path = ft_strjoin(dir, "/");//error check
 		path = ft_strjoin(path, command);//error check
 	}
-	
-	return (path);
+	if (access(path, F_OK) == 0)
+		return (path);
+	return (NULL);
 }
 
 int	execute_job(char **command, char **env)
@@ -159,13 +160,13 @@ int	execute_job(char **command, char **env)
 		command[0] = fix_command(command[0]);//error check
 		if (!path)
 		{
-			return (ft_printf("no command\n"), 127);
+			ft_printf("no command\n");
 			free (path);
 			exit (127);//free the commands and exit
 		}
 	}
- 	execve(path, command, env);
-	printf("execve failed\n");
+ 	int status = execve(path, command, env);
+	printf("execve failed %d\n", status);//error message should be here
 	free_array(command);
 	exit (0);//free fds
 }
@@ -212,7 +213,6 @@ int	simple_process(t_jobs *job, char **env, char **temp_vars)
 	waitpid(pid, &status, 0);
 	return (WEXITSTATUS(status));
 }
-
 void	panic(char *s)
 {
 	ft_putendl_fd(s, 2);

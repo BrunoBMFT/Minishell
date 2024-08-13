@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/11 18:21:20 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/13 03:35:44 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,20 @@
 // ! AFTER UNSETTING PWD, THE PWD COMMAND HAS TO STILL WORK
 int	caught_pwd(t_jobs *job, char **env)//make better
 {
-	char buffer[4096];
+	char buf[PATH_MAX];
 
 	if (job->job[1])//error and exit code
 	{
 		ft_putendl_fd("pwd: too many arguments", 2);
 		return (1);
 	}
-	ft_putendl_fd(getcwd(buffer, 4096), 2);//error check?
+	ft_putendl_fd(getcwd(buf, PATH_MAX), 2);//error check?
 	return (0);
 }
 
 int	try_builtins(t_jobs *job, char **env, char **temp_vars)
 {
+	printf("builtins\n");
 	if (ft_strcmp(job->job[0], "echo") == 0)
 		return (caught_echo(job));
 	else if (ft_strcmp(job->job[0], "env") == 0)

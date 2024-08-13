@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/10 13:21:44 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/13 03:35:32 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <sys/wait.h>
 # include <signal.h>
 # include <fcntl.h>
+# include <limits.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
@@ -32,6 +33,7 @@ static volatile sig_atomic_t	sig = 0;
 
 # define BEFORE 0
 # define AFTER 1
+# define PATH_MAX 4096
 
 typedef enum s_types
 {
