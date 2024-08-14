@@ -6,13 +6,13 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/10 18:44:56 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/14 18:56:18 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-t_token	*developed_cmdline_tokenization(char *command_line, char **env)
+t_token	*developed_cmdline_tokenization(char *command_line, char **env, int status)
 {
 	char	*converted;
 	char	*simplified;
@@ -20,7 +20,7 @@ t_token	*developed_cmdline_tokenization(char *command_line, char **env)
 
 	list = NULL;
 	simplified = split_complex_args(command_line);
-	converted = unquote_and_direct(simplified, env, NULL);
+	converted = unquote_and_direct(simplified, env, NULL, status);
 	free(simplified);
 	tokenize(&list, converted);
 	free(converted);
@@ -32,7 +32,7 @@ t_token	*developed_cmdline_tokenization(char *command_line, char **env)
 	return (list);
 }
 
-t_jobs	*build(char *command_line, char **env)
+t_jobs	*build(char *command_line, char **env, int status)
 {
 	t_jobs	*jobs;
 	t_token	*list;
@@ -42,7 +42,7 @@ t_jobs	*build(char *command_line, char **env)
 	jobs = NULL;
 	list = NULL;
 	last = NULL;
-	list = developed_cmdline_tokenization(command_line, env);
+	list = developed_cmdline_tokenization(command_line, env, status);
 	if (parse(&list) == -1)
 	{
 		clear_list(&list);

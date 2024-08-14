@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 12:43:06 by yohan             #+#    #+#             */
-/*   Updated: 2024/07/09 16:13:57 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/13 18:37:51 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	full = malloc((ft_strlen(s1) + ft_strlen(s2)) + 1 * sizeof(char));
 	if (full == NULL)
 		return (NULL);
-	while (s1[i])
+	while (s1 && s1[i])
 	{
 		full[i] = s1[i];
 		i++;
 	}
-	while (s2[j])
+	while (s2 && s2[j])
 	{
 		full[i] = s2[j];
 		i++;

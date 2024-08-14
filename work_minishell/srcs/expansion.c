@@ -6,13 +6,13 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/10 13:29:09 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/14 19:00:11 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 // $? $$
-char	*expand(char *str, char **env, char **temp_vars)
+char	*expand(char *str, char **env, char **temp_vars, int status)
 {
 	t_var_holder	h;
 
@@ -32,18 +32,18 @@ char	*expand(char *str, char **env, char **temp_vars)
 		{
 			h.start = h.i;
 			h.i++;
-			h.result = expansion(str, &h, env, temp_vars);
+			h.result = expansion(str, &h, env, temp_vars, status);
 		}
 	}
 	return (h.result);
 }
 
-char	*no_quotes(char *str, t_var_holder *h, char **env, char **temp_vars)
+char	*no_quotes(char *str, t_var_holder *h, char **env, char **temp_vars, int status)
 {
 	h->temp = ft_strndup(str + h->start, h->i - h->start);
 	if (!h->temp)
 		return h->new;
-	h->before = expand(h->temp, env, temp_vars);
+	h->before = expand(h->temp, env, temp_vars, status);
 	free(h->temp);
 	if (!h->before)
 		return h->new;
@@ -79,16 +79,16 @@ char	*single_quotes(char *str, t_var_holder *h)
 	return (h->new);
 }
 
-char *double_quotes(char *str, t_var_holder *h, char **env, char **temp_vars)
+char *double_quotes(char *str, t_var_holder *h, char **env, char **temp_vars, int status)
 {
     h->start = ++h->i;
     while (str[h->i] && str[h->i] != '\"')
         h->i++;
-    h->new = no_quotes(str, h, env, temp_vars);
+    h->new = no_quotes(str, h, env, temp_vars, status);
     return (h->new);
 }
 
-char *unquote_and_direct(char *str, char **env, char **temp_vars)
+char *unquote_and_direct(char *str, char **env, char **temp_vars, int status)
 {
     t_var_holder h;
 
@@ -105,11 +105,11 @@ char *unquote_and_direct(char *str, char **env, char **temp_vars)
         while (str[h.i] && str[h.i] != '\'' && str[h.i] != '\"')
             h.i++;
         if (h.i > h.start) 
-            h.new = no_quotes(str, &h, env, temp_vars);
+            h.new = no_quotes(str, &h, env, temp_vars, status);
         if (str[h.i] == '\'')
             h.new = single_quotes(str, &h);
         else if (str[h.i] == '\"') 
-            h.new = double_quotes(str, &h, env, temp_vars);
+            h.new = double_quotes(str, &h, env, temp_vars, status);
         if (str[h.i])
             h.i++;
     }
@@ -145,13 +145,19 @@ char	*no_expansion(char *str, t_var_holder h)
 	return(h.temp);
 }
 
-char	*expansion(char *str, t_var_holder *h, char **env, char **temp_vars)
+char	*expansion(char *str, t_var_holder *h, char **env, char **temp_vars, int status)
 {
 	if (str[h->i] == '\0' || str[h->i] == ' ' || str[h->i] == '\t')
 		h->expanded = ft_strdup("$");
 	else if (str[h->i] == '$')
 	{
-		h->expanded = ft_itoa(getpid());
+		h->expanded = ft_itoa(getpid());//in this part, receive pid and printf pid
+		h->i++;
+	}
+	else if (str[h->i] == '?')
+	{
+		h->expanded = ft_itoa(status);
+//		h->expanded = ft_itoa(getpid());//in this part, receive pid and printf pid
 		h->i++;
 	}
 	else

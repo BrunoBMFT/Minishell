@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/13 03:51:46 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/14 18:58:27 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int	main(int ac, char **av, char **envp)
 	t_jobs	*jobs;
 	t_jobs	*curr;
 	char	**temp_vars = NULL;
+	int		status = 0;
 
 	while (1)
 	{
@@ -43,7 +44,7 @@ if (secondquote(line))
 		check_exit(line);//technically a builtin
 		add_history(line);
 /* 		
-line = expand_env_vars(line, env, temp_vars);
+		line = expand_env_vars(line, env, temp_vars);
 		if (ft_strnstr(line, "=", ft_strlen(line)))
 			temp_vars = vars_declaration(line, temp_vars, env);
 		if (ft_strnstr(line, "=", ft_strlen(line)))
@@ -61,9 +62,9 @@ line = expand_env_vars(line, env, temp_vars);
 		}
 		if (ft_strncmp(line, "env", 3) == 0)
 			printenv(env); */
-		jobs = build(line, env);
+		jobs = build(line, env, status);//find better way to send status
 		curr = jobs;
-		start_executor(jobs, env, temp_vars);
+		status = start_executor(jobs, env, temp_vars);
 //		clear_jobs(&jobs);
 	}
 	return (0);

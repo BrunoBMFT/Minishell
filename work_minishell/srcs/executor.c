@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/09 18:39:45 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/14 19:00:14 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,6 @@ int	start_executor(t_jobs *job, char **env, char **temp_vars)
 	}
 //	printf("status: %d\n", status);
 	close (saved_stdin);
-	return (1);
+	return (status);
 }
 

@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/13 03:35:32 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/14 18:58:39 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,8 @@ char	*ft_env_var(char *str);
 char	*ft_getenv(char *str, char **env);
 char	*expand_env_vars(char *input, char **env, char **temp_vars);
 char	*no_expansion(char *str, t_var_holder h);
-char	*expansion(char *str, t_var_holder *h, char **env, char **temp_vars);
-char	*unquote_and_direct(char *str, char **env, char **temp_vars);
+char	*expansion(char *str, t_var_holder *h, char **env, char **temp_vars, int status);
+char *unquote_and_direct(char *str, char **env, char **temp_vars, int status);
 
 //executor
 int		start_executor(t_jobs *job, char **env, char **temp_vars);
@@ -150,7 +150,7 @@ t_jobs	*addjob(void *content);
 t_jobs	*get_last_job(t_jobs *lst);
 void	go_to_next_job(t_jobs **lst, t_jobs *new);
 void	make_job_list(t_jobs **job_list, t_token **tok_list, char **env);
-t_jobs	*build(char *command_line, char **env);
+t_jobs	*build(char *command_line, char **env, int status);
 
 //signals:
 void	ctrl_c_idle(int sig);
