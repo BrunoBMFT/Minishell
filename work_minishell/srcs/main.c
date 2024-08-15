@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/14 18:58:27 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/15 20:44:49 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,28 +43,11 @@ if (secondquote(line))
 		} */
 		check_exit(line);//technically a builtin
 		add_history(line);
-/* 		
-		line = expand_env_vars(line, env, temp_vars);
-		if (ft_strnstr(line, "=", ft_strlen(line)))
-			temp_vars = vars_declaration(line, temp_vars, env);
-		if (ft_strnstr(line, "=", ft_strlen(line)))
-		{
-			temp_vars = vars_declaration(line, temp_vars, env);//needs to be taken care of in process so exit code doesnt change
-			if (temp_vars)
-			{
-				int i = 0;
-				while (temp_vars[i])
-				{
-					printf("%d: %s\n", i, temp_vars[i]);
-					i++;
-				}
-			}
-		}
-		if (ft_strncmp(line, "env", 3) == 0)
-			printenv(env); */
 		jobs = build(line, env, status);//find better way to send status
 		curr = jobs;
-		status = start_executor(jobs, env, temp_vars);
+		status = start_executor(jobs, env, &temp_vars);
+		if (temp_vars && temp_vars[0])
+			printf("temp_vars: %s\n", temp_vars[0]);
 //		clear_jobs(&jobs);
 	}
 	return (0);

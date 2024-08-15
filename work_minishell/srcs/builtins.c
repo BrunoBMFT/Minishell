@@ -6,27 +6,25 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/13 18:04:08 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/15 20:46:07 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-// ! AFTER UNSETTING PWD, THE PWD COMMAND HAS TO STILL WORK
-int	caught_pwd(t_jobs *job, char **env)//make better
+int	declare_temp_vars(t_jobs *job, char **env, char ***temp_vars)
 {
-	char buf[PATH_MAX];
-
-	if (job->job[1])//error and exit code
-	{
-		ft_putendl_fd("pwd: too many arguments", 2);
-		return (1);
-	}
-	ft_putendl_fd(getcwd(buf, PATH_MAX), 2);//error check?
+	*temp_vars = malloc(sizeof(char *) * 2);
+	if (!*temp_vars)
+		return (printf("failed1\n"), 0);
+	*temp_vars[0] = ft_strdup(job->job[0]);
+	if (!*temp_vars)
+		return (printf("failed2\n"), 0);
+	*temp_vars[1] = NULL;
 	return (0);
 }
 
-int	try_builtins(t_jobs *job, char **env, char **temp_vars)
+int	try_builtins(t_jobs *job, char **env, char ***temp_vars)
 {
 	if (ft_strcmp(job->job[0], "echo") == 0)
 		return (caught_echo(job));
@@ -34,12 +32,19 @@ int	try_builtins(t_jobs *job, char **env, char **temp_vars)
 		return (caught_env(job, env));
 	else if (ft_strcmp(job->job[0], "pwd") == 0)
 		return (caught_pwd(job, env));
-	else if (ft_strcmp(job->job[0], "unset") == 0)//has to unset temp_vars as well
-		return (caught_unset(job, env, temp_vars));
+/* 	else if (ft_strcmp(job->job[0], "unset") == 0)//has to unset temp_vars as well
+		return (caught_unset(job, env, &temp_vars)); */
+	else if (ft_strchr(job->job[0], '='))//has to unset temp_vars as well
+		return (declare_temp_vars(job, env, temp_vars));
 /* 	else if (ft_strcmp(job->job[0], "export") == 0)//"hello=world && export hello=mi", which stays?
 		return (caught_export(job, env, temp_vars)); */
 	return (200);//check if builtins fail, everything goes correct
 }
+
+
+
+
+
 //has to unset temp_vars
 int	unset_aux(char **to_remove, char **env)
 {
@@ -148,6 +153,18 @@ int	caught_echo(t_jobs *job)
 	exit (0);
 }
 
+int	caught_pwd(t_jobs *job, char **env)//make better
+{
+	char buf[PATH_MAX];
+
+	if (job->job[1])//error and exit code
+	{
+		ft_putendl_fd("pwd: too many arguments", 2);
+		return (1);
+	}
+	ft_putendl_fd(getcwd(buf, PATH_MAX), 2);//error check?
+	return (0);
+}
 
 void	check_exit(char *line)// wrong for job[0]1 | exit
 {

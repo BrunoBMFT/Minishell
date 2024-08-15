@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/14 18:58:39 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/15 20:45:34 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,20 +70,18 @@ typedef struct s_token
 {
 	char			*token;
 	int				type;
-//    int                 quote;//not used
 	struct s_token	*next;
 }				t_token;
 
 typedef struct s_jobs
 {
 	int				type;
-//	char			*cmd;
-//	char			*execd;
 	char			**job;
 	struct s_jobs	*next;
 }				t_jobs;
 
 //builtins:
+int		try_builtins(t_jobs *job, char **env, char ***temp_vars);
 int		caught_echo(t_jobs *job);
 int		caught_cd(t_jobs *job, char **env);
 int		caught_pwd(t_jobs *job, char **env);
@@ -103,19 +101,18 @@ char	*expansion(char *str, t_var_holder *h, char **env, char **temp_vars, int st
 char *unquote_and_direct(char *str, char **env, char **temp_vars, int status);
 
 //executor
-int		start_executor(t_jobs *job, char **env, char **temp_vars);
-int		try_builtins(t_jobs *job, char **env, char **temp_vars);
-int		child_process(t_jobs *job, char **env, char **temp_vars);
-int		simple_process(t_jobs *job, char **env, char **temp_vars);
-char	*find_path(char *command, char **env);
+int		start_executor(t_jobs *job, char **env, char ***temp_vars);
+int		child_process(t_jobs *job, char **env, char ***temp_vars);
+int		simple_process(t_jobs *job, char **env, char ***temp_vars);
+int	execute_job(char **command, char **env);
 int		new_fork(void);
 void	panic(char *s);
 
 //redirections
 void	redirections(t_jobs *job);
 void	update_input(t_jobs *job);
-int		update_output(t_jobs *job, char **env, char **temp_vars);
-int		append_to_file(t_jobs *job, char **env, char **temp_vars);
+int		update_output(t_jobs *job, char **env, char ***temp_vars);
+int		append_to_file(t_jobs *job, char **env, char ***temp_vars);
 void	start_heredoc(t_jobs *curr);
 
 //free:
