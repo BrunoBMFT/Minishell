@@ -6,19 +6,19 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/15 20:08:25 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/16 01:10:49 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 
-void	ft_perror_exit(char *str)//have this recieve exit code
+void	ft_perror_exit(char *str)//remove
 {
 	write(2, "minishell: ", 11);
 	perror (str);
 }
-
+// ! RENAME
 int find_command_path(char **cmd, char **env)
 {
 	char	**path_array;
@@ -60,7 +60,7 @@ char	*fix_cmd(char *cmd)
 		newcmd = cmd;
 	return (newcmd);
 }
-
+// ! RENAME
 int find_executable_path(char **cmd, char **env)//find better way to update command
 {
 	char	*path = NULL;
@@ -83,7 +83,7 @@ int find_executable_path(char **cmd, char **env)//find better way to update comm
 	}
 	*cmd = fix_cmd(*cmd);//error check
 	if (access(path, F_OK) == 0)
-		execve(path, cmd, env);
+		execve(path, cmd, env);//error check
 	ft_perror_exit(cmd[0]);
 	exit (127);
 }
@@ -99,6 +99,7 @@ int	execute_job(char **command, char **env)
 		status = find_executable_path(&command[0], env);
 	else
 		status = find_command_path(&command[0], env);
+	//! DECLARING VARIABLES HERE? 
 //	free_array(command);
 	exit (0);//free fds
 }

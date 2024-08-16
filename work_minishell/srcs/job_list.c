@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/14 18:56:18 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/16 01:14:22 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,115 +60,123 @@ t_jobs	*build(char *command_line, char **env, int status)
 
 char	*unquoted(char *str, char **env)
 {
-	char	*new;
+    char *new;
 
-	if (*str == '\'')
-		new = ft_strtrim(str, "\'");
-	else if (*str == '\"')
-		new = ft_strtrim(expand_env_vars(str, env, NULL), "\"");
-	else
-		new = ft_strdup(expand_env_vars(str, env, NULL));
-	return (new);
+    if (*str == '\'')
+        new = ft_strtrim(str, "\'");
+    else if(*str == '\"')
+        new = ft_strtrim(expand_env_vars(str, env, NULL), "\"");
+    else
+        new = ft_strdup(expand_env_vars(str, env, NULL));
+    return (new);
 }
 
 char	*assign_cmd(t_token *cur)
 {
-	if (cur->type == AND)
-		return ("&&");
-	else if (cur->type == OR)
-		return ("||");
-	else if (cur->type == PIPE)
-		return ("|");
-	else if (cur->type == APPEND_OUT)
-		return (">>");
-	else if (cur->type == HEREDOC)
-		return ("<<");
-	else if (cur->type == INPUT)
-		return ("<");
-	else if (cur->type == OUTPUT)
-		return (">");
-	else if (cur->type == EXPORT)
-		return ("export");
-	return (NULL);
+    if (cur->type == AND)
+        return ("&&");
+    else if (cur->type == OR)
+        return ("||");
+    else if (cur->type == PIPE)
+        return ("|");   
+    else if (cur->type == APPEND_OUT)
+        return (">>");   
+    else if (cur->type == HEREDOC)
+        return ("<<");   
+    else if (cur->type == INPUT)
+        return ("<");   
+    else if (cur->type == OUTPUT)
+        return (">");  
+    else if (cur->type == EXPORT)
+        return ("export");
+    return (NULL);
 }
 
-char	**job_array(t_token **cur, char **env)
+void    apply_redir(t_token *current, t_jobs *job)
 {
-	int		i;
-	int		count;
-	char	**array;
-	t_token	*temp;
-
-	i = 0;
-	count = 0;
-	temp = *cur;
-	while (temp && temp->type == WORD)
-	{
-		count++;
-		temp = temp->next;
-	}
-	array = malloc(sizeof(char *) * (count + 1));
-	if (!array)
-		return (NULL);
-	while (*cur && (*cur)->type == WORD)
-	{
-		array[i] = ft_strdup((*cur)->token);
-		i++;
-		*cur = (*cur)->next;
-	}
-	array[i] = NULL;
-	return (array);
+    if (current->type == INPUT || current->type == HEREDOC)
+    {
+        if (current->type == HEREDOC)
+            job->heredoc = 1;
+        if (job->input)
+        {
+            job->mult_input_flag = 1;
+            free(job->input);
+        }
+        job->input = ft_strdup(current->next->token);
+    }
+    else if(current->type == OUTPUT || current->type == APPEND_OUT)
+    {
+        if (current->type == APPEND_OUT)
+            job->append = 1;
+        if (job->output)
+            free(job->output);
+        job->output = ft_strdup(current->next->token);
+    }
 }
 
-char	**redir_array(t_token **cur, char **env)
+char **job_array(t_token **cur, t_jobs **job, char **env)
 {
-	char	**array;
-
-	array = malloc(sizeof (char *) * 2);
-	if (!array)
-		return (NULL);
-	array[0] = ft_strdup((*cur)->next->token);
-	array[1] = NULL;
-	return (array);
-}
-
-void	handle_non_word_tokens(t_jobs **cur, t_token **tok_cur, char **env)
-{
-	char	*next;
-
-	if ((*tok_cur)->type >= 4 && (*tok_cur)->type <= 7 && (*tok_cur)->token)
-	{
-		next = (*tok_cur)->next->token;
-		(*cur)->type = (*tok_cur)->type;
-		(*cur)->job = redir_array(tok_cur, env);
-		*tok_cur = (*tok_cur)->next;
-	}
-	else if ((*tok_cur)->type > 0 && (*tok_cur)->type < 4)
-	{
-		(*cur)->type = (*tok_cur)->type;
-		(*cur)->job = NULL;
-	}
+    int i;
+    int count;
+    char **array;
+    t_token *temp;
+    
+    i = 0;
+    count = 0;
+    temp = *cur;
+    while (temp && temp->type != AND && temp->type != OR && temp->type != PIPE)
+    {
+        if (temp->type == INPUT || temp->type == OUTPUT || temp->type == HEREDOC || temp->type == APPEND_OUT)
+        {
+            temp = temp->next->next;
+            continue;
+        }
+        count++;
+        temp = temp->next;
+    }
+    array = malloc(sizeof(char *) * (count + 1));
+    if (!array)
+        return (NULL);
+    while (*cur && (*cur)->type != AND && (*cur)->type != OR && (*cur)->type != PIPE)
+    {
+        if ((*cur)->type == INPUT || (*cur)->type == OUTPUT || (*cur)->type == HEREDOC || (*cur)->type == APPEND_OUT)
+        {
+            apply_redir(*cur, *job);
+            *cur = (*cur)->next->next;
+            continue;
+        }
+        array[i] = ft_strdup((*cur)->token);
+        i++;
+        *cur = (*cur)->next;
+    }
+    array[i] = NULL;
+    return (array);
 }
 
 void	make_job_list(t_jobs **job_list, t_token **tok_list, char **env)
 {
-	t_token	*cur;
-	t_jobs	*new;
-	char	*cmd;
+    t_token *cur;
+    t_jobs *new;
+    char *cmd;
 
-	cur = *tok_list;
-	while (cur)
-	{
-		new = addjob(NULL);
-		if (cur && cur->type != WORD)
-		{
-			handle_non_word_tokens(&new, &cur, env);
-			go_to_next_job(job_list, new);
-			cur = cur->next;
-			continue ;
-		}
-		new->job = job_array(&cur, env);
-		new->type = WORD;
-		go_to_next_job(job_list, new);
-	}
+    cur = *tok_list;
+    while (cur)
+    {
+        new = addjob(NULL);
+        if (cur && cur->type == PIPE || cur->type == AND || cur->type == OR)
+        {
+            if (cur->type > 0 && cur->type < 4)
+            {
+                new->type = cur->type;
+                new->job = NULL;
+            }
+            go_to_next_job(job_list, new);
+            cur = cur->next;
+            continue;
+        }
+        new->job = job_array(&cur, &new, env);
+        new->type = WORD;
+        go_to_next_job(job_list, new);
+    }
 }

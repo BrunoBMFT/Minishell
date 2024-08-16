@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/10 13:23:03 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/16 01:15:13 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,27 @@
 
 int	count_jobs(t_token *tokens)
 {
-	int		num;
-	t_token	*cur;
+    int		num;
+    t_token	*cur;
 
-	num = 0;
-	cur = tokens;
-	while (cur)
-	{
-		if (cur->type == WORD)
-		{
-			cur = cur->next;
-			while (cur && cur->token[0] == '-')
-				cur = cur->next;
-			num++;
-			if (!cur)
-				break ;
-		}
-		if (cur && (cur->type != WORD))
-			num++;
-		cur = cur->next;
-	}
-	return (num);
+    num = 0;
+    cur = tokens;
+    while (cur)
+    {
+        if (cur->type == WORD)
+        {
+            cur = cur->next;
+            while (cur && cur->token[0] == '-')      
+                cur = cur->next;
+            num++;
+            if (!cur) 
+                break;
+        }
+        if (cur && (cur->type != WORD))
+            num++;
+        cur = cur->next;
+    }
+    return (num);
 }
 
 t_jobs	*addjob(void *content)
@@ -46,6 +46,11 @@ t_jobs	*addjob(void *content)
 		return (NULL);
 	list->job = NULL;
 	list->type = 0;
+	list->append = 0;
+	list->heredoc = 0;
+	list->mult_input_flag = 0;
+	list->input = NULL;
+	list->output = NULL;
 	list->next = NULL;
 	return (list);
 }

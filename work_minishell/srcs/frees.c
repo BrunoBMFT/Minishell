@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:18:01 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/15 00:14:32 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/16 00:59:31 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,22 @@ void	clear_jobs(t_jobs **lst)
 	}
 	*lst = NULL;
 }
+/* yohan's version
+void	clear_jobs(t_jobs **lst)
+{
+	t_jobs	*temp;
+	t_jobs	*current;
+
+	current = *lst;
+	while (current)
+	{
+		temp = current->next;
+		free_array(current->job);
+        free(current);
+		current = temp;
+	}
+	*lst = NULL;
+} */
 
 void	free_all(t_token **list, char **array, char *message, int len)
 {

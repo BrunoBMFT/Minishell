@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/15 20:46:07 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/16 01:11:28 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	try_builtins(t_jobs *job, char **env, char ***temp_vars)
 		return (caught_pwd(job, env));
 /* 	else if (ft_strcmp(job->job[0], "unset") == 0)//has to unset temp_vars as well
 		return (caught_unset(job, env, &temp_vars)); */
-	else if (ft_strchr(job->job[0], '='))//has to unset temp_vars as well
+	else if (ft_strchr(job->job[0], '='))
 		return (declare_temp_vars(job, env, temp_vars));
 /* 	else if (ft_strcmp(job->job[0], "export") == 0)//"hello=world && export hello=mi", which stays?
 		return (caught_export(job, env, temp_vars)); */

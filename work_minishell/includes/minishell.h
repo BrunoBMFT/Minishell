@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/15 20:45:34 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/16 01:17:49 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,11 @@ typedef struct s_jobs
 {
 	int				type;
 	char			**job;
+	char			*input;
+	char			*output;
+	int				append;
+	int				heredoc;
+	int				mult_input_flag;
 	struct s_jobs	*next;
 }				t_jobs;
 
@@ -109,11 +114,11 @@ int		new_fork(void);
 void	panic(char *s);
 
 //redirections
-void	redirections(t_jobs *job);
 void	update_input(t_jobs *job);
 int		update_output(t_jobs *job, char **env, char ***temp_vars);
 int		append_to_file(t_jobs *job, char **env, char ***temp_vars);
-void	start_heredoc(t_jobs *curr);
+void	handle_heredoc(char *delimiter);
+void    print_file(int fd);
 
 //free:
 void	clear_list(t_token **lst);

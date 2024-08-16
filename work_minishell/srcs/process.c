@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/15 20:41:15 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/16 01:28:14 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@ int	child_process(t_jobs *job, char **env, char ***temp_vars)
 	if (pid == 0)
 	{
 		close(fd[READ]);
-		dup2(fd[WRITE], STDOUT_FILENO);
+		dup2(fd[WRITE], STDOUT_FILENO);//error check
 		close(fd[WRITE]);
 		if (try_builtins(job, env, temp_vars) == 200)
 			execute_job(job->job, env);
 	}
 	close(fd[WRITE]);
-	dup2(fd[READ], STDIN_FILENO);
+	dup2(fd[READ], STDIN_FILENO);//error check
 	close(fd[READ]);
 	waitpid(pid, &status, 0);
 	return (WEXITSTATUS(status));
