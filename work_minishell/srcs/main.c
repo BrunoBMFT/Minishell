@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/15 20:44:49 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/18 03:26:51 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,14 @@ if (secondquote(line))
 		add_history(line);
 		jobs = build(line, env, status);//find better way to send status
 		curr = jobs;
-		status = start_executor(jobs, env, &temp_vars);
-		if (temp_vars && temp_vars[0])
-			printf("temp_vars: %s\n", temp_vars[0]);
-//		clear_jobs(&jobs);
+		status = start_executor(curr, env, &temp_vars);
+/* 		int i = 0;
+		while (temp_vars && temp_vars[i])
+		{
+			printf("temp_vars %d: %s\n", i, temp_vars[i]);
+			i++;
+		} */
+		clear_jobs(&jobs);
 	}
 	return (0);
 }

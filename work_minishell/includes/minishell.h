@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/16 01:17:49 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/18 04:34:04 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,8 @@ int		caught_echo(t_jobs *job);
 int		caught_cd(t_jobs *job, char **env);
 int		caught_pwd(t_jobs *job, char **env);
 int		caught_env(t_jobs *job, char **env);
-int		caught_unset(t_jobs *job, char **env, char **temp_vars);
-int		caught_export(t_jobs *job, char **env, char **temp_vars);
+int		caught_unset(t_jobs *job, char **env, char ***temp_vars);
+//int		caught_export(t_jobs *job, char **env, char ***temp_vars);
 
 //prompt:
 char	*update_prompt(void);

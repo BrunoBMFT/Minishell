@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:18:01 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/16 00:59:31 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/17 16:48:07 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,6 @@ void	clear_jobs(t_jobs **lst)
 	while (current)
 	{
 		temp = current->next;
-		if (current->job[0])
-			free(current->job[0]);
-		if (current->job[1])
-			free(current->job[1]);
 		if (current->job)
 			free_array(current->job);
 		free(current);

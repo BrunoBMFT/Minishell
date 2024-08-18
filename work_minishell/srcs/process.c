@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/16 01:28:14 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/18 03:27:58 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int	simple_process(t_jobs *job, char **env, char ***temp_vars)
 		if (try_builtins(job, env, temp_vars) == 200)
 			execute_job(job->job, env);//has to take in temp_vars as well, stuff like unset?
 	}
+	
 	waitpid(pid, &status, 0);
 	return (WEXITSTATUS(status));
 }
