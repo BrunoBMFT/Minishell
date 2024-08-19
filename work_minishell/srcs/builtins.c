@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/19 02:12:20 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/19 18:56:52 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,7 @@ void	export_temp(char *var, char ***env, char ***temp_vars)
 	var = ft_strjoin(var, "=");//joins = sign
 	temp = ft_strjoin(var, temp);//joins var name and tempenv var value
 	(*env)[i] = ft_strdup(temp); */
-	var = ft_strjoin(var, "=");//use vars[ft_strlen]
-	temp = ft_strjoin(var, ft_getenv(var, *temp_vars));
+	temp = ft_strjoin3(var, "=", ft_getenv(var, *temp_vars));//use vars[ft_strlen], error check
 	if (!is_in_env(temp, env))//error check
 		(*env)[i] = ft_strdup(temp);//error check
 }
@@ -113,18 +112,15 @@ int	caught_export(t_jobs *job, char ***env, char ***temp_vars)
 		}
 		else
 		{
-			export_temp(job->job[i], env, temp_vars);//error check
-
-/* 			//not
+//			export_temp(job->job[i], env, temp_vars);//error check
+			//not
 			job->job[i] = ft_strjoin(job->job[i], "=");//use vars[ft_strlen]
 			temp = ft_strjoin(job->job[i], ft_getenv(job->job[i], *temp_vars));
 			if (!is_in_env(temp, env))//error check
-				(*env)[i] = ft_strdup(temp);//error check */
+				(*env)[i] = ft_strdup(temp);//error check
 		}
 		i++;
 	}
-	if ((*env)[32])
-		printf("inside: %s\n", (*env)[32]);
 	exit (0);//env doesnt save
 }
 /* 
@@ -203,40 +199,49 @@ int	caught_unset(t_jobs *job, char ***env, char ***temp_vars)//segfault if var d
 	exit (0);
 }
 // cd
-void	cd_update_aux1(char **env, bool when)
+char	*cd_update_aux1(char *env_var, bool when)
 {
 	char	cwd[PATH_MAX];
+	char	*ret;
 	char	*temp;
-	int	i;
 	
-	i = 0;
+	getcwd(cwd, PATH_MAX);//error check
+	if (when == BEFORE)
+		temp = ft_strjoin("OLDPWD=", cwd);//error check
+	else
+		temp = ft_strjoin("PWD=", cwd);//error check
+	ret = temp;
+	return (ret);
+/* 	int	i = 0;
 	if (when == BEFORE)
 	{
 		while (env[i] && ft_strncmp(env[i], "OLDPWD", 6))//fix oldpwd when cd fails
 			i++;
 		getcwd(cwd, PATH_MAX);//error check
 		temp = ft_strjoin("OLDPWD=", cwd);//error check
-		env[i] = temp;
+		env[i] = ft_strdup(temp);
 	}
 	else if (when == AFTER)
 	{
 
-		while (env[i] && ft_strncmp(env[i], "PWD", 3))
+		while (env[i] && ft_strncmp(env[i], "PWD", 3))//use envnamecmp
 			i++;
 		getcwd(cwd, PATH_MAX);//error check
 		temp = ft_strjoin("PWD=", cwd);//error check
-		env[i] = temp;
-	}
+		env[i] = ft_strdup(temp);
+	} */
 }
 
 // TODO cd can happen with just ..
-// * check if just **env works, should because it doesnt exit process
 int	caught_cd(t_jobs *job, char **env)//cd supposedly cant exit process, needs to be called before fork
 {//check return values
 	char 	*directory;
 	char	*error;
 	
-	cd_update_aux1(env, BEFORE);
+	int i = 0;
+	while (env[i] && ft_strncmp(env[i], "OLDPWD", 6))
+		i++;
+	env[i] = cd_update_aux1(env[i], BEFORE);
  	if (!job->job[1])
 	{
 		if (chdir(ft_getenv("HOME", env)) < 0)//return this
@@ -253,7 +258,10 @@ int	caught_cd(t_jobs *job, char **env)//cd supposedly cant exit process, needs t
 			return (1);// * need to fix perror
 		}
 	}
-	cd_update_aux1(env, AFTER);
+	 i = 0;
+	while (env[i] && ft_strncmp(env[i], "PWD", 3))
+		i++;
+	env[i] = cd_update_aux1(env[i], AFTER);
 	return (0);
 }
 //env

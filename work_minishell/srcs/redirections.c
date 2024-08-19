@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/19 02:05:38 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/19 17:56:36 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void    update_input(t_jobs *job)
     close (fd);
 }
 
-int update_output(t_jobs *job, char **env, char ***temp_vars)
+int update_output(t_jobs *job, char ***env, char ***temp_vars)
 {
     int fd;
     int status;
@@ -79,7 +79,7 @@ int update_output(t_jobs *job, char **env, char ***temp_vars)
     return (status);
 }
 
-int    append_to_file(t_jobs *job, char **env, char ***temp_vars) 
+int    append_to_file(t_jobs *job, char ***env, char ***temp_vars) 
 {
     int fd;
     int status;

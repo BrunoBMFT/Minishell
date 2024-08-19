@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_getenv.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 18:16:48 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/10 13:15:39 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/19 17:18:55 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ char	*ft_getenv(char *str, char **env)
 		temp = ft_strndup(env[i], len);
 		if (!temp)
 			return (NULL);
-		if (ft_strncmp(str, temp, ft_strlen(temp)) == 0)
+		if (ft_strcmp(str, temp) == 0)
 			return (free (temp), ft_env_var(env[i]));
 		free (temp);
 		i++;

@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/16 01:03:24 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/19 17:19:05 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-// $? $$
+
 char	*expand(char *str, char **env, char **temp_vars, int status)
 {
 	t_var_holder	h;
@@ -151,13 +151,12 @@ char	*expansion(char *str, t_var_holder *h, char **env, char **temp_vars, int st
 		h->expanded = ft_strdup("$");
 	else if (str[h->i] == '$')
 	{
-		h->expanded = ft_itoa(getpid());//in this part, receive pid and printf pid
+		h->expanded = ft_itoa(getpid());
 		h->i++;
 	}
 	else if (str[h->i] == '?')
 	{
 		h->expanded = ft_itoa(status);
-//		h->expanded = ft_itoa(getpid());//in this part, receive pid and printf pid
 		h->i++;
 	}
 	else

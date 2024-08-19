@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/19 01:58:38 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/19 17:36:02 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,15 @@ int	main(int ac, char **av, char **envp)
 	while (1)
 	{
 		prompt = update_prompt();
-/* 		
-if (set_signal(SIGINT, ctrl_c_idle) < 0 || set_signal(SIGQUIT, SIG_IGN) < 0)
-			clean_exit(jobs, line, prompt); */
+/* 		if (set_signal(SIGINT, ctrl_c_idle) < 0 || set_signal(SIGQUIT, SIG_IGN) < 0)
+				clean_exit(jobs, line, prompt); */
 		line = readline(prompt);
 		free(prompt);
 		if (!line || !line[0])
 			continue ;//free line?
 		line = parse_quotes(line);
 /* 		
-if (secondquote(line))
+	if (secondquote(line))
 		{
 			free(line);
 			ft_printf("error: unclosed quote\n");

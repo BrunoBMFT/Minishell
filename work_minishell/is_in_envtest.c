@@ -59,7 +59,6 @@ char	*ft_strdup(const char *s1)
 	}
 	dest[i] = '\0';
 	return (dest);
-	free(dest);
 }
 int	len_to_equal(char *str)
 {

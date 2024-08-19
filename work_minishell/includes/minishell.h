@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/19 02:06:00 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/19 17:55:32 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,8 @@ char *unquote_and_direct(char *str, char **env, char **temp_vars, int status);
 
 //executor
 int		start_executor(t_jobs *job, char **env, char ***temp_vars);
-int		child_process(t_jobs *job, char **env, char ***temp_vars);
-int		simple_process(t_jobs *job, char **env, char ***temp_vars);
+int		child_process(t_jobs *job, char ***env, char ***temp_vars);
+int		simple_process(t_jobs *job, char ***env, char ***temp_vars);
 int	execute_job(char **command, char **env);
 int		new_fork(void);
 void	panic(char *s);
@@ -114,8 +114,8 @@ int		caught_unset(t_jobs *job, char ***env, char ***temp_vars);
 
 //redirections
 void	update_input(t_jobs *job);
-int		update_output(t_jobs *job, char **env, char ***temp_vars);
-int		append_to_file(t_jobs *job, char **env, char ***temp_vars);
+int		update_output(t_jobs *job, char ***env, char ***temp_vars);
+int		append_to_file(t_jobs *job, char ***env, char ***temp_vars);
 void	handle_heredoc(char *delimiter);
 void    print_file(int fd);
 

@@ -3,27 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   process_aux.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/16 01:10:49 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/19 17:46:06 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
 
 void	ft_perror_exit(char *str)//remove
 {
 	write(2, "minishell: ", 11);
 	perror (str);
 }
-// ! RENAME
-int find_command_path(char **cmd, char **env)
+
+int execute_command_path(char **cmd, char **env)
 {
 	char	**path_array;
 	char	*path;
-	char	*partial;//remove?
 	int		i;
 
 	path = ft_getenv("PATH", env);//error check
@@ -34,9 +32,7 @@ int find_command_path(char **cmd, char **env)
 	i = 0;
 	while (path_array[i])
 	{
-		partial = ft_strjoin(path_array[i], "/");//error check
-		path = ft_strjoin(partial, cmd[0]);
-		free (partial);
+		path = ft_strjoin3(path_array[i], "/", cmd[0]);//error check
 		if (access(path, F_OK) == 0)
 		{
 			free_array(path_array);
@@ -60,8 +56,8 @@ char	*fix_cmd(char *cmd)
 		newcmd = cmd;
 	return (newcmd);
 }
-// ! RENAME
-int find_executable_path(char **cmd, char **env)//find better way to update command
+
+int execute_executable_path(char **cmd, char **env)//find better way to update command
 {
 	char	*path = NULL;
 	char	cwd[PATH_MAX];
@@ -72,16 +68,20 @@ int find_executable_path(char **cmd, char **env)//find better way to update comm
 	if (*cmd[0] == '~')
 	{
 		dir = ft_getenv("HOME", env);//error check
-		path = ft_strjoin(dir, "/");//error check
-		path = ft_strjoin(path, *cmd + 2);//error check
+		path = ft_strjoin3(dir, "/", *cmd + 2);//error check
+	}
+	else if (*cmd[0] == '/')
+	{
+		dir = *cmd;
+		path = "/";// TODO permission denied?
 	}
 	else
 	{
 		dir = getcwd(cwd, PATH_MAX);//error check
-		path = ft_strjoin(dir, "/");//error check
-		path = ft_strjoin(path, *cmd);//error check
+		path = ft_strjoin3(dir, "/", *cmd);//error check
 	}
 	*cmd = fix_cmd(*cmd);//error check
+	printf("cmd: %s\npath: %s\n", *cmd, path);
 	if (access(path, F_OK) == 0)
 		execve(path, cmd, env);//error check
 	ft_perror_exit(cmd[0]);
@@ -96,10 +96,9 @@ int	execute_job(char **command, char **env)
 	if (!command[0])
 		return (ft_printf("job error\n"), 126);//fix the error return, test with "" as input
 	if (ft_strchr(command[0], '/'))
-		status = find_executable_path(&command[0], env);
+		status = execute_executable_path(&command[0], env);
 	else
-		status = find_command_path(&command[0], env);
-	//! DECLARING VARIABLES HERE? 
+		status = execute_command_path(&command[0], env);
 //	free_array(command);
 	exit (0);//free fds
 }

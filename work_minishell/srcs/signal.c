@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/10 13:14:04 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/19 14:58:09 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/* #include "../includes/minishell.h"
+#include "../includes/minishell.h"
 
-void	ctrl_c_idle(int sig)
+/* void	ctrl_c_idle(int sig)
 {
 	printf("\n");
 	rl_on_new_line();

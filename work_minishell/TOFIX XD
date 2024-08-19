@@ -1,0 +1,2 @@
+fix absolute path (/bin/ls)
+cd includes && echo $PWD
