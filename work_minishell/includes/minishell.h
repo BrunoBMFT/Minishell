@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/18 04:34:04 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/19 02:06:00 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,15 +85,6 @@ typedef struct s_jobs
 	struct s_jobs	*next;
 }				t_jobs;
 
-//builtins:
-int		try_builtins(t_jobs *job, char **env, char ***temp_vars);
-int		caught_echo(t_jobs *job);
-int		caught_cd(t_jobs *job, char **env);
-int		caught_pwd(t_jobs *job, char **env);
-int		caught_env(t_jobs *job, char **env);
-int		caught_unset(t_jobs *job, char **env, char ***temp_vars);
-//int		caught_export(t_jobs *job, char **env, char ***temp_vars);
-
 //prompt:
 char	*update_prompt(void);
 
@@ -112,6 +103,14 @@ int		simple_process(t_jobs *job, char **env, char ***temp_vars);
 int	execute_job(char **command, char **env);
 int		new_fork(void);
 void	panic(char *s);
+//builtins:
+int		try_builtins(t_jobs *job, char ***env, char ***temp_vars);
+int		caught_echo(t_jobs *job);
+int		caught_cd(t_jobs *job, char **env);
+int		caught_pwd(t_jobs *job, char ***env);
+int		caught_env(t_jobs *job, char ***env);
+int		caught_unset(t_jobs *job, char ***env, char ***temp_vars);
+//int		caught_export(t_jobs *job, char **env, char ***temp_vars);
 
 //redirections
 void	update_input(t_jobs *job);

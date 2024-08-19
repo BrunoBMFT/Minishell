@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/18 03:27:58 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/19 02:06:42 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	child_process(t_jobs *job, char **env, char ***temp_vars)
 		close(fd[READ]);
 		dup2(fd[WRITE], STDOUT_FILENO);//error check
 		close(fd[WRITE]);
-		if (try_builtins(job, env, temp_vars) == 200)
+		if (try_builtins(job, &env, temp_vars) == 200)
 			execute_job(job->job, env);
 	}
 	close(fd[WRITE]);
@@ -43,16 +43,19 @@ int	simple_process(t_jobs *job, char **env, char ***temp_vars)
 	int	status;
 
 	if (ft_strcmp(job->job[0], "cd") == 0)//not really working with multiple jobs
-		return (caught_cd(job, env));
+		return (caught_cd(job, env));//also has to work with just ..
 	status = 0;
 	pid = new_fork();
 	if (pid == 0)
 	{
-		if (try_builtins(job, env, temp_vars) == 200)
+		if (try_builtins(job, &env, temp_vars) == 200)
 			execute_job(job->job, env);//has to take in temp_vars as well, stuff like unset?
 	}
-	
 	waitpid(pid, &status, 0);
+	if (env[31])
+		printf("outside b4: %s\n", env[31]);
+	if (env[32])
+		printf("outside: %s\n", env[32]);
 	return (WEXITSTATUS(status));
 }
 void	panic(char *s)
