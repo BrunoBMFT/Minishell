@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstiter.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 15:56:39 by yohan             #+#    #+#             */
-/*   Updated: 2024/07/10 20:30:52 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/20 19:06:19 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int	main(void)
 	int len = ft_strlen(buffer);
 	t_list *list;
 
-	while (i <= 5) //assigning values to each node content
+	while (i <= 5)
 	{
 		snprintf(buffer, sizeof(buffer), "node#%d: abcd", i);
 		char *content = (char *) malloc (sizeof (char) * len + 1);
@@ -107,7 +107,7 @@ int	main(void)
 	}
 
 	t_list *currentNode = list;
-	while (currentNode) //reading each node inside t_list
+	while (currentNode)
 	{
 		printf ("%s\n", (char *)currentNode -> content);
 		currentNode = currentNode -> next;
@@ -117,7 +117,6 @@ int	main(void)
 
 	currentNode = list;
 	while (currentNode)
-	//reading each node inside t_list after modifying content
 	{
 		printf ("%s\n", (char *)currentNode -> content);
 		currentNode = currentNode -> next;

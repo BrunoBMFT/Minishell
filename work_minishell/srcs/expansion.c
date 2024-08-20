@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/19 17:19:05 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/20 19:28:16 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	*no_quotes(char *str, t_var_holder *h, char **env, char **temp_vars, int st
 {
 	h->temp = ft_strndup(str + h->start, h->i - h->start);
 	if (!h->temp)
-		return h->new;
+		return (h->new);
 	h->before = expand(h->temp, env, temp_vars, status);
 	free(h->temp);
 	if (!h->before)

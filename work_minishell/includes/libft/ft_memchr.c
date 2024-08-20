@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 12:42:05 by yohan             #+#    #+#             */
-/*   Updated: 2024/07/10 20:30:47 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/20 19:06:25 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,5 @@ int main (void)
 
 	x = "absdurbuivbasliubviruueivb";
 	printf ("%s\n", (char *) ft_memchr(x, 'l', 15));
-	//printf ("%s", (char *)memchr(x, 'l', 15));
 }
  */

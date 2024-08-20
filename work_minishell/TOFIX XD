@@ -1,2 +1,19 @@
+start testing every malloc functions with NULLS and see if everything is freed and protected
+
 fix absolute path (/bin/ls)
 cd includes && echo $PWD
+
+
+builtins doesnt need to exit since it doesnt need fork, unless it is a pipe command
+	(builtins to run before new_fork)
+	(builtins should just return, and if they return 200, fork and run execve)
+cd to builtins, since it returns
+
+make env be sent again as char **env
+
+expander needs to take in temp_vars
+
+
+test things like "var=hello | echo $var" vs. "var=hello && echo $var"
+
+rename variables

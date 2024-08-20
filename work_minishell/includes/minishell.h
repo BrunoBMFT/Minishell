@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/19 17:55:32 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/20 19:22:29 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-static volatile sig_atomic_t	sig = 0;
+static volatile sig_atomic_t	sig = 0;//global var needs to start with g_
 
 # define WRITE 1
 # define READ 0
@@ -94,30 +94,32 @@ char	*ft_getenv(char *str, char **env);
 char	*expand_env_vars(char *input, char **env, char **temp_vars);
 char	*no_expansion(char *str, t_var_holder h);
 char	*expansion(char *str, t_var_holder *h, char **env, char **temp_vars, int status);
-char *unquote_and_direct(char *str, char **env, char **temp_vars, int status);
+char	*unquote_and_direct(char *str, char **env, char **temp_vars, int status);
 
 //executor
 int		start_executor(t_jobs *job, char **env, char ***temp_vars);
-int		child_process(t_jobs *job, char ***env, char ***temp_vars);
-int		simple_process(t_jobs *job, char ***env, char ***temp_vars);
-int	execute_job(char **command, char **env);
+int		child_process(t_jobs *job, char **env, char ***temp_vars);
+int		simple_process(t_jobs *job, char **env, char ***temp_vars);
+int		execute_job(char **command, char **env);
+int		execute_executable_path(char **cmd, char **env);
+int		execute_command_path(char **cmd, char **env);
 int		new_fork(void);
 void	panic(char *s);
 //builtins:
-int		try_builtins(t_jobs *job, char ***env, char ***temp_vars);
+int		try_builtins(t_jobs *job, char **env, char ***temp_vars, bool pipe);
 int		caught_echo(t_jobs *job);
 int		caught_cd(t_jobs *job, char **env);
-int		caught_pwd(t_jobs *job, char ***env);
-int		caught_env(t_jobs *job, char ***env);
-int		caught_unset(t_jobs *job, char ***env, char ***temp_vars);
+int		caught_pwd(t_jobs *job, char **env);
+int		caught_env(t_jobs *job, char **env);
+int		caught_unset(t_jobs *job, char **env, char ***temp_vars);
 //int		caught_export(t_jobs *job, char **env, char ***temp_vars);
 
 //redirections
 void	update_input(t_jobs *job);
-int		update_output(t_jobs *job, char ***env, char ***temp_vars);
-int		append_to_file(t_jobs *job, char ***env, char ***temp_vars);
+int		update_output(t_jobs *job, char **env, char ***temp_vars);
+int		append_to_file(t_jobs *job, char **env, char ***temp_vars);
 void	handle_heredoc(char *delimiter);
-void    print_file(int fd);
+void	print_file(int fd);
 
 //free:
 void	clear_list(t_token **lst);

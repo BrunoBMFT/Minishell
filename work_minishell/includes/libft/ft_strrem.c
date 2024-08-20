@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strrem.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 14:25:08 by bruno             #+#    #+#             */
-/*   Updated: 2024/07/24 04:03:21 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/20 19:06:52 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strrem(char *str, char *to_remove)//check invalids
+char	*ft_strrem(char *str, char *to_remove)// TODO check invalids
 {
 	int		i;
 	int		j;

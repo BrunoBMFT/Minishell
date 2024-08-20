@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/19 17:36:02 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/20 19:12:02 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,17 +40,11 @@ int	main(int ac, char **av, char **envp)
 			ft_printf("error: unclosed quote\n");
 			continue ;
 		} */
-		check_exit(line);//technically a builtin
 		add_history(line);
-		jobs = build(line, env, status);//find better way to send status
+		//find better way to send status to build, since it's being sent everywhere
+		jobs = build(line, env, status);
 		curr = jobs;
 		status = start_executor(curr, env, &temp_vars);
-/* 		int i = 0;
-		while (temp_vars && temp_vars[i])
-		{
-			printf("temp_vars %d: %s\n", i, temp_vars[i]);
-			i++;
-		} */
 		clear_jobs(&jobs);
 	}
 	return (0);

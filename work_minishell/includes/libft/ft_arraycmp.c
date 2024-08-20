@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_arraycmp.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 16:51:17 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/10 13:15:53 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/20 19:05:59 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-//0 is true
+
 int	ft_arraycmp(char **arr1, char **arr2)
 {
 	int	i;

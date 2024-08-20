@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 12:43:06 by yohan             #+#    #+#             */
-/*   Updated: 2024/08/19 15:40:58 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/20 19:23:34 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ char	*ft_strjoin3(char const *s1, char const *s2, char const *s3)
 	i = -1;
 	j = 0;
 	k = 0;
-	full = ft_calloc((ft_strlen(s1) + ft_strlen(s2) + ft_strlen(s3)) + 1, sizeof(char));
+	full = ft_calloc((ft_strlen(s1)
+				+ ft_strlen(s2) + ft_strlen(s3)) + 1, sizeof(char));
 	if (full == NULL)
 		return (NULL);
 	while (s1 && s1[++i])

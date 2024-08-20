@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   smooth_usrexp.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/10 13:22:39 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/20 19:20:17 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-//make function that calculates space for new string. 
-//when a char is equal to the character we want to cehck for, it will 
-//check if the char before is a space. if its not, buf size ++ else,
-// iterate until weve passed the characters we are searching for.
-// if the char after the last char 
-//we are searching for a space, continue. else, buf size++;
+/* make function that calculates space for new string. 
+when a char is equal to the character we want to cehck for, it will 
+check if the char before is a space. if its not, buf size ++ else,
+iterate until weve passed the characters we are searching for.
+if the char after the last char 
+we are searching for a space, continue. else, buf size++; */
 
 int	count(char *str)
 {

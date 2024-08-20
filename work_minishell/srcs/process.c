@@ -6,20 +6,20 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/19 18:57:00 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/20 19:19:44 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	child_process(t_jobs *job, char ***env, char ***temp_vars)
+int	child_process(t_jobs *job, char **env, char ***temp_vars)
 {
 	pid_t	pid;
 	int		fd[2];
 	int		status = 0;
 
 	if (ft_strcmp(job->job[0], "cd") == 0)
-		return (caught_cd(job, *env));
+		return (caught_cd(job, env));
 	pipe(fd);
 	pid = new_fork();
 	if (pid == 0)
@@ -27,8 +27,8 @@ int	child_process(t_jobs *job, char ***env, char ***temp_vars)
 		close(fd[READ]);
 		dup2(fd[WRITE], STDOUT_FILENO);//error check
 		close(fd[WRITE]);
-		if (try_builtins(job, env, temp_vars) == 200)
-			execute_job(job->job, *env);
+		if (try_builtins(job, env, temp_vars, true) == 200)
+			execute_job(job->job, env);
 	}
 	close(fd[WRITE]);
 	dup2(fd[READ], STDIN_FILENO);//error check
@@ -37,19 +37,22 @@ int	child_process(t_jobs *job, char ***env, char ***temp_vars)
 	return (WEXITSTATUS(status));
 }
 
-int	simple_process(t_jobs *job, char ***env, char ***temp_vars)
+int	simple_process(t_jobs *job, char **env, char ***temp_vars)
 {
 	pid_t	pid;
 	int	status;
 
-	if (ft_strcmp(job->job[0], "cd") == 0)//not really working with multiple jobs
-		return (caught_cd(job, *env));//also has to work with just ..
-	status = 0;
+	status = try_builtins(job, env, temp_vars, false);
+	if (status != 200)
+		return (WEXITSTATUS(status));
 	pid = new_fork();
 	if (pid == 0)
 	{
-		if (try_builtins(job, env, temp_vars) == 200)
-			execute_job(job->job, *env);//has to take in temp_vars as well, stuff like unset?
+/* 		bash builtins like echo recieve shell variables (temp_vars), we can check with echo
+		execve and others wont be able to have those variables, we can check with printenv
+		so maybe no temp_vars needs to be sent in, 
+			as execve doesnt take it, unless we have to expand it before */
+		execute_job(job->job, env);
 	}
 	waitpid(pid, &status, 0);
 	return (WEXITSTATUS(status));

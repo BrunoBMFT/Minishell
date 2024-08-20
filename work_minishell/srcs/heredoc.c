@@ -3,58 +3,58 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/16 00:58:51 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/20 19:11:22 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/minishell.h"
+/* 
+add heredoc signal handling
 
-//add heredoc signal handling
+void    heredoc(char *str)
+{
+    int fd;
+    char *line;
 
-// void    heredoc(char *str)
-// {
-//     int fd;
-//     char *line;
+    if ((fd = open(".heredoc", O_CREAT | O_RDWR, 0644)) < 0)
+    {
+        perror("heredoc misconduct");
+        return ;
+    }
+    while (1)
+    {
+        line = readline("heredoc> ");
+        if (ft_strcmp(str, line) == 0)
+        {
+            free(line);
+            break ;
+        }
+        ft_putendl_fd(line, fd);
+        free(line);
+    }
+    close (fd);
+}
 
-//     if ((fd = open(".heredoc", O_CREAT | O_RDWR, 0644)) < 0)
-//     {
-//         perror("heredoc misconduct");
-//         return ;
-//     }
-//     while (1)
-//     {
-//         line = readline("heredoc> ");
-//         if (ft_strcmp(str, line) == 0)
-//         {
-//             free(line);
-//             break ;
-//         }
-//         ft_putendl_fd(line, fd);
-//         free(line);
-//     }
-//     close (fd);
-// }
-
-// void    start_heredoc(t_jobs *curr)
-// {
-//     int fd;
-// 	char *line;
+void    start_heredoc(t_jobs *curr)
+{
+    int fd;
+	char *line;
     
-//     heredoc(curr->input);
-// 	fd = open(".heredoc", O_RDONLY);
-//     if (fd < 0)
-//     {
-//         perror("error opening heredoc fd");
-//         return ;
-//     }
-//     if (dup2(fd, STDIN_FILENO) < 0)
-//        perror("heredoc dup2 error");
-//     print_file(fd);
-//     close (fd);
-// }
+    heredoc(curr->input);
+	fd = open(".heredoc", O_RDONLY);
+    if (fd < 0)
+    {
+        perror("error opening heredoc fd");
+        return ;
+    }
+    if (dup2(fd, STDIN_FILENO) < 0)
+       perror("heredoc dup2 error");
+    print_file(fd);
+    close (fd);
+} */
 
 void handle_heredoc(char *delimiter)
 {

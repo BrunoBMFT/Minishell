@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/19 17:46:06 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/20 19:17:15 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,16 @@ int execute_command_path(char **cmd, char **env)
 	int		i;
 
 	path = ft_getenv("PATH", env);//error check
-	path_array = ft_split(path, ':');//error check
+	path_array = ft_split(path, ':');
 	if (!path_array)
-		exit (0);//exit code
+		exit (127);//free path_array
 	free (path);
 	i = 0;
 	while (path_array[i])
 	{
-		path = ft_strjoin3(path_array[i], "/", cmd[0]);//error check
+		path = ft_strjoin3(path_array[i], "/", cmd[0]);
+		if (!path)
+			return (free_array(path_array), 0);//free path
 		if (access(path, F_OK) == 0)
 		{
 			free_array(path_array);
@@ -51,9 +53,11 @@ char	*fix_cmd(char *cmd)
 	char	*newcmd;
 
 	if (cmd[0] == '~')
-		newcmd = ft_strjoin(".", cmd + 1);//replaces the ~ for a . //error check
+		newcmd = ft_strjoin(".", cmd + 1);//replaces the ~ for a .
 	else
 		newcmd = cmd;
+	if (!newcmd)
+		return (NULL);//free newcmd
 	return (newcmd);
 }
 
@@ -63,13 +67,12 @@ int execute_executable_path(char **cmd, char **env)//find better way to update c
 	char	cwd[PATH_MAX];
 	char	*dir;
 	
-	//use absolute path from beginning
-
 	if (*cmd[0] == '~')
 	{
 		dir = ft_getenv("HOME", env);//error check
 		path = ft_strjoin3(dir, "/", *cmd + 2);//error check
 	}
+	//fix absolute paths -> "~/", "/", ".", ".."
 	else if (*cmd[0] == '/')
 	{
 		dir = *cmd;
@@ -77,20 +80,23 @@ int execute_executable_path(char **cmd, char **env)//find better way to update c
 	}
 	else
 	{
-		dir = getcwd(cwd, PATH_MAX);//error check
-		path = ft_strjoin3(dir, "/", *cmd);//error check
+		getcwd(cwd, PATH_MAX);//error check
+		path = ft_strjoin3(cwd, "/", *cmd);//error check
+		if (!path)
+			return (0);//free path
 	}
-	*cmd = fix_cmd(*cmd);//error check
+	*cmd = fix_cmd(*cmd);
+	if (!*cmd)
+		return (0);//free cmd?
 	printf("cmd: %s\npath: %s\n", *cmd, path);
 	if (access(path, F_OK) == 0)
-		execve(path, cmd, env);//error check
-	ft_perror_exit(cmd[0]);
+		execve(path, cmd, env);//error check?
+	ft_perror_exit(cmd[0]);//check if it's correct
 	exit (127);
 }
 
 int	execute_job(char **command, char **env)
 {
-//	char	*path;
 	int status = 0;
 
 	if (!command[0])
@@ -99,7 +105,8 @@ int	execute_job(char **command, char **env)
 		status = execute_executable_path(&command[0], env);
 	else
 		status = execute_command_path(&command[0], env);
-//	free_array(command);
-	exit (0);//free fds
+//	if it returns, everything needs to be freed
+//	free fds in case of error
+	exit (127);//check exit code
 }
 

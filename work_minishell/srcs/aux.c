@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:15:54 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/19 17:35:33 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/20 19:25:20 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,40 @@
 
 char	*update_prompt(void)//make better
 {
-	char	cwd[100];//check size
+	char	cwd[PATH_MAX];
 	char	*dir;
 	char	*prompt;
 	char	**folders;
 	int		i;
-	
-	dir = getcwd(cwd, sizeof(cwd));//error check
-	folders = ft_split(dir, '/');//error check
+
+	getcwd(cwd, PATH_MAX);//error check clean exit
+	folders = ft_split(cwd, '/');
+	if (!folders)
+		return (NULL);//free folders
 	i = 0;
 	while (folders[i])
 		i++;
-	prompt = folders[i - 1];
-	prompt = ft_strjoin(prompt, "$ ");//error check
+	prompt = ft_strjoin(folders[i - 1], "$ ");//error check
 	free_array(folders);
+	if (!prompt)
+		return (free_array(folders), NULL);
 	return (prompt);
+}
+
+void print_jobs(t_jobs *jobs)/*to remove*/
+{
+	t_jobs	*curr;
+	int		i = 0;
+
+	curr = jobs;
+	while (curr != NULL) {
+		int i = 0;
+		while (curr->job && curr->job[i]) {
+			printf("job %d: %s\n", i, curr->job[i]);
+			i++;
+		}
+		curr = curr->next;
+	}
 }
 
 /* void print_jobs(t_jobs *jobs) 
