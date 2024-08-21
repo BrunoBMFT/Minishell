@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/21 18:10:14 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/21 19:00:19 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,13 +92,13 @@ int	start_executor(t_jobs *job, char **env, char ***temp_vars)
 	int saved_stdout = dup(STDOUT_FILENO);
 	int redirected_input;
 	int redirected_output;
- 	if (set_signal(SIGINT, ctrl_c) < 0 || set_signal(SIGQUIT, sigquit) < 0)
+/*  	if (set_signal(SIGINT, ctrl_c) < 0 || set_signal(SIGQUIT, sigquit) < 0)
 	{
 		ft_printf("Error: signal\n");
 		clear_jobs(&job);
 		free_array(env);
 		exit(1);
-	}
+	} */
 	while (job)
 	{
 		if (job->input)
@@ -125,7 +125,7 @@ int	start_executor(t_jobs *job, char **env, char ***temp_vars)
 		}
 		if (job->next && job->next->type == PIPE)
 		{
-			child_process(job, env, temp_vars);
+			status = child_process(job, env, temp_vars);
 			job = job->next->next;
 			continue;
 		}
@@ -173,5 +173,5 @@ int	start_executor(t_jobs *job, char **env, char ***temp_vars)
 		remove(".heredoc");
 	close(saved_stdin);
 	close(saved_stdout);
-	return status;
+	return (status);
 }

@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:18:01 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/21 17:56:42 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/21 18:31:58 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ void	clear_jobs(t_jobs **lst)
 		temp = current->next;
 		if (current->job)
 			free_array(current->job);
+		free(current->input);
+		free(current->output);
 		free(current);
 		current = temp;
 	}

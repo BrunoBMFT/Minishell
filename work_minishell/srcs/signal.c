@@ -6,12 +6,12 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/21 18:10:26 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/21 18:28:12 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
+/* 
 void	ctrl_c_idle(int sig)
 {
 	printf("\n");
@@ -43,4 +43,4 @@ int	set_signal(int sig, void f(int))
 		return (-1);
 
 	return (0);
-}
+} */

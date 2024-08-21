@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:15:54 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/20 19:25:20 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/21 18:54:51 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,27 @@ void print_jobs(t_jobs *jobs)/*to remove*/
 		}
 		curr = curr->next;
 	}
+}
+
+char	**dup_envp(char **envp)//maybe put this one?
+{
+	//have this tell if env -i has happened, print funny message
+	char	**new_env;
+	char	cwd[PATH_MAX];
+	int		i;
+
+	new_env = envp;
+	i = 0;
+	while (envp[i])//error check
+	{
+		if (ft_strncmp(envp[i], "SHELL=", 6) == 0)
+			break ;
+		i++;
+	}
+	getcwd(cwd, PATH_MAX);//error check
+	new_env[i] = ft_calloc(sizeof(char), ft_strlen(cwd));//error check
+	new_env[i] = ft_strjoin("SHELL=", cwd);
+	return (new_env);
 }
 
 /* void print_jobs(t_jobs *jobs) 

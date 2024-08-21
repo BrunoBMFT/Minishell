@@ -1,19 +1,26 @@
-start testing every malloc functions with NULLS and see if everything is freed and protected
+exit codes not saving
 
 fix absolute path (/bin/ls)
 cd includes && echo $PWD
 
+if job.job1, does pwd still print?
+
+start testing every malloc functions with NULLS and see if everything is freed and protected
 
 builtins doesnt need to exit since it doesnt need fork, unless it is a pipe command
 	(builtins to run before new_fork)
 	(builtins should just return, and if they return 200, fork and run execve)
-cd to builtins, since it returns
 
-make env be sent again as char **env
+variable expansion has to happen every job
 
-expander needs to take in temp_vars
-
+temp_vars has to be ***?
 
 test things like "var=hello | echo $var" vs. "var=hello && echo $var"
 
+take care of env-i
+
 rename variables
+
+check builtin order
+
+need to take care of .. for cd?

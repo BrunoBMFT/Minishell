@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/21 18:12:35 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/21 19:07:32 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ char	*expand_env_vars(char *input, char **env, char **temp_vars)
 		temp = ft_getenv(input, temp_vars);
 	if (!temp)
 		temp = ft_strdup("");
-	return temp;
+	return (temp);
 }
 
 char	*no_expansion(char *str, t_var_holder h)
@@ -153,7 +153,7 @@ char	*expansion(char *str, t_var_holder *h, char **env, char **temp_vars, int st
 		h->expanded = ft_strdup("$");
 	else if (str[h->i] == '$')
 	{
-		h->expanded = ft_itoa(getpid());//in this part, receive pid and printf pid
+		h->expanded = ft_itoa(getpid());
 		h->i++;
 	}
 	else if (str[h->i] == '?')

@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/20 19:19:44 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/21 18:59:48 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	simple_process(t_jobs *job, char **env, char ***temp_vars)
 
 	status = try_builtins(job, env, temp_vars, false);
 	if (status != 200)
-		return (WEXITSTATUS(status));
+		return (status);
 	pid = new_fork();
 	if (pid == 0)
 	{

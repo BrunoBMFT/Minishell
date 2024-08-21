@@ -6,44 +6,11 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/21 17:55:21 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/21 19:25:01 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-//temp_vars has to be ***?
-
-int	unset_aux(char **to_remove, char **env)
-{
-// TODO has to unset temp_vars
-	int		i;
-	while (*to_remove)
-	{
-		i = 0;
-		while (env[i] && ft_strncmp(env[i], *to_remove, ft_strlen(*to_remove)))
-			i++;
-		if (!env[i])
-			return (1);
-		while (env[i])
-		{
-			env[i] = env[i + 1];
-			i++;
-		}
-		to_remove++;
-	}
-	return (0);
-}
-
-int	caught_unset(t_jobs *job, char **env, char ***temp_vars)//segfault if var doesnt exist
-{
-	int		i;
-	char	**to_remove;
-
-	to_remove = ft_split(job->job[1], ' ');//error check
-	if (unset_aux(to_remove, env))
-		unset_aux(to_remove, *temp_vars);
-	return (0);
-}
 
 int	try_builtins(t_jobs *job, char **env, char ***temp_vars, bool pipe)//wtf is bool pipe
 {
@@ -52,24 +19,23 @@ int	try_builtins(t_jobs *job, char **env, char ***temp_vars, bool pipe)//wtf is 
 	status = 200;
 	if (ft_strcmp(job->job[0], "echo") == 0)
 		status = caught_echo(job);
-	if (ft_strcmp(job->job[0], "cd") == 0)//not really working with multiple jobs
-		status = caught_cd(job, env);//also has to work with just ..
+	if (ft_strcmp(job->job[0], "cd") == 0)
+		status = caught_cd(job, env);
 	else if (ft_strcmp(job->job[0], "pwd") == 0)
 		status = caught_pwd(job);
-	else if (ft_strcmp(job->job[0], "export") == 0)//"hello=world && export hello=mi", which stays?
-		status =  caught_export(job, env, temp_vars);//take care of env-i
-	else if (ft_strcmp(job->job[0], "unset") == 0)//has to unset temp_vars as well
+	else if (ft_strcmp(job->job[0], "export") == 0)
+		status =  caught_export(job, env, temp_vars);
+	else if (ft_strcmp(job->job[0], "unset") == 0)
 		status = caught_unset(job, env, temp_vars);
 	else if (ft_strcmp(job->job[0], "env") == 0)
 		status = caught_env(job, env);
-	else if (ft_strchr(job->job[0], 'exit'))
-		caught_exit(job->job[0]);
+	else if (ft_strcmp(job->job[0], "exit") == 0)// TODO fix
+			caught_exit(job->job[0]);
 	else if (ft_strchr(job->job[0], '='))
 		status = declare_temp_vars(job, env, temp_vars);
 	if (pipe == true)
 		exit (status);
-	return (status);//check if builtins fail, everything goes correct
-	//exit is technically builtin
+	return (status);
 }
 
 int	caught_echo(t_jobs *job)//multiple strs doesnt work
@@ -131,8 +97,8 @@ char	*cd_update_aux1(char *env_var, bool when)
 		env[i] = ft_strdup(temp);
 	} */
 }
-// TODO cd can happen with just ..
-int	caught_cd(t_jobs *job, char **env)//cd supposedly cant exit process, needs to be called before fork
+
+int	caught_cd(t_jobs *job, char **env)
 {//check return values
 	char 	*directory;
 	char	*error;
@@ -165,42 +131,37 @@ int	caught_cd(t_jobs *job, char **env)//cd supposedly cant exit process, needs t
 }
 
 
-
-
-int	caught_env(t_jobs *job, char **env)//make better
-{//env SHELL var has to be different
-	int	i;
-
-	if (job->job[1])//error and exit code
-	{
-		ft_putendl_fd("minishell env doesnt take that many args\n", 2);//permission denied
-		return (126);
-	}
-	i = 0;
-	while (env[i])
-	{
-		ft_putstr_fd(env[i], 1);//needs to change i think, in the case of redirs
-		ft_nl_fd(1);
-		i++;
-	}
-	return (0);
-}
-
-
-
-int	caught_pwd(t_jobs *job)
+int	unset_aux(char **to_remove, char **env)
 {
-	char buf[PATH_MAX];
-
-	if (job->job[1])//error and exit code
+// TODO has to unset temp_vars
+	int		i;
+	while (*to_remove)
 	{
-		ft_putendl_fd("pwd: too many arguments", 2);
-		return (1);
+		i = 0;
+		while (env[i] && ft_strncmp(env[i], *to_remove, ft_strlen(*to_remove)))
+			i++;
+		if (!env[i])
+			return (1);
+		while (env[i])
+		{
+			env[i] = env[i + 1];
+			i++;
+		}
+		to_remove++;
 	}
-	ft_putendl_fd(getcwd(buf, PATH_MAX), 2);//error check?
 	return (0);
 }
 
+int	caught_unset(t_jobs *job, char **env, char ***temp_vars)//segfault if var doesnt exist
+{
+	int		i;
+	char	**to_remove;
+
+	to_remove = ft_split(job->job[1], ' ');//error check
+	if (unset_aux(to_remove, env))
+		unset_aux(to_remove, *temp_vars);
+	return (0);
+}
 
 
 void	caught_exit(char *line)//check pipes
@@ -212,4 +173,44 @@ void	caught_exit(char *line)//check pipes
 		rl_clear_history();
 		exit(0);
 	}
+}
+
+
+
+
+
+int	caught_env(t_jobs *job, char **env)// TODO Almost Done
+{
+	int		i;
+	char	*error;
+
+	if (job->job[1])//error and exit code
+	{
+		error = ft_strjoin3("env: '", job->job[1], "': No such file or directory");
+		ft_putendl_fd(error, 2);//hardcoded
+		free (error);
+		return (127);
+	}
+	i = 0;
+	while (env[i])
+	{
+		ft_putendl_fd(env[i], 1);
+		i++;
+	}
+	return (0);
+}
+
+int	caught_pwd(t_jobs *job)// TODO almost done
+{
+	char cwd[PATH_MAX];
+
+/* 	if (job->job[1])
+	{
+		ft_putendl_fd("pwd: too many arguments", 2);
+		return (1);
+	} */
+	if (!getcwd(cwd, PATH_MAX))
+		return (printf("getcwd() error"), 127);//exit code?
+	ft_putendl_fd(cwd, 2);//error check?
+	return (0);
 }
