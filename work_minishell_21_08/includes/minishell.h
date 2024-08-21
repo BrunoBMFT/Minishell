@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/21 18:11:28 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/21 18:04:13 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ char	*split_complex_args(char *str);
 int		assign_i(char *str, int i);
 int		count_words(char *str);
 char	**token_array(char *str);
-void	tokenize(t_token **list, char *str, char **env, int status);
+void	tokenize(t_token **list, char *str);
 int		define_type(char *str);
 t_token	*addtok(void *content);
 t_token	*get_last_tok(t_token *lst);
@@ -156,7 +156,6 @@ void	clean_up_build(t_token **list, char *cmd_line);
 void	ctrl_c_idle(int sig);
 int		set_signal(int sig, void f(int));
 void	sigquit(int sig);
-void	ctrl_c(int sig);
 
 //aux:
 void	print_jobs(t_jobs *jobs);//to remove

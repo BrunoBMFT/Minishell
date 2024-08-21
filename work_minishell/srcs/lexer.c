@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/16 01:00:53 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/21 18:08:24 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	tokenize(t_token **list, char *str)
+void	tokenize(t_token **list, char *str, char **env, int status)
 {
 	int		i;
 	char	**array;
@@ -20,6 +20,15 @@ void	tokenize(t_token **list, char *str)
 
 	i = 0;
 	array = token_array(str);
+	char *temp;
+	while (array[i])
+	{
+		temp = unquote_and_direct(array[i], env, NULL, 0);
+		free(array[i]);
+		array[i] = temp;
+		i++;
+	}
+	i = 0;
 	if (!array)
 		return;
 	while (array[i])
@@ -34,27 +43,61 @@ void	tokenize(t_token **list, char *str)
 	free_array(array);
 }
 
-int	count_words(char *str)
+void handle_quotes(t_var_holder *h, char *str)
 {
-	t_var_holder	h;
+    char quote = str[h->i];
+    h->i++;
+    while (str[h->i] && str[h->i] != quote)
+        h->i++;
+    if (str[h->i] == quote)
+        h->i++;
+}
 
-	h.i = 0;
-	h.wc = 0;
-	h.k = 0;
-	if (!str)
-		return (0);
-	while (str[h.i])
-	{
-		if (!h.k && !(str[h.i] == ' ' || str[h.i] == '\t' || str[h.i] == '\n'))
+int count_words(char *str)
+{
+    t_var_holder h;
+
+    h.i = 0;
+    h.wc = 0;
+    while (str[h.i])
+    {
+        while (str[h.i] && (str[h.i] == ' ' || str[h.i] == '\t' || str[h.i] == '\n'))
+        	h.i++;
+        if (str[h.i] == '\'' || str[h.i] == '\"')
+        {
+            handle_quotes(&h, str);
+            h.wc++;
+        }
+        else if (str[h.i] && !(str[h.i] == ' ' || str[h.i] == '\t' || str[h.i] == '\n'))
+        {
+            while (str[h.i] && !(str[h.i] == ' ' || str[h.i] == '\t' || str[h.i] == '\n'))
+                h.i++;
+            h.wc++;
+        }
+    }
+    return h.wc;
+}
+
+void update_iterator(t_var_holder *h, char *str)
+{
+    while (str[h->i])
+    {
+        while (str[h->i] && (str[h->i] == ' ' || str[h->i] == '\t' || str[h->i] == '\n'))
+			h->i++;
+        h->j = h->i;
+        if (str[h->i] == '\'' || str[h->i] == '\"')
+            handle_quotes(h, str);
+        else
+        {
+            while (str[h->i] && !(str[h->i] == ' ' || str[h->i] == '\t' || str[h->i] == '\n'))
+                h->i++;
+        }
+        if (h->i > h->j)
 		{
-			h.wc++;
-			h.k = 1;
+			h->array[h->k] = ft_substr(str, h->j, h->i - h->j);
+			h->k++;
 		}
-		if (str[h.i] == ' ' || str[h.i] == '\t' || str[h.i] == '\n')
-			h.k = 0;
-		h.i++;
-	}
-	return (h.wc);
+    }
 }
 
 char	**token_array(char *str)
@@ -68,19 +111,7 @@ char	**token_array(char *str)
 	h.array = malloc(sizeof(char *) * (h.wc + 1));
 	if (!h.array)
 		return (NULL);
-	while (str[h.i])
-	{
-		while (str[h.i] && (str[h.i] == ' ' || str[h.i] == '\t' || str[h.i] == '\n'))
-			h.i++;
-		h.j = h.i;
-		while (str[h.i] && !(str[h.i] == ' ' || str[h.i] == '\t' || str[h.i] == '\n'))
-			h.i++;
-		if (h.i > h.j)
-		{
-			h.array[h.k] = ft_substr(str, h.j, h.i - h.j);
-			h.k++;
-		}
-	}
+	update_iterator(&h, str);
 	h.array[h.k] = NULL;
 	return (h.array);
 }

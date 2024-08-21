@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/21 18:08:39 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/20 19:20:08 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,27 +27,27 @@ void    print_file(int fd)
 
 void    update_input(t_jobs *job)
 {
-    int fd;
-    int i;
-    
-    fd = open(job->input, O_RDONLY);
-    
-    if (fd < 0)
-    {
-        ft_printf("No such file or directory:  %s\n", job->input);
-        return ;
-    }
-    if (job->next)
-    {
-        if (dup2(fd, STDIN_FILENO) == -1)
-        {
-            perror("dup2 error input redir\n");
-            return ;
-        }
-    }
-    else if (!job->job || !job->job[0] && !job->output && !job->mult_input_flag)
-        print_file(fd);
-    close (fd);
+	int	fd;
+	int	i;
+
+	fd = open(job->job[0], O_RDONLY);
+
+	if (fd < 0)
+	{
+		ft_printf("No such file or directory:  %s\n", job->job[0]);
+		return ;
+	}
+	if (job->next)
+	{
+		if (dup2(fd, STDIN_FILENO) == -1)
+		{
+			perror("dup2 error input redir\n");
+			return ;
+		}
+	}
+	/*	else
+		print_file(fd); */
+	close (fd);
 }
 
 int update_output(t_jobs *job, char **env, char ***temp_vars)

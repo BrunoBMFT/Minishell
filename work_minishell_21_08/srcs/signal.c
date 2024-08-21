@@ -6,13 +6,13 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/21 18:10:26 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/19 14:58:09 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	ctrl_c_idle(int sig)
+/* void	ctrl_c_idle(int sig)
 {
 	printf("\n");
 	rl_on_new_line();
@@ -26,12 +26,6 @@ void	sigquit(int sig)
 	ft_printf("Quit\n");
 }
 
-void	ctrl_c(int sig)
-{
-	(void)sig;
-	ft_printf("\n");
-}
-
 int	set_signal(int sig, void f(int))
 {
 	struct sigaction	sa;
@@ -43,4 +37,4 @@ int	set_signal(int sig, void f(int))
 		return (-1);
 
 	return (0);
-}
+} */

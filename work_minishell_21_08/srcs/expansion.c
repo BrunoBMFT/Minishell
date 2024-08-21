@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/21 18:12:35 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/21 18:04:07 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	*no_quotes(char *str, t_var_holder *h, char **env, char **temp_vars, int st
 {
 	h->temp = ft_strndup(str + h->start, h->i - h->start);
 	if (!h->temp)
-		return h->new;
+		return (h->new);
 	h->before = expand(h->temp, env, temp_vars, status);
 	free(h->temp);
 	if (!h->before)
@@ -63,8 +63,6 @@ char	*no_quotes(char *str, t_var_holder *h, char **env, char **temp_vars, int st
 
 char	*single_quotes(char *str, t_var_holder *h)
 {
-	if (!h->new)
-		h->new = ft_strdup("");
 	h->start = ++h->i;
 	while (str[h->i] && str[h->i] != '\'')
 		h->i++;
@@ -153,7 +151,7 @@ char	*expansion(char *str, t_var_holder *h, char **env, char **temp_vars, int st
 		h->expanded = ft_strdup("$");
 	else if (str[h->i] == '$')
 	{
-		h->expanded = ft_itoa(getpid());//in this part, receive pid and printf pid
+		h->expanded = ft_itoa(getpid());
 		h->i++;
 	}
 	else if (str[h->i] == '?')

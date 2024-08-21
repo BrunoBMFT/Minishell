@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/21 18:08:13 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/21 18:03:57 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ t_token	*developed_cmdline_tokenization(char *command_line, char **env, int stat
 	t_token	*list;
 
 	list = NULL;
-	//simplified = split_complex_args(command_line);
-	//free(simplified);
-	//tokenize(&list, simplified, env, status);
-    //free(simplified);
-    tokenize(&list, command_line, env, status);
+	simplified = split_complex_args(command_line);
+	converted = unquote_and_direct(simplified, env, NULL, status);
+	free(simplified);
+	tokenize(&list, converted);
+	free(converted);
 	if (parse(&list) == -1)
 	{
 		clear_list(&list);
@@ -37,7 +37,7 @@ t_jobs	*build(char *command_line, char **env, int status)
 	t_jobs	*jobs;
 	t_token	*list;
 	t_token	*last;
-	//t_jobs	*temp;
+	t_jobs	*temp;
 
 	jobs = NULL;
 	list = NULL;
@@ -53,9 +53,22 @@ t_jobs	*build(char *command_line, char **env, int status)
 		if (parse_last_token(&command_line, &list, &last) == -1)
 			return (NULL);
 	make_job_list(&jobs, &list, env);
-	clear_list(&list);
-    free(command_line);
+	temp = jobs;
+	clean_up_build(&list, command_line);
 	return (jobs);
+}
+
+char	*unquoted(char *str, char **env)
+{
+    char *new;
+
+    if (*str == '\'')
+        new = ft_strtrim(str, "\'");
+    else if(*str == '\"')
+        new = ft_strtrim(expand_env_vars(str, env, NULL), "\"");
+    else
+        new = ft_strdup(expand_env_vars(str, env, NULL));
+    return (new);
 }
 
 char	*assign_cmd(t_token *cur)
@@ -89,23 +102,15 @@ void    apply_redir(t_token *current, t_jobs *job)
         {
             job->mult_input_flag = 1;
             free(job->input);
-            job->input = NULL;
         }
         job->input = ft_strdup(current->next->token);
     }
     else if(current->type == OUTPUT || current->type == APPEND_OUT)
     {
-        int fd;
-
-        fd = open(current->next->token, O_CREAT | O_RDWR, 0644);
-        close(fd);
         if (current->type == APPEND_OUT)
             job->append = 1;
         if (job->output)
-        {
             free(job->output);
-            job->output = NULL;
-        }
         job->output = ft_strdup(current->next->token);
     }
 }
@@ -123,12 +128,12 @@ char **job_array(t_token **cur, t_jobs **job, char **env)
     while (temp && temp->type != AND && temp->type != OR && temp->type != PIPE)
     {
         if (temp->type == INPUT || temp->type == OUTPUT || temp->type == HEREDOC || temp->type == APPEND_OUT)
-            temp = temp->next->next;
-        else
         {
-            count++;
-            temp = temp->next;
+            temp = temp->next->next;
+            continue;
         }
+        count++;
+        temp = temp->next;
     }
     array = malloc(sizeof(char *) * (count + 1));
     if (!array)
@@ -139,24 +144,17 @@ char **job_array(t_token **cur, t_jobs **job, char **env)
         {
             apply_redir(*cur, *job);
             *cur = (*cur)->next->next;
+            continue;
         }
-        else
-        {
-            array[i] = ft_strdup((*cur)->token);
-            i++;
-            *cur = (*cur)->next;
-        }
-    }
-    if (i == 0)
-    {
-        free(array);
-        return (NULL);
+        array[i] = ft_strdup((*cur)->token);
+        i++;
+        *cur = (*cur)->next;
     }
     array[i] = NULL;
     return (array);
 }
 
-void make_job_list(t_jobs **job_list, t_token **tok_list, char **env)
+void	make_job_list(t_jobs **job_list, t_token **tok_list, char **env)
 {
     t_token *cur;
     t_jobs *new;

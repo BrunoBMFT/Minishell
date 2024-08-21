@@ -6,12 +6,12 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/21 18:10:14 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/21 17:24:51 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-/* 
+
 int	start_executor(t_jobs *job, char **env, char ***temp_vars)
 {
 	int	status;
@@ -19,13 +19,13 @@ int	start_executor(t_jobs *job, char **env, char ***temp_vars)
 
 	saved_stdin = dup(STDIN_FILENO);
 	status = 0;	
-	 	if (set_signal(SIGINT, ctrl_c_idle) < 0 || set_signal(SIGQUIT, sigquit) < 0)
+	/*  	if (set_signal(SIGINT, ctrl_c_idle) < 0 || set_signal(SIGQUIT, sigquit) < 0)
 	{
 		ft_printf("Error: signal\n");
 		clear_jobs(&job);
 		free_array(env);
 		exit(1);
-	}
+	} */
 	while (job)
 	{
 		if (job->next && job->next->type == APPEND_OUT)
@@ -79,20 +79,22 @@ int	start_executor(t_jobs *job, char **env, char ***temp_vars)
 			job = job->next;
 		}
 	}
+	/* 	printf("status: %d\n", status); */
 	close (saved_stdin);
 	return (status);
 }
-*/
+
+
 
 // Yohan's!
-int	start_executor(t_jobs *job, char **env, char ***temp_vars)
+/* int	start_executor(t_jobs *job, char **env, char ***temp_vars)
 {
 	int status = 0;
 	int saved_stdin = dup(STDIN_FILENO);
 	int saved_stdout = dup(STDOUT_FILENO);
 	int redirected_input;
 	int redirected_output;
- 	if (set_signal(SIGINT, ctrl_c) < 0 || set_signal(SIGQUIT, sigquit) < 0)
+ 	if (set_signal(SIGINT, ctrl_c_idle) < 0 || set_signal(SIGQUIT, sigquit) < 0)
 	{
 		ft_printf("Error: signal\n");
 		clear_jobs(&job);
@@ -110,7 +112,7 @@ int	start_executor(t_jobs *job, char **env, char ***temp_vars)
 				continue;
 			}
 			redirected_input = open(job->input, O_RDONLY);
-			if ((!job->job || !job->job[0]) && !job->output && !job->mult_input_flag)
+			if (!job->job || !job->job[0] && !job->output && job->mult_input_flag == 0)//here is for no command except redirection
 			{
 				print_file(redirected_input);
 				close(redirected_input);
@@ -121,13 +123,8 @@ int	start_executor(t_jobs *job, char **env, char ***temp_vars)
         		perror("input file error\n");
 			if (dup2(redirected_input, STDIN_FILENO) < 0)
 				return (perror("error duping input\n"), 127);
+			free(job->input);
 			close (redirected_input);
-		}
-		if (job->next && job->next->type == PIPE)
-		{
-			child_process(job, env, temp_vars);
-			job = job->next->next;
-			continue;
 		}
 		if (job->output)
 		{
@@ -143,15 +140,32 @@ int	start_executor(t_jobs *job, char **env, char ***temp_vars)
 				perror("output file error\n");
 			if (dup2(redirected_output, STDOUT_FILENO) < 0)
 				return (perror("error duping output\n"), 127);
+			free(job->output);
 			close(redirected_output);
 		}
 		if (job->job && job->job[0])
 			status = simple_process(job, env, temp_vars);
-			
 		if (dup2(saved_stdin, STDIN_FILENO) < 0 || dup2(saved_stdout, STDOUT_FILENO) < 0)
 			return (perror("error restoring stdin and stdout\n"), 127);
-		if (job->next && job->next->type == AND)
+		if (job->next && job->next->type == PIPE)
+		{
+			child_process(job, env, temp_vars);
 			job = job->next->next;
+		}
+		else if (job->next && job->next->type == AND)
+		{
+			if (status != 0)
+			{
+				while (job->next && job->next->type == AND)
+					job = job->next;
+				if (job->next)
+					job = job->next->next;
+				else
+					job = job->next;
+			}
+			else
+				job = job->next->next;
+		}
 		else if (job->next && job->next->type == OR)
 		{
 			if (status == 0)
@@ -169,9 +183,7 @@ int	start_executor(t_jobs *job, char **env, char ***temp_vars)
 		else
 			job = job->next;
 	}
-	if (access(".heredoc", F_OK) == 0)
-		remove(".heredoc");
-	close(saved_stdin);
-	close(saved_stdout);
-	return status;
-}
+//	printf("status: %d\n", status);
+	close (saved_stdin);
+	return (status);
+} */

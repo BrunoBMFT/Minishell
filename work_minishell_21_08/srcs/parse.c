@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/21 18:11:45 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/21 18:03:54 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	parse(t_token **token)
 				return (-1);
 		cur = cur->next;
 	}
-	return (0);
+	return 0;
 }
 
 int	secondquote(char *line)//rather not use
@@ -97,8 +97,6 @@ char	*parse_quotes(char *line)
 	char	*newline;
 
 	i = 0;
-	if (!line)
-		return (NULL);
 	while (line[i])
 	{
 		if (line[i] == '\'' || line[i] == '\"')
@@ -141,7 +139,7 @@ int	parse_last_token(char **cmd_line, t_token **list, t_token **last)
 	*cmd_line = new;
 	clear_list(list);
 	converted = split_complex_args(*cmd_line);
-	tokenize(list, converted, NULL, 0);	
+	tokenize(list, converted);
 	free(converted);
 	*last = get_last_tok(*list);
 	if (parse(list) == -1)
