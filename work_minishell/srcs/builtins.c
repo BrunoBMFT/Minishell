@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/21 19:25:01 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/22 17:47:59 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,19 @@ int	caught_echo(t_jobs *job)//multiple strs doesnt work
 		nl = false;
 		i++;
 	}
-	while (job->job[i + 1])
+	//echo ola   ""    bruno
+	while (job->job[i])
 	{
-		ft_printf("%s ", job->job[i]);
+//		printf("har args\n");
+		if (job->job[i][0])
+		{
+//			printf("has string\n");
+			ft_putstr(job->job[i]);
+		}
+		if (job->job[i + 1])
+			ft_putstr(" ");
 		i++;
 	}
-	ft_printf("%s", job->job[i]);//find better way
 	if (nl)
 		ft_nl_fd(1);
 	return (0);

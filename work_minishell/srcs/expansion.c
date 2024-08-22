@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/21 19:07:32 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/22 17:53:52 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ char	*no_expansion(char *str, t_var_holder h)
 {
 	h.before = ft_strndup(str + h.start, h.i - h.start);
 	if (!h.before)
-		return NULL;
+		return (NULL);
 	if (!h.result)
 		h.temp = ft_strdup(h.before);
 	else

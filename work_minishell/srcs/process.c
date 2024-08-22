@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/21 18:59:48 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/22 18:14:54 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	child_process(t_jobs *job, char **env, char ***temp_vars)
 		close(fd[READ]);
 		dup2(fd[WRITE], STDOUT_FILENO);//error check
 		close(fd[WRITE]);
-		if (try_builtins(job, env, temp_vars, true) == 200)
+//		if (try_builtins(job, env, temp_vars, true) == 200)
 			execute_job(job->job, env);
 	}
 	close(fd[WRITE]);
@@ -42,21 +42,18 @@ int	simple_process(t_jobs *job, char **env, char ***temp_vars)
 	pid_t	pid;
 	int	status;
 
-	status = try_builtins(job, env, temp_vars, false);
-	if (status != 200)
-		return (status);
+//	status = try_builtins(job, env, temp_vars, false);
+//	if (status != 200)
+//		return (status);
 	pid = new_fork();
 	if (pid == 0)
 	{
-/* 		bash builtins like echo recieve shell variables (temp_vars), we can check with echo
-		execve and others wont be able to have those variables, we can check with printenv
-		so maybe no temp_vars needs to be sent in, 
-			as execve doesnt take it, unless we have to expand it before */
 		execute_job(job->job, env);
 	}
 	waitpid(pid, &status, 0);
 	return (WEXITSTATUS(status));
 }
+
 void	panic(char *s)
 {
 	ft_putendl_fd(s, 2);
@@ -69,6 +66,6 @@ int	new_fork(void)
 
 	pid = fork();
 	if (pid == -1)
-		panic("fork");
+		panic("fork");// TODO stop using panic
 	return (pid);
 }

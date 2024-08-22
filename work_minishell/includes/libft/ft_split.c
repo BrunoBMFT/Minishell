@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 12:42:55 by yohan             #+#    #+#             */
-/*   Updated: 2024/07/27 21:54:13 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/22 17:58:23 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,14 @@ char	**ft_split(char const *s, char c)
 {
 	t_vars	var;
 
+	if (!s)
+		return (NULL);
 	var.word_count = ft_count_words((char *)s, c);
 	var.i = 0;
 	var.start = 0;
 	var.str_index = 0;
 	var.dest = (char **)malloc((var.word_count + 1) * sizeof(char *));
-	if (!s || var.dest == NULL)
+	if (!var.dest)
 		return (NULL);
 	while (s[var.i])
 	{

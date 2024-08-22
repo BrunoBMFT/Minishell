@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/21 19:09:57 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/22 18:15:54 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,11 @@ int	main(int ac, char **av, char **envp)
 		}
 		add_history(line);
 		line = parse_quotes(line);
-		//find better way to send status to build, since it's being sent everywhere
 		jobs = build(line, env, status);
 		curr = jobs;
 		status = start_executor(curr, env, &temp_vars);
-		printf("status: %d\n", status);
+		// status = start_executor(curr, NULL, &temp_vars);//not protected
+//		printf("status: %d\n", status);
 		clear_jobs(&jobs);
 	}
 	return (0);

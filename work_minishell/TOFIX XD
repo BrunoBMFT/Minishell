@@ -3,6 +3,8 @@ exit codes not saving
 fix absolute path (/bin/ls)
 cd includes && echo $PWD
 
+just a | crashes
+
 if job.job1, does pwd still print?
 
 start testing every malloc functions with NULLS and see if everything is freed and protected
@@ -24,3 +26,11 @@ rename variables
 check builtin order
 
 need to take care of .. for cd?
+
+
+		//find better way to send status to build, since it's being sent everywhere
+
+echo "ola
+adeus" > out			fix
+
+# define malloc(x) NULL
