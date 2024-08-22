@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/22 19:31:34 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/22 19:32:33 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int execute_command_path(char **cmd, char **env)
 
 char	**fix_cmd(char **cmd)
 {
-	char	**newcmd = malloc(sizeof(char *) * 3);
+	char	**newcmd = malloc(sizeof(char *) * 3);// wrong
 
 	if (cmd[0][0] == '~')
 		newcmd[0] = ft_strjoin(".", *cmd + 1);//replaces the ~ for a .
