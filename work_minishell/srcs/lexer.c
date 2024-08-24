@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/22 17:52:50 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/24 03:34:36 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	tokenize(t_token **list, char *str, char **env, int status)
 	char *temp;
 	while (array[i])
 	{
-		temp = unquote_and_direct(array[i], env, NULL, 0);
+		temp = unquote_and_direct(array[i], env, NULL, status);
 		free(array[i]);
 		array[i] = temp;
 		i++;

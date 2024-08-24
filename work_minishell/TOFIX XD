@@ -1,7 +1,9 @@
 exit codes not saving
 
-fix absolute path (/bin/ls)
+~/ksdakads kdas env_var leak
+
 cd includes && echo $PWD
+variable expansion has to happen every job
 
 just a | crashes
 
@@ -13,7 +15,6 @@ builtins doesnt need to exit since it doesnt need fork, unless it is a pipe comm
 	(builtins to run before new_fork)
 	(builtins should just return, and if they return 200, fork and run execve)
 
-variable expansion has to happen every job
 
 temp_vars has to be ***?
 
@@ -24,8 +25,6 @@ take care of env-i
 rename variables
 
 check builtin order
-
-need to take care of .. for cd?
 
 
 		//find better way to send status to build, since it's being sent everywhere

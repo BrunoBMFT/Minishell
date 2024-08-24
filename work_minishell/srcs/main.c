@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/22 18:15:54 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/24 03:34:40 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ int	main(int ac, char **av, char **envp)
 		jobs = build(line, env, status);
 		curr = jobs;
 		status = start_executor(curr, env, &temp_vars);
-		// status = start_executor(curr, NULL, &temp_vars);//not protected
-//		printf("status: %d\n", status);
 		clear_jobs(&jobs);
 	}
 	return (0);

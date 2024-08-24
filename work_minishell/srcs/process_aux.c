@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_aux.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/22 19:32:33 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/24 03:16:37 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,35 +50,39 @@ int execute_command_path(char **cmd, char **env)
 
 char	**fix_cmd(char **cmd)
 {
-	char	**newcmd = malloc(sizeof(char *) * 3);// wrong
+	char	**newcmd = ft_calloc(sizeof(char *), ft_split_wordcount(cmd) + 1);
 
 	if (cmd[0][0] == '~')
-		newcmd[0] = ft_strjoin(".", *cmd + 1);//replaces the ~ for a .
-	else
-		newcmd[0] = ft_strdup(*cmd);
-	newcmd[1] = NULL;
-//	if (!newcmd)//error check
-//		return (NULL);//free newcmd
+	{
+		newcmd[0] = ft_strjoin(".", *cmd + 1);//error check
+		if (!newcmd[0])
+			return (NULL);//cant return NULL
+	}
+	int i = 0;
+	while (cmd[i])
+	{
+		newcmd[i] = ft_strdup(cmd[i]);
+		if (!newcmd[i])
+			return (NULL);//error check
+		i++;
+	}
+	newcmd[i] = NULL;
 	return (newcmd);
 }
 
-int execute_executable_path(char **cmd, char **env)//find better way to update command
+int execute_executable_path(char **cmd, char **env)
 {
 	char	*path = NULL;
 	char	cwd[PATH_MAX];
-	char	*dir;
+	char	*dir;//remove
 	
 	if (*cmd[0] == '~')
 	{
 		dir = ft_getenv("HOME", env);//error check
 		path = ft_strjoin3(dir, "/", *cmd + 2);//error check
 	}
-	//fix absolute paths -> "~/", "/", ".", ".."
-	else if (*cmd[0] == '/')
-	{
-		dir = *cmd;//dir???????????????????????????????????????????????
+	else if (*cmd[0] == '/')//check for paths?
 		path = cmd[0];
-	}
 	else
 	{
 		getcwd(cwd, PATH_MAX);//error check
@@ -86,13 +90,14 @@ int execute_executable_path(char **cmd, char **env)//find better way to update c
 		if (!path)
 			return (0);//free path
 	}
-	cmd = fix_cmd(cmd);
-//	if (!cmd)
-//		return (0);//free cmd?
-	printf("cmd: %s\npath: %s\n", *cmd, path);
+	cmd = NULL;
+//	cmd = fix_cmd(cmd);
 	if (access(path, F_OK) == 0)
-		execve(path, cmd, env);//error check?
-	ft_perror_exit(cmd[0]);//check if it's correct
+		execve(path, cmd, env);
+	if (cmd)
+		ft_perror_exit(cmd[0]);//check if it's correct
+	free_array(cmd);
+	free (path);
 	exit (127);
 }
 

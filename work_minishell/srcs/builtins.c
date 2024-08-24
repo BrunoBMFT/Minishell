@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/22 17:47:59 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/24 03:44:52 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,87 +56,56 @@ int	caught_echo(t_jobs *job)//multiple strs doesnt work
 	//echo ola   ""    bruno
 	while (job->job[i])
 	{
-//		printf("har args\n");
 		if (job->job[i][0])
-		{
-//			printf("has string\n");
-			ft_putstr(job->job[i]);
-		}
+			printf("%s", job->job[i]);
 		if (job->job[i + 1])
-			ft_putstr(" ");
+			printf(" ");
 		i++;
 	}
 	if (nl)
-		ft_nl_fd(1);
+		printf("\n");
 	return (0);
 }
 
 
-char	*cd_update_aux1(char *env_var, bool when)
+void	cd_update_aux1(char **env, char *PWD)
 {
 	char	cwd[PATH_MAX];
 	char	*ret;
 	char	*temp;
-	
-	getcwd(cwd, PATH_MAX);//error check
-	if (when == BEFORE)
-		temp = ft_strjoin("OLDPWD=", cwd);//error check
-	else
-		temp = ft_strjoin("PWD=", cwd);//error check
-	ret = temp;
-	return (ret);
-/* 	int	i = 0;
-	if (when == BEFORE)
-	{
-		while (env[i] && ft_strncmp(env[i], "OLDPWD", 6))//fix oldpwd when cd fails
-			i++;
-		getcwd(cwd, PATH_MAX);//error check
-		temp = ft_strjoin("OLDPWD=", cwd);//error check
-		env[i] = ft_strdup(temp);
-	}
-	else if (when == AFTER)
-	{
+	int i = 0;
 
-		while (env[i] && ft_strncmp(env[i], "PWD", 3))//use envnamecmp
-			i++;
-		getcwd(cwd, PATH_MAX);//error check
-		temp = ft_strjoin("PWD=", cwd);//error check
-		env[i] = ft_strdup(temp);
-	} */
+	while (env[i] && ft_strncmp(env[i], PWD, ft_strlen(PWD)))//find better way
+		i++;
+	getcwd(cwd, PATH_MAX);//error check
+	env[i] = ft_strjoin(PWD, cwd);//error check
 }
 
 int	caught_cd(t_jobs *job, char **env)
-{//check return values
+{
 	char 	*directory;
 	char	*error;
-	
-	int i = 0;
-	while (env[i] && ft_strncmp(env[i], "OLDPWD", 6))
-		i++;
-	env[i] = cd_update_aux1(env[i], BEFORE);
+
+	cd_update_aux1(env, "OLDPWD=");// TODO cant run if this fails
  	if (!job->job[1])
 	{
-		if (chdir(ft_getenv("HOME", env)) < 0)//return this
-			return (ft_putendl_fd("cd home failed", 2), 1);// * need to fix perror
+		if (chdir(ft_getenv("HOME", env)) < 0)//error check
+			return (ft_putendl_fd("cd home failed", 2), 1);
 	}
 	else
 	{
 		directory = job->job[1];
 		if (chdir(directory) < 0)
 		{
-			error = ft_strjoin("minishell: cd: ", job->job[1]);//error check and free
+			error = ft_strjoin("minishell: cd: ", job->job[1]);//error check
 			perror(error);
 			free (error);
-			return (1);// * need to fix perror
+			return (1);
 		}
 	}
-	 i = 0;
-	while (env[i] && ft_strncmp(env[i], "PWD", 3))
-		i++;
-	env[i] = cd_update_aux1(env[i], AFTER);
+	cd_update_aux1(env, "PWD=");
 	return (0);
 }
-
 
 int	unset_aux(char **to_remove, char **env)
 {

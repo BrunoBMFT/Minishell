@@ -16,6 +16,7 @@
 		"fcntl.h": "c",
 		"features.h": "c",
 		"types.h": "c",
-		"history.h": "c"
+		"history.h": "c",
+		"limits.h": "c"
 	}
 }
