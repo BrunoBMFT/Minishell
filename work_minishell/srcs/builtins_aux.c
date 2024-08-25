@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_aux.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/21 16:57:18 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/25 02:42:12 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,26 +27,37 @@ bool	is_in_env(char *to_add, char **env)
 		temp2 = ft_strndup(env[i], len_to_equal(env[i]));
 		if (ft_strcmp(temp1, temp2) == 0)
 		{
+            free(temp1);
+            free(temp2);
 			env[i] = ft_strdup(to_add);
 			return (true);
 		}
+        free(temp1);
+        free(temp2);
 		i++;
 	}
 	return (false);
 }
 
 int	declare_temp_vars(t_jobs *job, char **env, char ***temp_vars)
-{	
+{
 	int temp_vars_len = ft_split_wordcount(*temp_vars);
 	int job_len = ft_split_wordcount(job->job);
 	int	total_len = job_len + temp_vars_len;
 	char **new_temp_vars = ft_calloc(sizeof(char *), total_len + 1);
 	if (!new_temp_vars)
-		return (0);
+		return (1);//check
 	int i = 0;
 	while (i < temp_vars_len)
 	{
-		new_temp_vars[i] = ft_strdup((*temp_vars)[i]);//error check
+		new_temp_vars[i] = ft_strdup((*temp_vars)[i]);
+        if (!new_temp_vars[i])
+        {
+            while (i > 0)
+                free(new_temp_vars[--i]);
+            free(new_temp_vars);
+            return (1);//error check
+        }
 		i++;
 	}
 	int j = 0;
@@ -57,7 +68,13 @@ int	declare_temp_vars(t_jobs *job, char **env, char ***temp_vars)
 			if (!is_in_env(job->job[j], new_temp_vars))//error check
 			{
 				new_temp_vars[i] = ft_strdup(job->job[j]);//error check
-				//crashes
+                if (!new_temp_vars[i])//make function for this
+                {
+                    while (i > 0)
+                        free(new_temp_vars[--i]);
+                    free(new_temp_vars);
+                    return (1);//error check
+                }
 			}
 		}
 		j++;
@@ -68,13 +85,24 @@ int	declare_temp_vars(t_jobs *job, char **env, char ***temp_vars)
 	return (0);
 }
 
+
+
+
+
 void	export_new(char *var, char **env)
 {
-  	int i = 0;
+	char	*temp;
+  	int i;
+
+	i = 0;
 	while (env[i])
 		i++;
 	if (!is_in_env(var, env))//error check, technically doesnt need to be here because if i do "varname=value, it will update env either way"
-		env[i] = ft_strdup(var);//error check
+	{
+		temp = ft_calloc(sizeof(char), ft_strlen(var) + 1);//error check
+		ft_strcpy(temp, var);//error check
+	}
+	env[i] = temp;
 	env[i + 1] = NULL;
 }
 
@@ -94,7 +122,7 @@ void	export_temp(char *var, char **env, char ***temp_vars)
 		env[i] = ft_strdup(temp);//error check
 	env[i + 1] = NULL;
 }
-// ! FIX NOW
+// ! NEW LOGIC PLS
 int	caught_export(t_jobs *job, char **env, char ***temp_vars)
 {	
 	if (!job->job[1])

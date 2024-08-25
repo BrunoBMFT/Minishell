@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/22 18:10:57 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/24 18:58:17 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,12 @@
 // Yohan's!
 int	start_executor(t_jobs *job, char **env, char ***temp_vars)
 {
-	int status = 0;
-	int saved_stdin = dup(STDIN_FILENO);
-	int saved_stdout = dup(STDOUT_FILENO);
-	int redirected_input;
-	int redirected_output;
+	int 	status = 0;
+	int 	saved_stdin = dup(STDIN_FILENO);
+	int 	saved_stdout = dup(STDOUT_FILENO);
+	int 	redirected_input;
+	int 	redirected_output;
+	bool	piped = false;// TODO check if works
 /*  	if (set_signal(SIGINT, ctrl_c) < 0 || set_signal(SIGQUIT, sigquit) < 0)
 	{
 		ft_printf("Error: signal\n");
@@ -55,6 +56,7 @@ int	start_executor(t_jobs *job, char **env, char ***temp_vars)
 		{
 			status = child_process(job, env, temp_vars);
 			job = job->next->next;
+			piped = true;
 			continue;
 		}
 		if (job->output)
@@ -73,13 +75,17 @@ int	start_executor(t_jobs *job, char **env, char ***temp_vars)
 				return (perror("error duping output\n"), 127);
 			close(redirected_output);
 		}
-		if (job->job && job->job[0])
+		if (job->job && job->job[0] && !piped)
 			status = simple_process(job, env, temp_vars);
-			
+		else if (job->job && job->job[0])
+			status = child_process(job, env, temp_vars);
 		if (dup2(saved_stdin, STDIN_FILENO) < 0 || dup2(saved_stdout, STDOUT_FILENO) < 0)
 			return (perror("error restoring stdin and stdout\n"), 127);//wrong order?
 		if (job->next && job->next->type == AND)
+		{
 			job = job->next->next;
+			piped = false;
+		}
 		else if (job->next && job->next->type == OR)
 		{
 			if (status == 0)

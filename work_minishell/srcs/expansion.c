@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/24 03:19:36 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/24 17:30:49 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,11 +149,15 @@ char	*no_expansion(char *str, t_var_holder h)
 
 char	*expansion(char *str, t_var_holder *h, char **env, char **temp_vars, int status)
 {
+	FILE *fp;
+	int	pid;
 	if (str[h->i] == '\0' || str[h->i] == ' ' || str[h->i] == '\t')
 		h->expanded = ft_strdup("$");
 	else if (str[h->i] == '$')
 	{
-		h->expanded = ft_itoa(getpid());
+		pid = ft_getpid();
+		if (pid)
+			h->expanded = ft_itoa(pid);
 		h->i++;
 	}
 	else if (str[h->i] == '?')
@@ -177,3 +181,4 @@ char	*expansion(char *str, t_var_holder *h, char **env, char **temp_vars, int st
 	h->start = h->i;
 	return (h->result);
 }
+

@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/24 00:20:08 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/25 02:34:33 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ int		caught_pwd(t_jobs *job);
 int		caught_export(t_jobs *job, char **env, char ***temp_vars);
 int		caught_unset(t_jobs *job, char **env, char ***temp_vars);
 int		caught_env(t_jobs *job, char **env);
-void	caught_exit(char *line);
+int	caught_exit(t_jobs *jobs, bool pipe);
 
 //expansions:
 char	*ft_env_var(char *str);
@@ -161,5 +161,6 @@ void	ctrl_c(int sig);
 //aux:
 void	print_jobs(t_jobs *jobs);//to remove
 char	*update_prompt(void);
+int	ft_getpid(void);
 
 #endif

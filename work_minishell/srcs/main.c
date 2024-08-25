@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/24 03:34:40 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/24 18:52:33 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,6 @@ int	main(int ac, char **av, char **envp)
 		{
 			free (line);
 			continue ;
-		}
-		if (ft_strcmp(line, "exit") == 0)//needs fix
-		{
-			free(line);
-			break ;
 		}
 		add_history(line);
 		line = parse_quotes(line);

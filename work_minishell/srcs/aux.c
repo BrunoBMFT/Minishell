@@ -3,14 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   aux.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:15:54 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/22 18:01:25 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/24 17:29:59 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+int	ft_getpid(void)
+{
+	FILE *fp;
+	int	pid;
+	fp = fopen("/proc/self/stat", "r");
+	fp = NULL;
+	if (!fp)
+		return (ft_putendl_fd("minishell: getpid() error", 2), 0);
+	fscanf(fp, "%d", &pid);
+	fclose(fp);
+	return (pid);
+}
 
 char	*update_prompt(void)//make better
 {

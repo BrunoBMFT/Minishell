@@ -1,4 +1,13 @@
-exit codes not saving
+exit not working after any job
+
+new logic for export
+
+fix cd updatepwd
+free temp_vars leaks
+
+fix leaks in normal cases (no errors)
+fix leaks in error cases
+fix leaks in NULL cases
 
 ~/ksdakads kdas env_var leak
 
@@ -6,6 +15,8 @@ cd includes && echo $PWD
 variable expansion has to happen every job
 
 just a | crashes
+
+problem with getpid = NULL, printing a newline
 
 if job.job1, does pwd still print?
 
