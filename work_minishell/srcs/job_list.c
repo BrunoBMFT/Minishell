@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   job_list.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/24 03:34:07 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/26 19:32:30 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-t_token	*developed_cmdline_tokenization(char *command_line, char **env, int status)
+t_token	*developed_cmdline_tokenization(char *command_line, char **env, char **temp_vars, int status)
 {
 	char	*converted;
 	char	*simplified;
@@ -23,7 +23,7 @@ t_token	*developed_cmdline_tokenization(char *command_line, char **env, int stat
 	//free(simplified);
 	//tokenize(&list, simplified, env, status);
     //free(simplified);
-    tokenize(&list, simplified, env, status);
+    tokenize(&list, simplified, env, temp_vars, status);
     free (simplified);
 	if (parse(&list) == -1)
 	{
@@ -33,7 +33,7 @@ t_token	*developed_cmdline_tokenization(char *command_line, char **env, int stat
 	return (list);
 }
 
-t_jobs	*build(char *command_line, char **env, int status)
+t_jobs	*build(char *command_line, char **env, char **temp_vars, int status)
 {
 	t_jobs	*jobs;
 	t_token	*list;
@@ -43,7 +43,7 @@ t_jobs	*build(char *command_line, char **env, int status)
 	jobs = NULL;
 	list = NULL;
 	last = NULL;
-	list = developed_cmdline_tokenization(command_line, env, status);
+	list = developed_cmdline_tokenization(command_line, env, temp_vars, status);
 	if (parse(&list) == -1)
 	{
 		clear_list(&list);

@@ -3,14 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/24 18:52:33 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/26 20:40:39 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+char	**dup_env(char **envp)
+{
+	char	**new_env;
+	int		i;
+
+	if (!envp || !envp[0])
+		return (NULL);//printf something
+	new_env = ft_calloc(sizeof(char *), ft_split_wordcount(envp) + 1);
+	if (!new_env)
+		return (NULL);//free new_env?
+	i = 0;
+	while (envp[i])
+	{
+		new_env[i] = ft_strdup(envp[i]);//error check
+		if (!new_env[i])
+		{
+			i = 0;
+			while (new_env[i])
+				free (new_env[i++]);//check if works
+			return (NULL);
+		}
+		i++;
+	}
+	new_env[i] = NULL;
+	return (new_env);
+}
 
 int	main(int ac, char **av, char **envp)
 {
@@ -41,7 +68,7 @@ int	main(int ac, char **av, char **envp)
 		}
 		add_history(line);
 		line = parse_quotes(line);
-		jobs = build(line, env, status);
+		jobs = build(line, env, temp_vars, status);
 		curr = jobs;
 		status = start_executor(curr, env, &temp_vars);
 		clear_jobs(&jobs);

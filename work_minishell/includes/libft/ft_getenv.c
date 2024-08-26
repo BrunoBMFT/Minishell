@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 18:16:48 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/21 18:28:42 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/26 19:46:57 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,17 +46,13 @@ char	*ft_getenv(char *str, char **env)
 {
 	char	*temp;
 	int		i;
-	int		len;
 
 	if (!str || !*str || !env || !*env)
 		return (NULL);
 	i = 0;
 	while (env[i])
 	{
-		len = 0;
-		while (env[i][len] && env[i][len] != '=')
-			len++;
-		temp = ft_strndup(env[i], len);
+		temp = ft_strndup(env[i], len_to_equal(env[i]));
 		if (!temp)
 			return (NULL);
 		if (ft_strcmp(str, temp) == 0)

@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/21 18:11:45 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/26 19:33:43 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ int	parse_last_token(char **cmd_line, t_token **list, t_token **last)
 	*cmd_line = new;
 	clear_list(list);
 	converted = split_complex_args(*cmd_line);
-	tokenize(list, converted, NULL, 0);	
+	tokenize(list, converted, NULL, NULL, 0);	
 	free(converted);
 	*last = get_last_tok(*list);
 	if (parse(list) == -1)

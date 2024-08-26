@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/25 18:40:03 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/26 20:58:57 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ int	try_builtins(t_jobs *job, char **env, char ***temp_vars, bool pipe)//wtf is 
 	else if (ft_strcmp(job->job[0], "env") == 0)//no leaks normal
 		status = caught_env(job, env);
 	else if (ft_strcmp(job->job[0], "exit") == 0)//no leaks normal
-		status = caught_exit(job, pipe);
+		status = caught_exit(job, env, temp_vars, pipe);
 	else if (ft_strchr(job->job[0], '='))
-		status = declare_temp_vars(job, env, temp_vars);
+		status = declare_temp_vars(job, env, temp_vars);//parse
 	if (pipe)
 		exit (status);
 	return (status);
@@ -66,7 +66,6 @@ int	caught_echo(t_jobs *job)//multiple strs doesnt work
 		printf("\n");
 	return (0);
 }
-
 
 void	cd_update_aux1(char **env, char *PWD)
 {
@@ -111,12 +110,13 @@ int	caught_cd(t_jobs *job, char **env)
 
 int	unset_aux(char **to_remove, char **env)
 {
-// TODO has to unset temp_vars
 	int		i;
 	while (*to_remove)
 	{
 		i = 0;
-		while (env[i] && ft_strncmp(env[i], *to_remove, ft_strlen(*to_remove)))
+		if (!env)
+			return (1);
+		while (env && env[i] && ft_strncmp(env[i], *to_remove, ft_strlen(*to_remove)))
 			i++;
 		if (!env[i])
 			return (1);
@@ -130,18 +130,16 @@ int	unset_aux(char **to_remove, char **env)
 	return (0);
 }
 
-int	caught_unset(t_jobs *job, char **env, char ***temp_vars)//segfault if var doesnt exist
+int	caught_unset(t_jobs *job, char **env, char ***temp_vars)
 {
-	int		i;
-	char	**to_remove;
-
-	to_remove = ft_split(job->job[1], ' ');//error check
-	if (unset_aux(to_remove, env))
-		unset_aux(to_remove, *temp_vars);
+	if (!job->job[1])
+		return (0);
+	if (unset_aux(job->job + 1, env))
+		unset_aux(job->job + 1, *temp_vars);
 	return (0);
 }
 
-int	caught_exit(t_jobs *job, bool pipe)
+int	caught_exit(t_jobs *job, char **env, char ***temp_vars, bool pipe)
 {
 	char *error;
 
@@ -164,12 +162,12 @@ int	caught_exit(t_jobs *job, bool pipe)
 	if (job->job[1] && job->job[2])
 		return (ft_putendl_fd("minishell: exit: too many arguments", 2), 1);
 	printf("exit\n");
+	free_array(*temp_vars);
+	free_array(env);
 	rl_clear_history();
 	clear_jobs(&job);
 	exit(0);
 }
-
-
 
 int	caught_env(t_jobs *job, char **env)
 {

@@ -1,11 +1,13 @@
-new logic for export
+export and then exit has invalid frees
 
 fix cd updatepwd
-free temp_vars leaks
 
 fix leaks in normal cases (no errors)
 fix leaks in error cases
 fix leaks in NULL cases
+
+make a few functions for errors that can output certain base messages
+	("command not found", "too many arguments", etc)
 
 ~/ksdakads kdas env_var leak
 

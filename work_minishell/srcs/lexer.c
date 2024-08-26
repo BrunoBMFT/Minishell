@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/24 03:34:36 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/26 19:31:27 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	tokenize(t_token **list, char *str, char **env, int status)
+void	tokenize(t_token **list, char *str, char **env, char **temp_vars, int status)
 {
 	int		i;
 	char	**array;
@@ -23,7 +23,7 @@ void	tokenize(t_token **list, char *str, char **env, int status)
 	char *temp;
 	while (array[i])
 	{
-		temp = unquote_and_direct(array[i], env, NULL, status);
+		temp = unquote_and_direct(array[i], env, temp_vars, status);
 		free(array[i]);
 		array[i] = temp;
 		i++;

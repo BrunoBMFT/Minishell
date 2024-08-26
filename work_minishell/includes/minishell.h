@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/25 02:34:33 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/26 20:32:33 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ char	*split_complex_args(char *str);
 int		assign_i(char *str, int i);
 int		count_words(char *str);
 char	**token_array(char *str);
-void	tokenize(t_token **list, char *str, char **env, int status);
+void	tokenize(t_token **list, char *str, char **env, char **temp_vars, int status);
 int		define_type(char *str);
 t_token	*addtok(void *content);
 t_token	*get_last_tok(t_token *lst);
@@ -102,7 +102,7 @@ t_jobs	*addjob(void *content);
 t_jobs	*get_last_job(t_jobs *lst);
 void	go_to_next_job(t_jobs **lst, t_jobs *new);
 void	make_job_list(t_jobs **job_list, t_token **tok_list, char **env);
-t_jobs	*build(char *command_line, char **env, int status);
+t_jobs	*build(char *command_line, char **env, char **temp_vars, int status);
 
 //executor
 int		start_executor(t_jobs *job, char **env, char ***temp_vars);
@@ -127,7 +127,7 @@ int		caught_pwd(t_jobs *job);
 int		caught_export(t_jobs *job, char **env, char ***temp_vars);
 int		caught_unset(t_jobs *job, char **env, char ***temp_vars);
 int		caught_env(t_jobs *job, char **env);
-int	caught_exit(t_jobs *jobs, bool pipe);
+int		caught_exit(t_jobs *jobs, char **env, char ***temp_vars, bool pipe);
 
 //expansions:
 char	*ft_env_var(char *str);
