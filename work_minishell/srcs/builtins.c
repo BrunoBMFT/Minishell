@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/25 02:39:13 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/25 18:40:03 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,15 +141,11 @@ int	caught_unset(t_jobs *job, char **env, char ***temp_vars)//segfault if var do
 	return (0);
 }
 
-int	caught_exit(t_jobs *job, bool pipe)// TODO FIX
+int	caught_exit(t_jobs *job, bool pipe)
 {
-//	char *error;
-	printf("exit\n");
-	rl_clear_history();
-	clear_jobs(&job);
-	exit(0);
+	char *error;
 
-/* 	if (pipe)
+	if (pipe)
 		return (0);
 	if (job->job[1] && !job->job[2])
 	{
@@ -165,12 +161,12 @@ int	caught_exit(t_jobs *job, bool pipe)// TODO FIX
 		free (error);
 		exit (2);
 	}
-	if (job->job[2])
+	if (job->job[1] && job->job[2])
 		return (ft_putendl_fd("minishell: exit: too many arguments", 2), 1);
 	printf("exit\n");
 	rl_clear_history();
 	clear_jobs(&job);
-	exit(0); */
+	exit(0);
 }
 
 

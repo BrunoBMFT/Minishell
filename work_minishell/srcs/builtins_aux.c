@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/25 02:42:12 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/25 21:12:46 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,6 @@ int	declare_temp_vars(t_jobs *job, char **env, char ***temp_vars)
 
 void	export_new(char *var, char **env)
 {
-	char	*temp;
   	int i;
 
 	i = 0;
@@ -99,10 +98,8 @@ void	export_new(char *var, char **env)
 		i++;
 	if (!is_in_env(var, env))//error check, technically doesnt need to be here because if i do "varname=value, it will update env either way"
 	{
-		temp = ft_calloc(sizeof(char), ft_strlen(var) + 1);//error check
-		ft_strcpy(temp, var);//error check
+		env[i] = ft_strdup(var);//error check
 	}
-	env[i] = temp;
 	env[i + 1] = NULL;
 }
 
@@ -122,25 +119,33 @@ void	export_temp(char *var, char **env, char ***temp_vars)
 		env[i] = ft_strdup(temp);//error check
 	env[i + 1] = NULL;
 }
-// ! NEW LOGIC PLS
-int	caught_export(t_jobs *job, char **env, char ***temp_vars)
-{	
+
+int	caught_export(t_jobs *job, char **env, char ***temp_vars)//fix export var =value (the space)
+{
+	int	status;
 	if (!job->job[1])
 		return (caught_env(job, env));
-	int i = 1;
-	char	*temp = NULL;
-	while (job->job[i])
+
+	job->job++;
+	status = 0;
+	while (*job->job)
 	{
-		if (ft_strchr(job->job[i], '='))//pass &env
+		if (!ft_isalpha(*job->job[0]))
 		{
-			export_new(job->job[i], env);//error check
+			ft_putendl_fd(ft_strjoin3("minishell: export: ",
+							*job->job, ": not a valid identifier"), 2);//error check
+			status = 1;
+		}
+		else if (ft_strchr(*job->job, '='))//pass &env
+		{
+			export_new(*job->job, env);//error check
 		}
 		else
 		{
-			export_temp(job->job[i], env, temp_vars);//error check
+			export_temp(*job->job, env, temp_vars);//error check
 		}
-		i++;
+		job->job++;
 	}
-	return (0);
+	return (status);
 }
 

@@ -1,5 +1,3 @@
-exit not working after any job
-
 new logic for export
 
 fix cd updatepwd
@@ -10,6 +8,8 @@ fix leaks in error cases
 fix leaks in NULL cases
 
 ~/ksdakads kdas env_var leak
+
+echo hi && exit -> leaks
 
 cd includes && echo $PWD
 variable expansion has to happen every job
