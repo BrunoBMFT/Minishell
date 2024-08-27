@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/26 20:40:39 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/27 04:20:48 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ char	**dup_env(char **envp)
 
 	if (!envp || !envp[0])
 		return (NULL);//printf something
-	new_env = ft_calloc(sizeof(char *), ft_split_wordcount(envp) + 1);
+	new_env = ft_calloc(sizeof(char *), ft_split_wordcount(envp) + 2);
 	if (!new_env)
 		return (NULL);//free new_env?
 	i = 0;
-	while (envp[i])
+	while (envp[i] && envp[i])
 	{
 		new_env[i] = ft_strdup(envp[i]);//error check
 		if (!new_env[i])
@@ -41,7 +41,7 @@ char	**dup_env(char **envp)
 
 int	main(int ac, char **av, char **envp)
 {
-	char	**env = envp;
+	char	**env = dup_env(envp);
 	char	*line;
 	char	*dir;
 	char	*prompt;

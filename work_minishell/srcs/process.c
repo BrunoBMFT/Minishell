@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/26 17:50:15 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/27 04:13:11 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int	simple_process(t_jobs *job, char **env, char ***temp_vars)
 	status = try_builtins(job, env, temp_vars, false);
 	if (status != 200)
 		return (status);
+	//has to test if execpath exists here
 	pid = new_fork();
 	if (pid == 0)
 	{

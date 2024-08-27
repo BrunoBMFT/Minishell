@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_aux.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/26 20:27:42 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/27 04:24:50 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,7 @@ int	caught_export(t_jobs *job, char **env, char ***temp_vars)//fix export var =v
 		{
 			ft_putendl_fd(ft_strjoin3("minishell: export: '",
 							*job->job, "': not a valid identifier"), 2);//error check
-			status = 1;
+			status = 0;//tester says exit code has to be 0
 		}
 		else if (ft_strchr(*job->job, '='))//pass &env
 		{

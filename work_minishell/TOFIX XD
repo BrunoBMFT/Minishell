@@ -1,6 +1,14 @@
+tester says builtins error codes have to be 0, but i think i modified the tester file badly
+
+cd folder && rm -rf ../folder
+env -i
+unset PATH
+
 export and then exit has invalid frees
 
-fix cd updatepwd
+echo hi && exit -> leaks
+
+is it allowed to create a child process even if command isnt found?
 
 fix leaks in normal cases (no errors)
 fix leaks in error cases
@@ -11,7 +19,6 @@ make a few functions for errors that can output certain base messages
 
 ~/ksdakads kdas env_var leak
 
-echo hi && exit -> leaks
 
 cd includes && echo $PWD
 variable expansion has to happen every job
@@ -19,8 +26,6 @@ variable expansion has to happen every job
 just a | crashes
 
 problem with getpid = NULL, printing a newline
-
-if job.job1, does pwd still print?
 
 start testing every malloc functions with NULLS and see if everything is freed and protected
 

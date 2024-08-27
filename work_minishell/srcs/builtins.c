@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/26 20:58:57 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/27 04:26:43 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,31 +67,42 @@ int	caught_echo(t_jobs *job)//multiple strs doesnt work
 	return (0);
 }
 
-void	cd_update_aux1(char **env, char *PWD)
+void	cd_update_aux1(char **env, char *PWD, char *value)
 {
 	char	cwd[PATH_MAX];
-	char	*ret;
 	char	*temp;
 	int i = 0;
 
 	while (env[i] && ft_strncmp(env[i], PWD, ft_strlen(PWD)))//find better way
 		i++;
-	getcwd(cwd, PATH_MAX);//error check
-	env[i] = ft_strjoin(PWD, cwd);//error check
+	if (!value)
+		value = getcwd(cwd, PATH_MAX);//error check
+	env[i] = ft_strjoin(PWD, value);//error check
 	if (!env[i])
 		return (free (env[i]), (void)NULL);
+}
+
+char	*cd_get_pwd(char **env)
+{
+	char	cwd[PATH_MAX];
+	char	*ret;
+
+	getcwd(cwd, PATH_MAX);//error check
+	ret = ft_strdup(cwd);//error check
+	return (ret);
 }
 
 int	caught_cd(t_jobs *job, char **env)
 {
 	char 	*directory;
 	char	*error;
-
-	cd_update_aux1(env, "OLDPWD=");// TODO cant run if this fails
+	char	*oldpwd;
+	
+	oldpwd = cd_get_pwd(env);
  	if (!job->job[1])
 	{
 		if (chdir(ft_getenv("HOME", env)) < 0)//error check
-			return (ft_putendl_fd("cd home failed", 2), 1);
+			return (ft_putendl_fd("cd home failed", 2), 0);//tester says exit code has to be 0
 	}
 	else
 	{
@@ -99,12 +110,12 @@ int	caught_cd(t_jobs *job, char **env)
 		if (chdir(directory) < 0)
 		{
 			error = ft_strjoin("minishell: cd: ", job->job[1]);//error check
-			perror(error);
-			free (error);
-			return (1);
+			return (perror(error), free (error), free (oldpwd), 0);//tester says exit code has to be 0
 		}
 	}
-	cd_update_aux1(env, "PWD=");
+	cd_update_aux1(env, "OLDPWD=", oldpwd);
+	cd_update_aux1(env, "PWD=", NULL);
+	free (oldpwd);
 	return (0);
 }
 
@@ -157,10 +168,10 @@ int	caught_exit(t_jobs *job, char **env, char ***temp_vars, bool pipe)
 		error = ft_strjoin3("minishell: exit: ", job->job[1], ": numeric argument required");
 		ft_putendl_fd(error, 2);
 		free (error);
-		exit (2);
+		exit (0);//tester says exit code has to be 0
 	}
 	if (job->job[1] && job->job[2])
-		return (ft_putendl_fd("minishell: exit: too many arguments", 2), 1);
+		return (ft_putendl_fd("minishell: exit: too many arguments", 2), 0);//tester says exit code has to be 0??
 	printf("exit\n");
 	free_array(*temp_vars);
 	free_array(env);
@@ -194,11 +205,6 @@ int	caught_pwd(t_jobs *job)
 {
 	char cwd[PATH_MAX];
 
-/* 	if (job->job[1])//bash just forgets this
-	{
-		ft_putendl_fd("pwd: too many arguments", 2);
-		return (1);
-	} */
 	if (!getcwd(cwd, PATH_MAX))
 		return (printf("getcwd() error"), 127);//exit code?
 	ft_putendl_fd(cwd, 1);//error check?

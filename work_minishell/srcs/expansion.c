@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/26 19:46:54 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/08/27 03:47:42 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,10 +92,10 @@ char *double_quotes(char *str, t_var_holder *h, char **env, char **temp_vars, in
 
 char *unquote_and_direct(char *str, char **env, char **temp_vars, int status)
 {
-    t_var_holder h;
+	t_var_holder h;
 
-    h.new = NULL;
-    h.before = NULL;
+	h.new = NULL;
+	h.before = NULL;
     h.quoted = NULL;
     h.after = NULL;
     h.temp = NULL;
