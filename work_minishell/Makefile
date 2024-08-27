@@ -6,7 +6,7 @@
 #    By: bruno <bruno@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/23 16:39:56 by ycantin           #+#    #+#              #
-#    Updated: 2024/08/23 00:30:28 by bruno            ###   ########.fr        #
+#    Updated: 2024/08/27 04:34:26 by bruno            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,5 +59,11 @@ vrun: all
 	clear && valgrind --leak-check=full --suppressions=readline.supp ./minishell
 fullvrun: all
 	clear && valgrind --leak-check=full --suppressions=readline.supp --show-leak-kinds=all --track-origins=yes ./minishell
+
+fullvrunenv: all
+	clear && env -i valgrind --leak-check=full --suppressions=readline.supp --show-leak-kinds=all --track-origins=yes ./minishell
+fullvrununset: all
+	clear && unset PATH && /usr/bin/valgrind --leak-check=full --suppressions=readline.supp --show-leak-kinds=all --track-origins=yes ./minishell
+
 
 .PHONY: all fclean clean re
