@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/27 04:20:48 by bruno            ###   ########.fr       */
+/*   Updated: 2024/08/31 17:44:45 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ char	**dup_env(char **envp)
 	i = 0;
 	while (envp[i] && envp[i])
 	{
-		new_env[i] = ft_strdup(envp[i]);//error check
+		if (ft_strncmp(envp[i], "SHLVL=", 6) == 0)//check size
+			new_env[i] = ft_strjoin("SHLVL=", ft_itoa(ft_atoi(envp[i] + 6) + 1));//error check
+		else
+			new_env[i] = ft_strdup(envp[i]);//error check
 		if (!new_env[i])
 		{
 			i = 0;
