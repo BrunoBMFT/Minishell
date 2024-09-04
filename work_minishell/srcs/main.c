@@ -6,74 +6,57 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/31 17:44:45 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/03 22:43:04 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char	**dup_env(char **envp)
+t_env	init_env(char **envp)
 {
-	char	**new_env;
-	int		i;
+	t_env	env;
 
-	if (!envp || !envp[0])
-		return (NULL);//printf something
-	new_env = ft_calloc(sizeof(char *), ft_split_wordcount(envp) + 2);
-	if (!new_env)
-		return (NULL);//free new_env?
-	i = 0;
-	while (envp[i] && envp[i])
-	{
-		if (ft_strncmp(envp[i], "SHLVL=", 6) == 0)//check size
-			new_env[i] = ft_strjoin("SHLVL=", ft_itoa(ft_atoi(envp[i] + 6) + 1));//error check
-		else
-			new_env[i] = ft_strdup(envp[i]);//error check
-		if (!new_env[i])
-		{
-			i = 0;
-			while (new_env[i])
-				free (new_env[i++]);//check if works
-			return (NULL);
-		}
-		i++;
-	}
-	new_env[i] = NULL;
-	return (new_env);
+	env.temp_vars = NULL;
+	env.temp_vars_build = NULL;
+	env.prompt = NULL;
+	env.status = 0;
+	env.env = dup_env(envp);
+	return (env);
 }
 
 int	main(int ac, char **av, char **envp)
 {
-	char	**env = dup_env(envp);
+	t_env	env;
 	char	*line;
 	char	*dir;
-	char	*prompt;
 	t_jobs	*jobs;
 	t_jobs	*curr;
-	char	**temp_vars = NULL;
-	int		status = 0;
 
+	env = init_env(envp);
 	while (1)
 	{
-		prompt = update_prompt();
-/* 		if (set_signal(SIGINT, ctrl_c_idle) < 0 || set_signal(SIGQUIT, SIG_IGN) < 0)
-		{
-			free(prompt);
-			ft_printf("Error: signal\n");
-			return 1;
-		} */
-		line = readline(prompt);
-		free(prompt);
+		signal(SIGINT, handle_signal_main);
+		signal(SIGQUIT, SIG_IGN);
+		env.prompt = update_prompt();
+		line = readline(env.prompt);
+		free(env.prompt);
 		if (!line || !line[0])
 		{
 			free (line);
 			continue ;
 		}
+		if (secondquote(line) == 1)	//remove if you want to request additional info to finish prompt
+		{
+			free(line);
+			ft_printf("error: unclosed quote\n");
+			continue ;
+		}
 		add_history(line);
 		line = parse_quotes(line);
-		jobs = build(line, env, temp_vars, status);
+		jobs = build(line, env);
 		curr = jobs;
-		status = start_executor(curr, env, &temp_vars);
+		env.temp_vars = &env.temp_vars_build;
+		env.status = start_executor(curr, env);
 		clear_jobs(&jobs);
 	}
 	return (0);

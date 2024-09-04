@@ -6,29 +6,30 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/27 04:13:11 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/04 02:24:40 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	child_process(t_jobs *job, char **env, char ***temp_vars)
+int	child_process(t_jobs *job, t_env env)
 {
 	pid_t	pid;
 	int		fd[2];
 	int		status = 0;
 
-	if (ft_strcmp(job->job[0], "cd") == 0)
-		return (caught_cd(job, env));
+	if (job->job && job->job[0] && (ft_strcmp(job->job[0], "cd")) == 0)
+		return (caught_cd(job, env.env));
 	pipe(fd);
 	pid = new_fork();
 	if (pid == 0)
 	{
 		close(fd[READ]);
-		dup2(fd[WRITE], STDOUT_FILENO);//error check
+		if (job->next && job->next->type == PIPE)//might not need this check
+			dup2(fd[WRITE], STDOUT_FILENO);//error check
 		close(fd[WRITE]);
-		if (try_builtins(job, env, temp_vars, true) == 200)
-			execute_job(job->job, env);
+		if (try_builtins(job, env, true) == 200)
+			execute_job(job->job, env.env);
 	}
 	close(fd[WRITE]);
 	dup2(fd[READ], STDIN_FILENO);//error check
@@ -37,19 +38,21 @@ int	child_process(t_jobs *job, char **env, char ***temp_vars)
 	return (WEXITSTATUS(status));
 }
 
-int	simple_process(t_jobs *job, char **env, char ***temp_vars)
+int	simple_process(t_jobs *job, t_env env)
 {
 	pid_t	pid;
 	int	status;
-
-	status = try_builtins(job, env, temp_vars, false);
+	
+	if (ft_strcmp(job->job[0], "exit") == 0)//exits even if piped
+		status = caught_exit(job, env);
+	status = try_builtins(job, env, false);
 	if (status != 200)
 		return (status);
-	//has to test if execpath exists here
+	//has to test if executable_path exists here
 	pid = new_fork();
 	if (pid == 0)
 	{
-		execute_job(job->job, env);
+		execute_job(job->job, env.env);
 	}
 	waitpid(pid, &status, 0);
 	return (WEXITSTATUS(status));

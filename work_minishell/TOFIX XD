@@ -1,12 +1,28 @@
-tester says builtins error codes have to be 0, but i think i modified the tester file badly
+has to test if executable_path exists in simple process
+
+bool pipe can be sent in struct
+
+job.array doesnt need env
+< lkasdlkdaslasd cat -> failing
+
+parse certain var declarations
+
+FIX PIPED IN EXECUTOR
+check priorities, seems alright
 
 cd folder && rm -rf ../folder
 env -i
 unset PATH
 
+cd includes && echo $PWD
+variable expansion has to happen every job
+
 export and then exit has invalid frees
 
+fix echo
 echo hi && exit -> leaks
+
+create a struct for env, temp_vars, status, for things like build or executor to not have many parameters
 
 is it allowed to create a child process even if command isnt found?
 
@@ -14,16 +30,14 @@ fix leaks in normal cases (no errors)
 fix leaks in error cases
 fix leaks in NULL cases
 
+just a | doesnt act how it's supposed to
+
 make a few functions for errors that can output certain base messages
 	("command not found", "too many arguments", etc)
 
 ~/ksdakads kdas env_var leak
 
-
-cd includes && echo $PWD
-variable expansion has to happen every job
-
-just a | crashes
+stop using panic
 
 problem with getpid = NULL, printing a newline
 
@@ -36,18 +50,8 @@ builtins doesnt need to exit since it doesnt need fork, unless it is a pipe comm
 
 temp_vars has to be ***?
 
-test things like "var=hello | echo $var" vs. "var=hello && echo $var"
-
-take care of env-i
-
 rename variables
 
 check builtin order
-
-
-		//find better way to send status to build, since it's being sent everywhere
-
-echo "ola
-adeus" > out			fix
 
 # define malloc(x) NULL

@@ -6,33 +6,31 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/27 04:26:43 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/04 02:21:41 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-int	try_builtins(t_jobs *job, char **env, char ***temp_vars, bool pipe)//wtf is bool pipe
+//dont use bool pipe
+int	try_builtins(t_jobs *job, t_env env, bool pipe)//wtf is bool pipe
 {
 	int	status;
 
 	status = 200;
 	if (ft_strcmp(job->job[0], "echo") == 0)//no leaks normal
 		status = caught_echo(job);
-	if (ft_strcmp(job->job[0], "cd") == 0)
-		status = caught_cd(job, env);
+/* 	if (ft_strcmp(job->job[0], "cd") == 0)
+		status = caught_cd(job, env.env); */
 	else if (ft_strcmp(job->job[0], "pwd") == 0)//no leaks normal
 		status = caught_pwd(job);
 	else if (ft_strcmp(job->job[0], "export") == 0)
-		status =  caught_export(job, env, temp_vars);
+		status = caught_export(job, env);
 	else if (ft_strcmp(job->job[0], "unset") == 0)
-		status = caught_unset(job, env, temp_vars);
+		status = caught_unset(job, env);
 	else if (ft_strcmp(job->job[0], "env") == 0)//no leaks normal
 		status = caught_env(job, env);
-	else if (ft_strcmp(job->job[0], "exit") == 0)//no leaks normal
-		status = caught_exit(job, env, temp_vars, pipe);
 	else if (ft_strchr(job->job[0], '='))
-		status = declare_temp_vars(job, env, temp_vars);//parse
+		status = declare_temp_vars(job, env);//parse
 	if (pipe)
 		exit (status);
 	return (status);
@@ -40,14 +38,13 @@ int	try_builtins(t_jobs *job, char **env, char ***temp_vars, bool pipe)//wtf is 
 
 int	caught_echo(t_jobs *job)//multiple strs doesnt work
 {
-	//redirs not working
 	bool	nl;
 	int		i;
 
 	i = 1;
+	nl = true;
 	if (!job->job[1])
 		return (ft_nl_fd(1), 0);
-	nl = true;
 	if (ft_strcmp(job->job[1], "-n") == 0)
 	{
 		nl = false;
@@ -91,7 +88,7 @@ char	*cd_get_pwd(char **env)
 	ret = ft_strdup(cwd);//error check
 	return (ret);
 }
-
+//dont have to handle ..
 int	caught_cd(t_jobs *job, char **env)
 {
 	char 	*directory;
@@ -121,7 +118,8 @@ int	caught_cd(t_jobs *job, char **env)
 
 int	unset_aux(char **to_remove, char **env)
 {
-	int		i;
+	int	i;
+
 	while (*to_remove)
 	{
 		i = 0;
@@ -131,6 +129,7 @@ int	unset_aux(char **to_remove, char **env)
 			i++;
 		if (!env[i])
 			return (1);
+		free (env[i]);//not freeing from temp_vars
 		while (env[i])
 		{
 			env[i] = env[i + 1];
@@ -141,21 +140,19 @@ int	unset_aux(char **to_remove, char **env)
 	return (0);
 }
 
-int	caught_unset(t_jobs *job, char **env, char ***temp_vars)
+int	caught_unset(t_jobs *job, t_env env)
 {
 	if (!job->job[1])
 		return (0);
-	if (unset_aux(job->job + 1, env))
-		unset_aux(job->job + 1, *temp_vars);
+	if (unset_aux(job->job + 1, env.env))
+		unset_aux(job->job + 1, *env.temp_vars);
 	return (0);
 }
 
-int	caught_exit(t_jobs *job, char **env, char ***temp_vars, bool pipe)
+int	caught_exit(t_jobs *job, t_env env)
 {
 	char *error;
 
-	if (pipe)
-		return (0);
 	if (job->job[1] && !job->job[2])
 	{
 		// TODO fix
@@ -173,14 +170,14 @@ int	caught_exit(t_jobs *job, char **env, char ***temp_vars, bool pipe)
 	if (job->job[1] && job->job[2])
 		return (ft_putendl_fd("minishell: exit: too many arguments", 2), 0);//tester says exit code has to be 0??
 	printf("exit\n");
-	free_array(*temp_vars);
-	free_array(env);
+	free_array(*env.temp_vars);
+	free_array(env.env);
 	rl_clear_history();
 	clear_jobs(&job);
 	exit(0);
 }
 
-int	caught_env(t_jobs *job, char **env)
+int	caught_env(t_jobs *job, t_env env)
 {
 	int		i;
 	char	*error;
@@ -193,9 +190,9 @@ int	caught_env(t_jobs *job, char **env)
 		return (127);
 	}
 	i = 0;
-	while (env[i])
+	while (env.env[i])
 	{
-		ft_putendl_fd(env[i], 1);
+		ft_putendl_fd(env.env[i], 1);
 		i++;
 	}
 	return (0);

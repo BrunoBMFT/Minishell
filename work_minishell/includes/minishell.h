@@ -6,13 +6,13 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/27 04:09:17 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/04 02:21:17 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-
+// ! REMOVE UNUSED FUNCTIONS
 # include "libft/libft.h"
 # include <stdio.h>
 # include <stdlib.h>
@@ -47,6 +47,16 @@ typedef enum s_types
 	APPEND_OUT,
 	EXPORT
 }			t_types;
+
+typedef struct s_env
+{
+	int		status;
+	char	*prompt;
+	char	**env;
+	char	**temp_vars_build;
+	char	***temp_vars;
+}				t_env;
+
 
 typedef struct variable_holder
 {
@@ -86,63 +96,69 @@ typedef struct s_jobs
 }				t_jobs;
 
 //tokenizer:
-int		count(char *str);
-char	*split_complex_args(char *str);
-int		assign_i(char *str, int i);
-int		count_words(char *str);
+void	tokenize(t_token **list, char *str, t_env env);
 char	**token_array(char *str);
-void	tokenize(t_token **list, char *str, char **env, char **temp_vars, int status);
+void	modify_array(char **array, t_env env);
+int		count_words(char *str);
 int		define_type(char *str);
 t_token	*addtok(void *content);
 t_token	*get_last_tok(t_token *lst);
 void	go_to_next(t_token **lst, t_token *new);
 
-//job list:
+//lexer:
+t_jobs	*build(char *command_line, t_env env);
 t_jobs	*addjob(void *content);
 t_jobs	*get_last_job(t_jobs *lst);
 void	go_to_next_job(t_jobs **lst, t_jobs *new);
-void	make_job_list(t_jobs **job_list, t_token **tok_list, char **env);
-t_jobs	*build(char *command_line, char **env, char **temp_vars, int status);
+void	make_job_list(t_jobs **job_list, t_token **tok_list, t_env env);
+int		count_tokens_in_job(t_token *cur);
+
+//error_correction:
+int		count_quotes(char *str, int *i);
+int 	count_normal_chars(char *str, int *i);
+int		count_special_chars(char *str, int *i);
+char 	*split_complex_args(char *str);
+
+//expansions:
+char	*ft_env_var(char *str);
+char	*ft_getenv(char *str, char **env);
+char	*expand_env_vars(char *input, t_env env);
+char	*no_expansion(char *str, t_var_holder h);
+char	*expansion(char *str, t_var_holder *h, t_env env);
+char	*unquote_and_direct(char *str, t_env env);
+
+//parser:
+int		parse(t_token **token);
+char	*parse_quotes(char *line);
+int		secondquote(char *line);
+int		parse_last_token(char **cmd_line, t_token **list, t_token **last);
 
 //executor
-int		start_executor(t_jobs *job, char **env, char ***temp_vars);
-int		child_process(t_jobs *job, char **env, char ***temp_vars);
-int		simple_process(t_jobs *job, char **env, char ***temp_vars);
+int		start_executor(t_jobs *job, t_env env);
+int		child_process(t_jobs *job, t_env env);
+int		simple_process(t_jobs *job, t_env env);
 int		execute_job(char **command, char **env);
 int		execute_executable_path(char **cmd, char **env);
 int		execute_command_path(char **cmd, char **env);
 int		new_fork(void);
 void	panic(char *s);
 
-//parser:
-int		parse(t_token **token);
-char	*parse_quotes(char *line);
-int		parse_last_token(char **cmd_line, t_token **list, t_token **last);
-
 //builtins:
-int		try_builtins(t_jobs *job, char **env, char ***temp_vars, bool pipe);
+int		try_builtins(t_jobs *job, t_env env, bool pipe);
 int		caught_echo(t_jobs *job);
 int		caught_cd(t_jobs *job, char **env);
 int		caught_pwd(t_jobs *job);
-int		caught_export(t_jobs *job, char **env, char ***temp_vars);
-int		caught_unset(t_jobs *job, char **env, char ***temp_vars);
-int		caught_env(t_jobs *job, char **env);
-int		caught_exit(t_jobs *jobs, char **env, char ***temp_vars, bool pipe);
-
-//expansions:
-char	*ft_env_var(char *str);
-char	*ft_getenv(char *str, char **env);
-char	*expand_env_vars(char *input, char **env, char **temp_vars);
-char	*no_expansion(char *str, t_var_holder h);
-char	*expansion(char *str, t_var_holder *h, char **env, char **temp_vars, int status);
-char	*unquote_and_direct(char *str, char **env, char **temp_vars, int status);
-int		declare_temp_vars(t_jobs *job, char **env, char ***temp_vars);
+int		caught_export(t_jobs *job, t_env env);
+int		caught_unset(t_jobs *job, t_env env);
+int		caught_env(t_jobs *job, t_env env);
+int		caught_exit(t_jobs *jobs, t_env env);
+int		declare_temp_vars(t_jobs *job, t_env env);
 
 //redirections
 void	update_input(t_jobs *job);
-int		update_output(t_jobs *job, char **env, char ***temp_vars);
-int		append_to_file(t_jobs *job, char **env, char ***temp_vars);
-void	handle_heredoc(char *delimiter);
+int		update_output(t_jobs *job, char **env, char **temp_vars);
+int		append_to_file(t_jobs *job, char **env, char **temp_vars);
+int 	handle_heredoc(t_jobs *job);
 void	print_file(int fd);
 
 //free:
@@ -153,14 +169,15 @@ void	clear_jobs(t_jobs **lst);
 void	clean_up_build(t_token **list, char *cmd_line);
 
 //signals:
-void	ctrl_c_idle(int sig);
-int		set_signal(int sig, void f(int));
-void	sigquit(int sig);
-void	ctrl_c(int sig);
+void sigquit(int sig);
+void handle_signal_main(int sig);
+void handle_signal_child(int sig);
+void handle_signal_heredoc(int sig);
 
 //aux:
 void	print_jobs(t_jobs *jobs);//to remove
 char	*update_prompt(void);
-int	ft_getpid(void);
+int		ft_getpid(void);
+char	**dup_env(char **envp);
 
 #endif

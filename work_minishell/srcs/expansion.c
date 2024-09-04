@@ -6,13 +6,13 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/27 03:47:42 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/03 22:33:23 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char	*expand(char *str, char **env, char **temp_vars, int status)
+char	*expand(char *str, t_env env)
 {
 	t_var_holder	h;
 
@@ -32,18 +32,18 @@ char	*expand(char *str, char **env, char **temp_vars, int status)
 		{
 			h.start = h.i;
 			h.i++;
-			h.result = expansion(str, &h, env, temp_vars, status);
+			h.result = expansion(str, &h, env);
 		}
 	}
 	return (h.result);
 }
 
-char	*no_quotes(char *str, t_var_holder *h, char **env, char **temp_vars, int status)
+char	*no_quotes(char *str, t_var_holder *h, t_env env)
 {
 	h->temp = ft_strndup(str + h->start, h->i - h->start);
 	if (!h->temp)
 		return h->new;
-	h->before = expand(h->temp, env, temp_vars, status);
+	h->before = expand(h->temp, env);
 	free(h->temp);
 	if (!h->before)
 		return h->new;
@@ -81,21 +81,21 @@ char	*single_quotes(char *str, t_var_holder *h)
 	return (h->new);
 }
 
-char *double_quotes(char *str, t_var_holder *h, char **env, char **temp_vars, int status)
+char *double_quotes(char *str, t_var_holder *h, t_env env)
 {
     h->start = ++h->i;
     while (str[h->i] && str[h->i] != '\"')
         h->i++;
-    h->new = no_quotes(str, h, env, temp_vars, status);
+    h->new = no_quotes(str, h, env);
     return (h->new);
 }
 
-char *unquote_and_direct(char *str, char **env, char **temp_vars, int status)
+char *unquote_and_direct(char *str, t_env env)
 {
-	t_var_holder h;
+    t_var_holder h;
 
-	h.new = NULL;
-	h.before = NULL;
+    h.new = NULL;
+    h.before = NULL;
     h.quoted = NULL;
     h.after = NULL;
     h.temp = NULL;
@@ -107,35 +107,35 @@ char *unquote_and_direct(char *str, char **env, char **temp_vars, int status)
         while (str[h.i] && str[h.i] != '\'' && str[h.i] != '\"')
             h.i++;
         if (h.i > h.start) 
-            h.new = no_quotes(str, &h, env, temp_vars, status);
+            h.new = no_quotes(str, &h, env);
         if (str[h.i] == '\'')
             h.new = single_quotes(str, &h);
         else if (str[h.i] == '\"') 
-            h.new = double_quotes(str, &h, env, temp_vars, status);
+            h.new = double_quotes(str, &h, env);
         if (str[h.i])
             h.i++;
     }
     return (h.new);
 }
 
-char	*expand_env_vars(char *input, char **env, char **temp_vars)
+char	*expand_env_vars(char *input, t_env env)
 {
 	char	*temp;
 
 	temp = NULL;
-	temp = ft_getenv(input + 1, env);
-	if (!temp && temp_vars)
-		temp = ft_getenv(input + 1, temp_vars);
+	temp = ft_getenv(input + 1, env.env);
+	if (!temp && env.temp_vars_build)
+		temp = ft_getenv(input + 1, env.temp_vars_build);
 	if (!temp)
 		temp = ft_strdup("");
-	return (temp);
+	return temp;
 }
 
 char	*no_expansion(char *str, t_var_holder h)
 {
 	h.before = ft_strndup(str + h.start, h.i - h.start);
 	if (!h.before)
-		return (NULL);
+		return NULL;
 	if (!h.result)
 		h.temp = ft_strdup(h.before);
 	else
@@ -147,22 +147,18 @@ char	*no_expansion(char *str, t_var_holder h)
 	return(h.temp);
 }
 
-char	*expansion(char *str, t_var_holder *h, char **env, char **temp_vars, int status)
+char	*expansion(char *str, t_var_holder *h, t_env env)
 {
-	FILE *fp;
-	int	pid;
 	if (str[h->i] == '\0' || str[h->i] == ' ' || str[h->i] == '\t')
 		h->expanded = ft_strdup("$");
 	else if (str[h->i] == '$')
 	{
-		pid = ft_getpid();
-		if (pid)
-			h->expanded = ft_itoa(pid);
+		h->expanded = ft_itoa(getpid());//in this part, receive pid and printf pid
 		h->i++;
 	}
 	else if (str[h->i] == '?')
 	{
-		h->expanded = ft_itoa(status);
+		h->expanded = ft_itoa(env.status);
 		h->i++;
 	}
 	else
@@ -170,7 +166,7 @@ char	*expansion(char *str, t_var_holder *h, char **env, char **temp_vars, int st
 		while (str[h->i] && (ft_isalnum(str[h->i]) || str[h->i] == '_'))
 			h->i++;
 		h->temp2 = ft_strndup(str + h->start, h->i - h->start);
-		h->expanded = expand_env_vars(h->temp2, env, temp_vars);
+		h->expanded = expand_env_vars(h->temp2, env);
 		free(h->temp2);
 	}
 	h->temp = ft_strjoin(h->result, h->expanded);
@@ -181,4 +177,3 @@ char	*expansion(char *str, t_var_holder *h, char **env, char **temp_vars, int st
 	h->start = h->i;
 	return (h->result);
 }
-

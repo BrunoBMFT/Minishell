@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/26 19:33:43 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/09/03 21:56:55 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ int	parse(t_token **token)
 				return (-1);
 		cur = cur->next;
 	}
-	return (0);
 }
 
 int	secondquote(char *line)//rather not use
@@ -93,7 +92,7 @@ char	*parse_quotes(char *line)
 {
 	int		i;
 	char	*start;
-	char	*newww;
+	char	*new;
 	char	*newline;
 
 	i = 0;
@@ -108,12 +107,12 @@ char	*parse_quotes(char *line)
 			{               
 				newline = readline("quote> ");
 				if (!newline)
-					newww = ft_strjoin(line, "\n"); //not working rn
+					new = ft_strjoin(line, "\n"); //not working rn
 				else
-					newww = ft_strjoin(line, newline);
+					new = ft_strjoin(line, newline);
 				free(line);
 				free(newline);
-				line = newww;
+				line = new;
 				start = ft_strchr(line + i + 1, line[i]);
 			}
 				i = start - line;
@@ -141,7 +140,7 @@ int	parse_last_token(char **cmd_line, t_token **list, t_token **last)
 	*cmd_line = new;
 	clear_list(list);
 	converted = split_complex_args(*cmd_line);
-	tokenize(list, converted, NULL, NULL, 0);	
+	tokenize(list, converted, *(t_env *)NULL);
 	free(converted);
 	*last = get_last_tok(*list);
 	if (parse(list) == -1)

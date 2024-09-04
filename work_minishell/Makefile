@@ -6,7 +6,7 @@
 #    By: bruno <bruno@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/23 16:39:56 by ycantin           #+#    #+#              #
-#    Updated: 2024/08/27 04:34:26 by bruno            ###   ########.fr        #
+#    Updated: 2024/09/03 15:53:34 by bruno            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,9 +14,10 @@ NAME =	minishell
 
 SRCS_DIR = ./srcs
 SRCS =	main.c aux.c builtins.c builtins_aux.c executor.c process.c process_aux.c \
-		heredoc.c signal.c smooth_usrexp.c \
-		lexer.c lexer_utils.c frees.c job_list.c job_utils.c \
-		parse.c expansion.c redirections.c
+		heredoc.c signal.c error_correction.c error_correction_utils.c \
+		lexer.c lexer_utils.c frees.c tokenize.c tokenize_utils.c \
+		parse.c expansion.c 
+#redirections.c
 
 OBJS_DIR = ./objs
 OBJS = $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))

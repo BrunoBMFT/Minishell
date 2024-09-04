@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/27 04:24:50 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/03 22:30:14 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ bool	declare_temp_vars_parse(t_jobs *job)
 	return (true);
 }
 
-int	declare_temp_vars(t_jobs *job, char **env, char ***temp_vars)//parse
+int	declare_temp_vars(t_jobs *job, t_env env)
 {
 	int temp_vars_len;
 	int job_len;
@@ -68,7 +68,7 @@ int	declare_temp_vars(t_jobs *job, char **env, char ***temp_vars)//parse
 	
 	if (!declare_temp_vars_parse(job))
 		return (127);
-	temp_vars_len = ft_split_wordcount(*temp_vars);
+	temp_vars_len = ft_split_wordcount(*env.temp_vars);
 	job_len = ft_split_wordcount(job->job);
 	new_temp_vars = ft_calloc(sizeof(char *), temp_vars_len + job_len + 1);
 	if (!new_temp_vars)
@@ -76,7 +76,7 @@ int	declare_temp_vars(t_jobs *job, char **env, char ***temp_vars)//parse
 	int i = 0;
 	while (i < temp_vars_len)
 	{
-		new_temp_vars[i] = ft_strdup((*temp_vars)[i]);
+		new_temp_vars[i] = ft_strdup((*env.temp_vars)[i]);
         if (!new_temp_vars[i])//test
         {
             while (i > 0)
@@ -89,7 +89,7 @@ int	declare_temp_vars(t_jobs *job, char **env, char ***temp_vars)//parse
 	int j = 0;
 	while (j < job_len)
 	{
-		if (!is_in_env(job->job[j], env))//error check
+		if (!is_in_env(job->job[j], env.env))//error check
 		{
 			if (!is_in_env(job->job[j], new_temp_vars))//error check
 			{
@@ -107,13 +107,9 @@ int	declare_temp_vars(t_jobs *job, char **env, char ***temp_vars)//parse
 		i++;
 	}
 	new_temp_vars[job_len + temp_vars_len] = NULL;
-	*temp_vars = new_temp_vars;
+	*env.temp_vars = new_temp_vars;
 	return (0);
 }
-
-
-
-
 
 void	export_new(char *var, char **env)
 {
@@ -130,20 +126,20 @@ void	export_new(char *var, char **env)
 }
 // TODO test temp
 //rename variables for better reading, error check for everything
-void	export_temp(char *var, char **env, char ***temp_vars)
+void	export_temp(char *var, t_env env)
 {
   	int i = 0;
 	char *temp;
-	while (env[i])
+	while (env.env[i])
 		i++;
 /*	char *temp = ft_getenv(var, (*temp_vars));//gets temp env var value
 	var = ft_strjoin(var, "=");//joins = sign
 	temp = ft_strjoin(var, temp);//joins var name and tempenv var value
 	(*env)[i] = ft_strdup(temp); */
-	temp = ft_strjoin3(var, "=", ft_getenv(var, *temp_vars));//use vars[ft_strlen], error check
-	if (!is_in_env(temp, env))//error check, technically doesnt need to be here because if i do "varname=value, it will update env either way"
-		env[i] = ft_strdup(temp);//error check
-	env[i + 1] = NULL;
+	temp = ft_strjoin3(var, "=", ft_getenv(var, *env.temp_vars));//use vars[ft_strlen], error check
+	if (!is_in_env(temp, env.env))//error check, technically doesnt need to be here because if i do "varname=value, it will update env either way"
+		env.env[i] = ft_strdup(temp);//error check
+	env.env[i + 1] = NULL;
 }
 
 bool	export_is_alnum(char *str, int n)
@@ -162,12 +158,12 @@ bool	export_is_alnum(char *str, int n)
 	return (true);
 }
 
-int	caught_export(t_jobs *job, char **env, char ***temp_vars)//fix export var =value (the space)
+int	caught_export(t_jobs *job, t_env env)//fix export var =value (the space)
 {
 	int	status;
 
 	if (!job->job[1])
-		return (caught_env(job, env));
+		return (caught_env(job, env.env));
 	job->job++;
 	status = 0;
 	while (*job->job)
@@ -180,11 +176,11 @@ int	caught_export(t_jobs *job, char **env, char ***temp_vars)//fix export var =v
 		}
 		else if (ft_strchr(*job->job, '='))//pass &env
 		{
-			export_new(*job->job, env);//error check
+			export_new(*job->job, env.env);//error check
 		}
 		else
 		{
-			export_temp(*job->job, env, temp_vars);//error check
+			export_temp(*job->job, env);//error check
 		}
 		job->job++;
 	}

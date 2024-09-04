@@ -3,28 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/28 16:52:00 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/21 18:08:19 by brfernan         ###   ########.fr       */
+/*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
+/*   Updated: 2024/09/03 14:15:44 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-t_token	*addtok(void *content)
+t_jobs	*addjob(void *content)
 {
-	t_token	*list;
+	t_jobs	*list;
 
-	list = malloc(sizeof(t_token));
+	list = malloc(sizeof(t_jobs));
 	if (!list)
 		return (NULL);
-	list->token = content;
+	list->job = NULL;
+	list->type = 0;
+	list->append = 0;
+	list->heredoc = 0;
+	list->mult_input_flag = 0;
+	list->input = NULL;
+	list->output = NULL;
 	list->next = NULL;
 	return (list);
 }
 
-t_token	*get_last_tok(t_token *lst)
+t_jobs	*get_last_job(t_jobs *lst)
 {
 	if (!lst)
 		return (NULL);
@@ -33,38 +39,36 @@ t_token	*get_last_tok(t_token *lst)
 	return (lst);
 }
 
-void	go_to_next(t_token **lst, t_token *new)
+void	go_to_next_job(t_jobs **lst, t_jobs *new)
 {
-	t_token	*current;
+	t_jobs	*current;
 
 	if (!new)
 		return ;
-	current = get_last_tok(*lst);
+	current = get_last_job(*lst);
 	if (lst && current)
 		current->next = new;
 	else
 		*lst = new;
 }
 
-int	define_type(char *str)
+int	count_tokens_in_job(t_token *cur)
 {
-	int type;
+	t_token	*temp;
+	int		count;
 
-	if (strcmp(str, "||") == 0)
-		type = OR;
-	else if (ft_strcmp(str, "&&") == 0)
-		type = AND;
-	else if (ft_strcmp(str, "|") == 0)
-		type = PIPE;
-	else if (ft_strcmp(str, "<") == 0)
-		type = INPUT;
-	else if (ft_strcmp(str, ">") == 0)
-		type = OUTPUT;
-	else if (ft_strcmp(str, "<<") == 0)
-		type = HEREDOC;
-	else if (ft_strcmp(str, ">>") == 0)
-		type = APPEND_OUT;
-	else
-		type = WORD;
-	return (type);
+	count = 0;
+	temp = cur;
+	while (temp && temp->type != AND && temp->type != OR && temp->type != PIPE)
+	{
+		if (temp->type >= 4 && temp->type <= APPEND_OUT)
+			temp = temp->next->next;
+		else
+		{
+			count++;
+			temp = temp->next;
+		}
+	}
+	return (count);
 }
+

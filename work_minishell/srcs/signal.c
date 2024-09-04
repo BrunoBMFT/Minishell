@@ -3,44 +3,50 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/22 17:30:44 by brfernan         ###   ########.fr       */
+/*   Created: 2024/07/22 03:18:24 by bruno             #+#    #+#             */
+/*   Updated: 2024/09/03 14:31:11 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-/* 
-void	ctrl_c_idle(int sig)
-{
-	printf("\n");
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
 
 void	sigquit(int sig)
 {
 	(void)sig;
-	ft_printf("Quit\n");
+	write(1, "Quit:\n", 7);
 }
 
-void	ctrl_c(int sig)
-{
-	(void)sig;
-	ft_printf("\n");
-}
-
-int	set_signal(int sig, void f(int))
+void	setup_sigquit_handler(void)
 {
 	struct sigaction	sa;
 
-	sa.sa_handler = f;
-	sa.sa_flags = 0;
+	sa.sa_handler = SIG_IGN;
 	sigemptyset(&sa.sa_mask);
-	if (sigaction(sig, &sa, NULL) < 0)
-		return (-1);
+	sa.sa_flags = 0;
+	sigaction(SIGQUIT, &sa, NULL);
+}
 
-	return (0);
-} */
+// Example signal handlers
+void	handle_signal_main(int sig)
+{
+	(void)sig;
+	write(1, "\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+}
+
+void	handle_signal_heredoc(int sig)
+{
+	(void)sig;
+	write(STDOUT_FILENO, "\n", 1);
+	close(STDIN_FILENO);
+}
+
+void	handle_signal_child(int sig)
+{
+	(void)sig;
+	write(STDOUT_FILENO, "\n", 1);
+}

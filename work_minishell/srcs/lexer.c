@@ -1,117 +1,138 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   lexer.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/08/26 19:31:27 by brfernan         ###   ########.fr       */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   job_list.c										 :+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: ycantin <ycantin@student.42.fr>			+#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2024/06/26 18:20:43 by ycantin		   #+#	#+#			 */
+/*   Updated: 2024/08/29 17:13:35 by ycantin		  ###   ########.fr	   */
+/*																			*/
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	tokenize(t_token **list, char *str, char **env, char **temp_vars, int status)
+t_token	*developed_cmdline_tokenization(char *command_line, t_env env)
+{
+	char	*converted;
+	char	*simplified;
+	t_token	*list;
+
+	list = NULL;
+	simplified = split_complex_args(command_line);
+	tokenize(&list, simplified, env);
+	free(simplified);
+	if (parse(&list) == -1)
+	{
+		clear_list(&list);
+		return (NULL);
+	}
+	return (list);
+}
+
+t_jobs	*build(char *command_line, t_env env)
+{
+	t_jobs	*jobs;
+	t_token	*list;
+	t_token	*last;
+
+	jobs = NULL;
+	list = NULL;
+	last = NULL;
+	list = developed_cmdline_tokenization(command_line, env);
+	if (parse(&list) == -1)
+	{
+		clear_list(&list);
+		return (NULL);
+	}
+	last = get_last_tok(list);
+	while (last && last->type >= PIPE && last->type <= OR && !last->next)
+		if (parse_last_token(&command_line, &list, &last) == -1)
+			return (NULL);
+	make_job_list(&jobs, &list, env);
+	clear_list(&list);
+	free(command_line);
+	return (jobs);
+}
+
+void	apply_redir(t_token *current, t_jobs *job)
+{
+	int	fd;
+
+	if (current->type == INPUT || current->type == HEREDOC)
+	{
+		if (current->type == HEREDOC)
+			job->heredoc = 1;
+		if (job->input)
+		{
+			job->mult_input_flag = 1;
+			free(job->input);
+		}
+		job->input = ft_strdup(current->next->token);
+	}
+	else if (current->type == OUTPUT || current->type == APPEND_OUT)
+	{
+		fd = open(current->next->token, O_CREAT | O_RDWR, 0644);
+		close(fd);
+		if (current->type == APPEND_OUT)
+			job->append = 1;
+		if (job->output)
+			free(job->output);
+		job->output = ft_strdup(current->next->token);
+	}
+}
+
+char	**job_array(t_token **cur, t_jobs **job, t_env env)
 {
 	int		i;
 	char	**array;
-	t_token	*new_node;
 
 	i = 0;
-	array = token_array(str);
-	char *temp;
-	while (array[i])
-	{
-		temp = unquote_and_direct(array[i], env, temp_vars, status);
-		free(array[i]);
-		array[i] = temp;
-		i++;
-	}
-	i = 0;
+	array = malloc(sizeof(char *) * (count_tokens_in_job(*cur) + 1));
 	if (!array)
-		return;
-	while (array[i])
-	{
-		new_node = addtok(ft_strdup(array[i]));
-		if (!new_node)
-			free_all(list, array, "Error\n", 7);
-		new_node->type = define_type(array[i]);
-		go_to_next(list, new_node);
-		i++;
-	}
-	free_array(array);
-}
-
-void handle_quotes(t_var_holder *h, char *str)
-{
-    char quote = str[h->i];
-    h->i++;
-    while (str[h->i] && str[h->i] != quote)
-        h->i++;
-    if (str[h->i] == quote)
-        h->i++;
-}
-
-int count_words(char *str)
-{
-    t_var_holder h;
-
-    h.i = 0;
-    h.wc = 0;
-    while (str[h.i])
-    {
-        while (str[h.i] && (str[h.i] == ' ' || str[h.i] == '\t' || str[h.i] == '\n'))
-        	h.i++;
-        if (str[h.i] == '\'' || str[h.i] == '\"')
-        {
-            handle_quotes(&h, str);
-            h.wc++;
-        }
-        else if (str[h.i] && !(str[h.i] == ' ' || str[h.i] == '\t' || str[h.i] == '\n'))
-        {
-            while (str[h.i] && !(str[h.i] == ' ' || str[h.i] == '\t' || str[h.i] == '\n'))
-                h.i++;
-            h.wc++;
-        }
-    }
-    return h.wc;
-}
-
-void update_iterator(t_var_holder *h, char *str)
-{
-    while (str[h->i])
-    {
-        while (str[h->i] && (str[h->i] == ' ' || str[h->i] == '\t' || str[h->i] == '\n'))
-			h->i++;
-        h->j = h->i;
-        if (str[h->i] == '\'' || str[h->i] == '\"')
-            handle_quotes(h, str);
-        else
-        {
-            while (str[h->i] && !(str[h->i] == ' ' || str[h->i] == '\t' || str[h->i] == '\n'))
-                h->i++;
-        }
-        if (h->i > h->j)
-		{
-			h->array[h->k] = ft_substr(str, h->j, h->i - h->j);
-			h->k++;
-		}
-    }
-}
-
-char	**token_array(char *str)
-{
-	t_var_holder	h;
-
-	h.i = 0;
-	h.j = 0;
-	h.k = 0;
-	h.wc = count_words(str);
-	h.array = malloc(sizeof(char *) * (h.wc + 1));
-	if (!h.array)
 		return (NULL);
-	update_iterator(&h, str);
-	h.array[h.k] = NULL;
-	return (h.array);
+	while (*cur && (*cur)->type != AND && (*cur)->type != OR
+		&& (*cur)->type != PIPE)
+	{
+		if ((*cur)->type >= INPUT && (*cur)->type <= APPEND_OUT)
+		{
+			apply_redir(*cur, *job);
+			*cur = (*cur)->next->next;
+		}
+		else
+		{
+			array[i++] = ft_strdup((*cur)->token);
+			*cur = (*cur)->next;
+		}
+	}
+	if (i == 0)
+		return (free(array), NULL);
+	return (array[i] = NULL, array);
+}
+
+void	make_job_list(t_jobs **job_list, t_token **tok_list, t_env env)
+{
+	t_token	*cur;
+	t_jobs	*new;
+	char	*cmd;
+
+	cur = *tok_list;
+	while (cur)
+	{
+		new = addjob(NULL);
+		if (cur && cur->type == PIPE || cur->type == AND || cur->type == OR)
+		{
+			if (cur->type > 0 && cur->type < 4)
+			{
+				new->type = cur->type;
+				new->job = NULL;
+			}
+			go_to_next_job(job_list, new);
+			cur = cur->next;
+			continue ;
+		}
+		new->job = job_array(&cur, &new, env);
+		new->type = WORD;
+		go_to_next_job(job_list, new);
+	}
 }
