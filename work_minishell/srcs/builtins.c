@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/04 02:21:41 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/05 05:12:31 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,39 +116,6 @@ int	caught_cd(t_jobs *job, char **env)
 	return (0);
 }
 
-int	unset_aux(char **to_remove, char **env)
-{
-	int	i;
-
-	while (*to_remove)
-	{
-		i = 0;
-		if (!env)
-			return (1);
-		while (env && env[i] && ft_strncmp(env[i], *to_remove, ft_strlen(*to_remove)))
-			i++;
-		if (!env[i])
-			return (1);
-		free (env[i]);//not freeing from temp_vars
-		while (env[i])
-		{
-			env[i] = env[i + 1];
-			i++;
-		}
-		to_remove++;
-	}
-	return (0);
-}
-
-int	caught_unset(t_jobs *job, t_env env)
-{
-	if (!job->job[1])
-		return (0);
-	if (unset_aux(job->job + 1, env.env))
-		unset_aux(job->job + 1, *env.temp_vars);
-	return (0);
-}
-
 int	caught_exit(t_jobs *job, t_env env)
 {
 	char *error;
@@ -177,33 +144,3 @@ int	caught_exit(t_jobs *job, t_env env)
 	exit(0);
 }
 
-int	caught_env(t_jobs *job, t_env env)
-{
-	int		i;
-	char	*error;
-
-	if (job->job[1])//error and exit code
-	{
-		error = ft_strjoin3("env: '", job->job[1], "': No such file or directory");
-		ft_putendl_fd(error, 2);//hardcoded
-		free (error);
-		return (127);
-	}
-	i = 0;
-	while (env.env[i])
-	{
-		ft_putendl_fd(env.env[i], 1);
-		i++;
-	}
-	return (0);
-}
-
-int	caught_pwd(t_jobs *job)
-{
-	char cwd[PATH_MAX];
-
-	if (!getcwd(cwd, PATH_MAX))
-		return (printf("getcwd() error"), 127);//exit code?
-	ft_putendl_fd(cwd, 1);//error check?
-	return (0);
-}

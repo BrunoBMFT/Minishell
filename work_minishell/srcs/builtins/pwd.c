@@ -1,25 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/16 07:26:16 by yohan             #+#    #+#             */
-/*   Updated: 2024/09/04 19:25:57 by bruno            ###   ########.fr       */
+/*   Created: 2024/09/04 23:09:17 by bruno             #+#    #+#             */
+/*   Updated: 2024/09/05 01:56:58 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../includes/minishell.h"
 
-void	ft_putchar_fd(char c, int fd)
+int	caught_pwd(t_jobs *job)
 {
-	if (fd < 0)
-		return ;
-	write(fd, &c, 1);
-}
+	char cwd[PATH_MAX];
 
-void	ft_putchar(char c)
-{
-	write(1, &c, 1);
+	if (!getcwd(cwd, PATH_MAX))
+		return (printf("getcwd() error"), 1);
+	ft_putendl_fd(cwd, 1);
+	return (0);
 }

@@ -1,25 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/16 07:26:16 by yohan             #+#    #+#             */
-/*   Updated: 2024/09/04 19:25:57 by bruno            ###   ########.fr       */
+/*   Created: 2024/09/04 23:09:17 by bruno             #+#    #+#             */
+/*   Updated: 2024/09/05 05:11:48 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../includes/minishell.h"
 
-void	ft_putchar_fd(char c, int fd)
+int	caught_env(t_jobs *job, t_env env)
 {
-	if (fd < 0)
-		return ;
-	write(fd, &c, 1);
-}
+	int		i;
 
-void	ft_putchar(char c)
-{
-	write(1, &c, 1);
+	if (job->job[1])
+	{
+		ft_printf_fd(2, "env: '%s': Permission denied\n", job->job[1]);
+		return (126);
+	}
+	i = 0;
+	while (env.env[i])
+	{
+		ft_putendl_fd(env.env[i], 1);
+		i++;
+	}
+	return (0);
 }

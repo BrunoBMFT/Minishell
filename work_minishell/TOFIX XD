@@ -1,28 +1,28 @@
-has to test if executable_path exists in simple process
+finish builtins
+
+check execute_executable and execute_command errors and memory
 
 bool pipe can be sent in struct
+FIX PIPED IN EXECUTOR
+check priorities, seems alright
 
 job.array doesnt need env
 < lkasdlkdaslasd cat -> failing
 
 parse certain var declarations
 
-FIX PIPED IN EXECUTOR
-check priorities, seems alright
-
-cd folder && rm -rf ../folder
-env -i
-unset PATH
+tests:
+	cd folder && rm -rf ../folder
+	env -i
+	unset PATH
 
 cd includes && echo $PWD
 variable expansion has to happen every job
 
-export and then exit has invalid frees
+export and then exit has leaks
 
 fix echo
 echo hi && exit -> leaks
-
-create a struct for env, temp_vars, status, for things like build or executor to not have many parameters
 
 is it allowed to create a child process even if command isnt found?
 
@@ -32,26 +32,10 @@ fix leaks in NULL cases
 
 just a | doesnt act how it's supposed to
 
-make a few functions for errors that can output certain base messages
-	("command not found", "too many arguments", etc)
-
-~/ksdakads kdas env_var leak
-
 stop using panic
 
-problem with getpid = NULL, printing a newline
-
-start testing every malloc functions with NULLS and see if everything is freed and protected
-
-builtins doesnt need to exit since it doesnt need fork, unless it is a pipe command
-	(builtins to run before new_fork)
-	(builtins should just return, and if they return 200, fork and run execve)
-
-
-temp_vars has to be ***?
+test every malloc functions with NULLS and see if everything is freed and protected
 
 rename variables
-
-check builtin order
 
 # define malloc(x) NULL

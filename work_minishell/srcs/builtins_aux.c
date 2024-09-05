@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/03 22:30:14 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/04 17:19:55 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ int	caught_export(t_jobs *job, t_env env)//fix export var =value (the space)
 	int	status;
 
 	if (!job->job[1])
-		return (caught_env(job, env.env));
+		return (caught_env(job, env));
 	job->job++;
 	status = 0;
 	while (*job->job)

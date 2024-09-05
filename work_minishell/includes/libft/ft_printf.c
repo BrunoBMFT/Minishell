@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 20:54:30 by yohan             #+#    #+#             */
-/*   Updated: 2024/07/09 16:18:59 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/04 19:26:30 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,45 @@ int	ft_printf(const char *str, ...)
 	}
 	va_end(conversions);
 	return (len);
+}
+
+void	ft_printcommands_fd(int fd, char c, va_list *conversions, int *i)
+{
+	if (c == 'c')
+		ft_putchar_fd(va_arg(*conversions, int), fd);
+	else if (c == 's')
+		ft_putstr_fd(va_arg(*conversions, char *), fd);
+	else if (c == '%')
+		ft_putchar_fd('%', fd);
+	else if (c == 'd')
+		ft_putnbr_fd(va_arg(*conversions, int), fd);
+	else
+		(*i)--;
+}
+
+int	ft_printf_fd(int fd, const char *str, ...)
+{
+	va_list	conversions;
+	int		i;
+
+	if (!str)
+		return (-1);
+	va_start(conversions, str);
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '%')
+		{
+			i++;
+			ft_printcommands_fd(fd, str[i], &conversions, &i);
+			i++;
+		}
+		else
+		{
+			ft_putchar_fd(str[i], fd);
+			i++;
+		}
+	}
+	va_end(conversions);
+	return (0);
 }

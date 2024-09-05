@@ -6,7 +6,7 @@
 #    By: bruno <bruno@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/23 16:39:56 by ycantin           #+#    #+#              #
-#    Updated: 2024/09/03 15:53:34 by bruno            ###   ########.fr        #
+#    Updated: 2024/09/05 05:12:21 by bruno            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,13 +16,15 @@ SRCS_DIR = ./srcs
 SRCS =	main.c aux.c builtins.c builtins_aux.c executor.c process.c process_aux.c \
 		heredoc.c signal.c error_correction.c error_correction_utils.c \
 		lexer.c lexer_utils.c frees.c tokenize.c tokenize_utils.c \
-		parse.c expansion.c 
+		parse.c expansion.c \
+		builtins/pwd.c builtins/env.c builtins/unset.c
 #redirections.c
 
 OBJS_DIR = ./objs
 OBJS = $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
-	@mkdir -p $(OBJS_DIR)
+#	@mkdir -p $(OBJS_DIR)
+	@mkdir -p $(dir $@)
 	@cc $(CFLAGS) -c $< -o $@
 
 LIBFT_DIR = ./includes/libft

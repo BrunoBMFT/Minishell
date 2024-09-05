@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/24 03:16:37 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/04 22:22:14 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_perror_exit(char *str)//remove
 	perror (str);
 }
 
-int execute_command_path(char **cmd, char **env)
+int execute_command(char **cmd, char **env)
 {
 	char	**path_array;
 	char	*path;
@@ -43,7 +43,7 @@ int execute_command_path(char **cmd, char **env)
 		free (path);
 		i++;
 	}
-	printf("%s: command not found\n", cmd[0]);
+	ft_printf_fd(2, "minishell: %s: command not found\n", cmd[0]);
 	free_array(path_array);
 	exit (127);
 }
@@ -70,30 +70,37 @@ char	**fix_cmd(char **cmd)
 	return (newcmd);
 }
 
-int execute_executable_path(char **cmd, char **env)
+//call this function inside exec_exec so if no path is found it returns
+char	*find_executable_path(char **cmd)
 {
-	char	*path = NULL;
+	char	*path;
 	char	cwd[PATH_MAX];
-	char	*dir;//remove
-	
-	if (*cmd[0] == '~')
+
+/* 	if (**cmd == '~')//supposedly dont need to handle this
 	{
 		dir = ft_getenv("HOME", env);//error check
 		path = ft_strjoin3(dir, "/", *cmd + 2);//error check
-	}
-	else if (*cmd[0] == '/')//check for paths?
+	} */
+	if (*cmd[0] == '/')
 		path = cmd[0];
 	else
 	{
 		getcwd(cwd, PATH_MAX);//error check
 		path = ft_strjoin3(cwd, "/", *cmd);//error check
-		if (!path)
-			return (0);//free path
 	}
-	cmd = NULL;
-//	cmd = fix_cmd(cmd);
 	if (access(path, F_OK) == 0)
-		execve(path, cmd, env);
+		return (path);
+	return (NULL);
+}
+
+int execute_executable(char **cmd, char **env)
+{
+	char	*path = NULL;
+
+	path = find_executable_path(cmd);
+	if (!path)
+		return (ft_printf_fd(2, "minishell: %s: No such file or directory\n", cmd[0]));
+	cmd = fix_cmd(cmd);
 	if (cmd)
 		ft_perror_exit(cmd[0]);//check if it's correct
 	free_array(cmd);
@@ -103,14 +110,13 @@ int execute_executable_path(char **cmd, char **env)
 
 int	execute_job(char **command, char **env)
 {
-	int status = 0;
-
+	int 	status = 0;
 	if (!command[0])
 		return (ft_printf("job error\n"), 126);//fix the error return, test with "" as input
 	if (ft_strchr(command[0], '/'))
-		status = execute_executable_path(&command[0], env);
+		status = execute_executable(command, env);
 	else
-		status = execute_command_path(&command[0], env);
+		status = execute_command(command, env);
 //	if it returns, everything needs to be freed
 //	free fds in case of error
 	exit (127);//check exit code
