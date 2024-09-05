@@ -1,0 +1,47 @@
+finish builtins
+
+export leaking memory
+export printing env prints in alphabetical order
+
+change errors to use printf_fd
+
+fix heredocs ( <<1 <<2 )
+
+check execute_executable and execute_command errors and memory
+
+bool pipe can be sent in struct
+FIX PIPED IN EXECUTOR
+check priorities, seems alright
+
+job.array doesnt need env
+< lkasdlkdaslasd cat -> failing
+
+cd includes && echo $PWD
+variable expansion has to happen every job
+
+export and then exit has leaks
+
+parse_quotes doesnt need to read unclosed quotations
+
+fix echo
+echo hi && exit -> leaks
+
+is it allowed to create a child process even if command isnt found?
+
+tests:
+	cd folder && rm -rf ../folder
+	env -i
+	unset PATH
+	fix leaks in normal cases (no errors)
+	fix leaks in error cases
+	fix leaks in NULL cases
+
+just a | doesnt act how it's supposed to
+
+stop using panic
+
+test every malloc functions with NULLS and see if everything is freed and protected
+
+rename variables
+
+# define malloc(x) NULL
