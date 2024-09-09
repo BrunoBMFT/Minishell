@@ -6,12 +6,15 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/08 00:02:54 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/09 22:21:17 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
+//maybe if pipe is detected at any point in executor, executor bool pipe turns true
+//	and after that, if pipe is true, always call child_process
+//	like that, simple_process can be the only one with exit in it
+//	but simple_process sends to builtins whether its piped or not, have to check
 int	child_process(t_jobs *job, t_env env)
 {
 	pid_t	pid;
@@ -43,7 +46,7 @@ int	simple_process(t_jobs *job, t_env env)//recieve pipe to decide exit?
 
 	if (job->job && job->job[0] && (ft_strcmp(job->job[0], "cd")) == 0)
 		return (caught_cd(job, env));
-	status = try_builtins(job, env, false);
+	status = try_builtins(job, env, false);//check if pipe needs to be sent
 	if (status != 200)
 		return (status);
 	pid = new_fork();

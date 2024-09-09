@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_getenv.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 18:16:48 by bruno             #+#    #+#             */
-/*   Updated: 2024/08/26 19:46:57 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/09/09 22:58:53 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,20 @@ char	*ft_getenv(char *str, char **env)
 	if (!str || !*str || !env || !*env)
 		return (NULL);
 	i = 0;
+//	printf("get_env:\nstr to find in env: %s\n", str);
 	while (env[i])
 	{
 		temp = ft_strndup(env[i], len_to_equal(env[i]));
 		if (!temp)
 			return (NULL);
+//		printf("env name: %s\n", temp);
 		if (ft_strcmp(str, temp) == 0)
-			return (free (temp), ft_env_var(env[i]));
+		{
+			char	*temp2 = ft_env_var(env[i]);
+			return (free (temp), temp2);
+		}
+//printf("\nstr: %s\nenv_var: %s\n", str, temp2), 
+//printf("env_var_value: %s\n", ft_env_var(env[i])), 
 		free (temp);
 		i++;
 	}

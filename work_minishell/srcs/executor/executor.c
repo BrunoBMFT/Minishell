@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/07 04:56:04 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/09 23:42:58 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,11 @@ int	start_executor(t_jobs *job, t_env env)
 	bool	piped = false;// TODO check if works
 	signal(SIGINT, handle_signal_child);
 	signal(SIGQUIT, sigquit);
+	int i = 0;
 	while (job)
 	{
+		int i = 0;
+		modify_array(job->job, env);
 		if (job->heredoc)
 			if ((redirected_input = handle_heredoc(job)) < 0)
 					return (127);
@@ -62,6 +65,7 @@ int	start_executor(t_jobs *job, t_env env)
 			piped = true;
 			continue;
 		}
+		//doesnt need to be here, can be called only in simple_process, but pipes still run simple
 		if (!piped && ft_strcmp(job->job[0], "exit") == 0)
 			status = caught_exit(job, env);
 		else if (job->job && job->job[0] && !piped)

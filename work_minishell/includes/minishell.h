@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/09/07 20:27:05 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/09 22:12:57 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,7 @@ char	*ft_env_var(char *str);
 char	*ft_getenv(char *str, char **env);
 char	*expand_env_vars(char *input, t_env env);
 char	*no_expansion(char *str, t_var_holder h);
+char	*expand(char *str, t_env env);
 char	*expansion(char *str, t_var_holder *h, t_env env);
 char	*unquote_and_direct(char *str, t_env env);
 

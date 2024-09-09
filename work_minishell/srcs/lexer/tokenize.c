@@ -21,7 +21,7 @@ void	tokenize(t_token **list, char *str, t_env env)
 
 	i = 0;
 	array = token_array(str);
-	modify_array(array, env);
+	//modify_array(array, env);
 	if (!array)
 		return ;
 	while (array[i])

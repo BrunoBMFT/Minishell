@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/07 04:33:41 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/09 23:40:29 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ char	*expansion(char *str, t_var_holder *h, t_env env)
 		h->expanded = ft_strdup("$");
 	else if (str[h->i] == '$')
 	{
-		h->expanded = ft_itoa(getpid());//in this part, receive pid and printf pid
+		h->expanded = ft_itoa(ft_getpid());//check if ft_getpid is working
 		h->i++;
 	}
 	else if (str[h->i] == '?')

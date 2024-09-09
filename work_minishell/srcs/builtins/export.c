@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/08 18:51:47 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/09 23:35:39 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,24 +54,6 @@ bool	parse_export(char *str, int n)//error messages
 	return (true);
 }
 
-void	export_new(char *var, char **env)
-{
-	char	**new_env;
-	int		i;
-
-	if (is_in_env(var, env))
-		return ;
-	i = 0;
-	new_env = ft_calloc(sizeof(char *), ft_split_wordcount(env) + 1);
-	if (!new_env)
-		return ;
-	new_env = env;
-	while (env[i])
-		i++;
-	new_env[i] = ft_strdup(var);//error check
-	new_env[i + 1] = NULL;
-}
-
 int	export_no_execd(char **env)
 {
 	int		i;
@@ -89,6 +71,24 @@ int	export_no_execd(char **env)
 		i++;
 	}
 	return (0);
+}
+
+void	export_new(char *var, char **env)
+{
+	char	**new_env;
+	int		i;
+
+	if (is_in_env(var, env))
+		return ;
+	i = 0;
+	new_env = ft_calloc(sizeof(char *), ft_split_wordcount(env) + 1);
+	if (!new_env)
+		return ;
+	new_env = env;
+	while (env[i])
+		i++;
+	new_env[i] = ft_strdup(var);//error check
+	new_env[i + 1] = NULL;
 }
 
 int	caught_export(t_jobs *job, t_env env)//fix export var =value (the space)
@@ -114,4 +114,3 @@ int	caught_export(t_jobs *job, t_env env)//fix export var =value (the space)
 	}
 	return (status);
 }
-
