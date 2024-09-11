@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_aux.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/08 17:40:57 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/11 15:01:46 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*find_command_path(char	**cmd, t_env env)
 	return (ft_printf_fd(2, "minishell: %s: command not found\n", cmd[0]), NULL);
 }
 
-int execute_command(t_jobs *job, t_env env)
+void	execute_command(t_jobs *job, t_env env)
 {
 	char	*path;
 
@@ -73,7 +73,6 @@ char	*find_executable_path(char *cmd)
 int execute_executable(t_jobs *job, t_env env)
 {
 	char	*path;
-	//check if executable exists?
 
 	path = find_executable_path(job->job[0]);
 	if (!path)
@@ -86,12 +85,12 @@ int execute_executable(t_jobs *job, t_env env)
 
 int	execute_job(t_jobs *job, t_env env)
 {
-	int 	status = 0;
+//	int 	status = 0;//status not needed, if it fails, it supposed to exit?
 	if (!job->job[0])
 		return (ft_printf("job error\n"), 126);
 	if (ft_strchr(job->job[0], '/'))
-		status = execute_executable(job, env);
+		execute_executable(job, env);
 	else
-		status = execute_command(job, env);
+		execute_command(job, env);
 }
 

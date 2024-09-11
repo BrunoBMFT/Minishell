@@ -1,4 +1,8 @@
-fix echo
+FIX PIPE
+reroute exit using pipes only in child process
+
+
+fix echo -> echo hello "" world
 
 export leaking memory
 export printing env prints in alphabetical order
@@ -21,6 +25,7 @@ ctrl-d
 
 is it allowed to create a child process even if command isnt found?
 
+signals
 
 tests:
 	cd folder && rm -rf ../folder

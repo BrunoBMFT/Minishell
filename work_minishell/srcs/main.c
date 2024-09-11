@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/09/09 23:34:37 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/11 16:52:54 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,17 @@ int	main(int ac, char **av, char **envp)
 		}
 		add_history(line);
 		line = parse_quotes(line);
+		printf("line: %s\n", line);
 		jobs = build(line, env);
 		curr = jobs;
+		
+		int i = 0;
+		while (jobs->job[i])
+		{
+			printf("job %d: %s\n", i, jobs->job[i]);
+			i++;
+		}
+
 		env.status = start_executor(curr, env);
 		clear_jobs(&jobs);
 	}

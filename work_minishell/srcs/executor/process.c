@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/09 22:21:17 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/11 16:55:16 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	child_process(t_jobs *job, t_env env)
 	int		fd[2];
 	int		status = 0;
 
-	pipe(fd);
+	pipe(fd);//error check
 	pid = new_fork();
 	if (pid == 0)
 	{

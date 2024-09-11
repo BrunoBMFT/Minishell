@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bruno <bruno@student.42.fr>                +#+  +:+       +#+         #
+#    By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/23 16:39:56 by ycantin           #+#    #+#              #
-#    Updated: 2024/09/07 21:01:11 by bruno            ###   ########.fr        #
+#    Updated: 2024/09/11 14:47:07 by brfernan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,9 +15,9 @@ NAME =	minishell
 SRCS_DIR = ./srcs
 SRCS = main.c $(addprefix aux/, $(AUX_SRCS)) $(addprefix lexer/, $(LEXER_SRCS)) $(addprefix expand/, $(EXPAND_SRCS)) $(addprefix executor/, $(EXECUTOR_SRCS)) $(addprefix builtins/, $(BUILTINS_SRCS))
 
-AUX_SRCS = aux.c frees.c signal.c parse.c
+AUX_SRCS = aux.c frees.c signal.c
 EXPAND_SRCS = expansion.c error_correction.c error_correction_utils.c 
-LEXER_SRCS = lexer.c lexer_utils.c tokenize.c tokenize_utils.c
+LEXER_SRCS = lexer.c lexer_utils.c tokenize.c tokenize_utils.c parse.c
 EXECUTOR_SRCS = executor.c process.c process_aux.c heredoc.c
 BUILTINS_SRCS = builtins.c export.c pwd.c env.c unset.c cd.c echo.c exit.c
 #redirections.c

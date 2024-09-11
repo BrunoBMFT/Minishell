@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/09 23:42:58 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/11 16:55:33 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	start_executor(t_jobs *job, t_env env)
 	int i = 0;
 	while (job)
 	{
-		int i = 0;
 		modify_array(job->job, env);
 		if (job->heredoc)
 			if ((redirected_input = handle_heredoc(job)) < 0)
@@ -65,13 +64,13 @@ int	start_executor(t_jobs *job, t_env env)
 			piped = true;
 			continue;
 		}
-		//doesnt need to be here, can be called only in simple_process, but pipes still run simple
+//doesnt need to be here, can be called only in simple_process, but pipes still run simple
 		if (!piped && ft_strcmp(job->job[0], "exit") == 0)
 			status = caught_exit(job, env);
-		else if (job->job && job->job[0] && !piped)
-			status = simple_process(job, env);
 		else if (job->job && job->job[0])
-			status = child_process(job, env);
+			status = simple_process(job, env);
+//		else if (job->job && job->job[0])
+//			status = child_process(job, env);
 		if (dup2(saved_stdin, STDIN_FILENO) < 0 || dup2(saved_stdout, STDOUT_FILENO) < 0)
 			status = 127;
 		if (job->next && job->next->type == AND)

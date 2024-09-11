@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 03:18:24 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/05 14:03:32 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/09/11 16:01:34 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ void	setup_sigquit_handler(void)
 {
 	struct sigaction	sa;
 
-	sa.sa_handler = SIG_IGN;
 	sigemptyset(&sa.sa_mask);
+	sa.sa_handler = SIG_IGN;
 	sa.sa_flags = 0;
 	sigaction(SIGQUIT, &sa, NULL);
 }
