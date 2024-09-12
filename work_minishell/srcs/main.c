@@ -6,11 +6,23 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/09/11 16:52:54 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/09/12 17:48:32 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	print_jobs(char *line, t_jobs *jobs)
+{
+	printf("line: %s\n", line);
+	int i = 0;
+	while (jobs->job[i])
+	{
+		printf("job %d: %s\n", i, jobs->job[i]);
+		i++;
+	}
+}
+
 int	main(int ac, char **av, char **envp)
 {
 	t_env	env;
@@ -39,18 +51,11 @@ int	main(int ac, char **av, char **envp)
 			continue ;
 		}
 		add_history(line);
+//char *temp = line;
 		line = parse_quotes(line);
-		printf("line: %s\n", line);
 		jobs = build(line, env);
+//print_jobs(line, jobs);
 		curr = jobs;
-		
-		int i = 0;
-		while (jobs->job[i])
-		{
-			printf("job %d: %s\n", i, jobs->job[i]);
-			i++;
-		}
-
 		env.status = start_executor(curr, env);
 		clear_jobs(&jobs);
 	}

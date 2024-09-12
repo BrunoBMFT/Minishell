@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/09/09 22:12:57 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/12 17:48:55 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ typedef struct s_token
 	struct s_token	*next;
 }				t_token;
 
+
 typedef struct s_jobs
 {
 	int				type;
@@ -89,6 +90,7 @@ typedef struct s_jobs
 	char			*delimiters;
 	int				append;
 	int				heredoc;
+	char			*heredoc_file;
 	int				mult_input_flag;
 	struct s_jobs	*next;
 }	t_jobs;
@@ -149,7 +151,7 @@ int		caught_pwd(t_jobs *job);
 int		caught_export(t_jobs *job, t_env env);
 int		caught_unset(t_jobs *job, t_env env);
 int		caught_env(t_jobs *job, t_env env);
-int		caught_exit(t_jobs *jobs, t_env env);
+int		caught_exit(t_jobs *jobs, t_env env, bool pipe);
 
 //redirections
 void	update_input(t_jobs *job);
@@ -176,5 +178,7 @@ char	*update_prompt(void);
 int		ft_getpid(void);
 char	**dup_env(char **envp);
 t_env	init_env(char **envp);
+
+void	print_jobs(char *line, t_jobs *jobs);//to remove
 
 #endif

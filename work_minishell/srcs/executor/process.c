@@ -6,15 +6,12 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/11 16:55:16 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/09/12 18:30:04 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-//maybe if pipe is detected at any point in executor, executor bool pipe turns true
-//	and after that, if pipe is true, always call child_process
-//	like that, simple_process can be the only one with exit in it
-//	but simple_process sends to builtins whether its piped or not, have to check
+
 int	child_process(t_jobs *job, t_env env)
 {
 	pid_t	pid;
@@ -26,11 +23,12 @@ int	child_process(t_jobs *job, t_env env)
 	if (pid == 0)
 	{
 		close(fd[READ]);
-		if (job->next && job->next->type == PIPE)//might not need this check
+		if (job->next && job->next->type == PIPE)
 			dup2(fd[WRITE], STDOUT_FILENO);//error check
 		close(fd[WRITE]);
 		if (try_builtins(job, env, true) == 200)
 			execute_job(job, env);
+		clean_exit(job, env, status);
 	}
 	close(fd[WRITE]);
 	dup2(fd[READ], STDIN_FILENO);//error check
@@ -39,20 +37,20 @@ int	child_process(t_jobs *job, t_env env)
 	return (WEXITSTATUS(status));
 }
 
-int	simple_process(t_jobs *job, t_env env)//recieve pipe to decide exit?
+int	simple_process(t_jobs *job, t_env env)
 {
 	pid_t	pid;
 	int	status;
 
 	if (job->job && job->job[0] && (ft_strcmp(job->job[0], "cd")) == 0)
 		return (caught_cd(job, env));
-	status = try_builtins(job, env, false);//check if pipe needs to be sent
+	status = try_builtins(job, env, false);
 	if (status != 200)
 		return (status);
 	pid = new_fork();
 	if (pid == 0)
 	{
-		execute_job(job, env);
+		execute_job(job, env);//error check
 	}
 	waitpid(pid, &status, 0);
 	return (WEXITSTATUS(status));

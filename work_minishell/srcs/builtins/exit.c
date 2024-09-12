@@ -3,15 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 21:01:01 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/07 21:01:05 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/12 17:00:51 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "../../includes/minishell.h"
+
+
+void	clean_exit(t_jobs *jobs, t_env env, int status)
+{
+	clear_jobs(&jobs);
+	free_array(env.env);
+	//rl clear history
+	exit (status);
+}
 
 bool	parse_digit(char *str)
 {
@@ -29,9 +38,10 @@ bool	parse_digit(char *str)
 	return (true);
 }
 
-int	caught_exit(t_jobs *job, t_env env)//send
+int	caught_exit(t_jobs *job, t_env env, bool piped)
 {
-	printf("exit\n");
+	if (!piped)
+		printf("exit\n");//check if it prints where it should
 	if (job->job[1])
 	{
 		if (!parse_digit(job->job[1]))
@@ -43,6 +53,10 @@ int	caught_exit(t_jobs *job, t_env env)//send
 		if (job->job[2])
 			return (ft_printf_fd(2, "minishell: exit: too many arguments\n"), 1);
 	}
-	rl_clear_history();
-	clean_exit(job, env, 0);
+	if (!piped)
+	{
+		rl_clear_history();//clear history in clean exit
+		clean_exit(job, env, 0);
+	}
+	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   frees.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:18:01 by ycantin           #+#    #+#             */
-/*   Updated: 2024/09/07 20:27:37 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/12 16:41:41 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,4 @@ void	free_all(t_token **list, char **array, char *message, int len)
 	clear_list(list);
 	write(1, message, len);
 	exit(1);
-}
-
-
-void	clean_exit(t_jobs *jobs, t_env env, int status)
-{
-	clear_jobs(&jobs);//in case it fails, it doesnt need freeing
-	free_array(env.env);
-	//rl clear history
-	exit (status);
 }

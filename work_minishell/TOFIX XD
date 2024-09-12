@@ -1,8 +1,8 @@
-FIX PIPE
-reroute exit using pipes only in child process
-
+FIX PIPE priorities in lines with ||
 
 fix echo -> echo hello "" world
+
+test with "" as commands (cat)
 
 export leaking memory
 export printing env prints in alphabetical order
@@ -43,6 +43,7 @@ norminette
 change errors to use printf_fd
 job.array doesnt need env
 
+improve echo
 rename variables
 add colors to prompt
 change SHELL=binzsh to shell=minishell

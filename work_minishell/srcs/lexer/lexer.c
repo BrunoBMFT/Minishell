@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 00:13:28 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/10 00:13:44 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/12 16:39:25 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
 t_token	*developed_cmdline_tokenization(char *command_line, t_env env)
 {
 	char	*converted;
@@ -55,7 +54,6 @@ t_jobs	*build(char *command_line, t_env env)
 	return (jobs);
 }
 
-
 void	apply_redir(t_token *current, t_jobs *job)
 {
 	int	fd;
@@ -65,21 +63,13 @@ void	apply_redir(t_token *current, t_jobs *job)
 	{
 		job->heredoc = 1;
 		if (job->delimiters)
-		{
-			temp = ft_strjoin(job->delimiters, " ");
 			free(job->delimiters);
-			job->delimiters = ft_strjoin(temp, current->next->token);
-			free(temp);
-			temp = ft_strjoin(job->delimiters, " ");
-			free(job->delimiters);
-			job->delimiters = ft_strdup(temp);
-			free(temp);
-		}
-		else
-			job->delimiters = ft_strjoin(current->next->token, " ");
+		job->delimiters = ft_strdup(current->next->token);
 		if (job->input)
 			free(job->input);
-		job->input = ft_strdup(".heredoc");
+		job->input = ft_strdup(job->heredoc_file);
+		if (handle_heredoc(job) < 0)
+			printf ("error handling heredocs\n");
 	}
 	if (current->type == INPUT)
 	{
@@ -130,12 +120,25 @@ char	**job_array(t_token **cur, t_jobs **job, t_env env)
 	return (array[i] = NULL, array);
 }
 
+char *filename(int i)
+{
+	char *num;
+	char *full;
+
+	num = ft_itoa(i);
+	full = ft_strjoin(".heredoc_", num);
+	free(num);
+	return (full);
+}
+
 void	make_job_list(t_jobs **job_list, t_token **tok_list, t_env env)
 {
 	t_token	*cur;
 	t_jobs	*new;
 	char	*cmd;
+	int		i;
 
+	i = 0;
 	cur = *tok_list;
 	while (cur)
 	{
@@ -151,8 +154,10 @@ void	make_job_list(t_jobs **job_list, t_token **tok_list, t_env env)
 			cur = cur->next;
 			continue ;
 		}
+		new->heredoc_file = filename(i);
 		new->job = job_array(&cur, &new, env);
 		new->type = WORD;
 		go_to_next_job(job_list, new);
+		i++;
 	}
 }

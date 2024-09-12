@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/11 15:01:46 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/09/12 18:32:40 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char	*find_executable_path(char *cmd)
 	return (NULL);
 }
 
-int execute_executable(t_jobs *job, t_env env)
+void execute_executable(t_jobs *job, t_env env)
 {
 	char	*path;
 
@@ -85,12 +85,12 @@ int execute_executable(t_jobs *job, t_env env)
 
 int	execute_job(t_jobs *job, t_env env)
 {
-//	int 	status = 0;//status not needed, if it fails, it supposed to exit?
-	if (!job->job[0])
+	if (!job->job[0])//check execd being ""
 		return (ft_printf("job error\n"), 126);
 	if (ft_strchr(job->job[0], '/'))
 		execute_executable(job, env);
 	else
 		execute_command(job, env);
+	return (0);
 }
 
