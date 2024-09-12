@@ -12,22 +12,6 @@
 
 #include "../../includes/minishell.h"
 
-int	manage_redirection(t_jobs *job)
-{
-	int	redirected_input;
-
-	redirected_input = open(".heredoc", O_RDONLY);
-	if (redirected_input < 0)
-		return (-1);
-	if (dup2(redirected_input, STDIN_FILENO) < 0)
-	{
-		close(redirected_input);
-		return (-1);
-	}
-	close(redirected_input);
-	return (0);
-}
-
 int	handle_heredoc(t_jobs *job)
 {
 	int		redirected_input;
@@ -38,32 +22,16 @@ int	handle_heredoc(t_jobs *job)
 
 	i = 0;
 	max = 0;
-	delimiters = ft_split(job->delimiters, ' ');
-	while (delimiters[max])
-		max++;
-	redirected_input = open(".heredoc", O_CREAT | O_RDWR | O_TRUNC, 0644);
+	redirected_input = open(job->heredoc_file, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (redirected_input < 0)
 		return (-1);
 	signal(SIGINT, handle_signal_heredoc);
 	signal(SIGQUIT, SIG_IGN);
-	while (i < (max - 1))
-	{
-		while (1)
-		{
-			line = readline("fake heredoc>");
-			if (!line || ft_strcmp(line, delimiters[i]) == 0)
-			{
-				free(line);
-				break ;
-			}
-			free(line);
-		}
-		i++;
-	}
 	while (1)
 	{
 		line = readline("heredoc>");
-		if (!line || ft_strcmp(line, delimiters[i]) == 0)
+		printf("%d\n", i);
+		if (!line || ft_strcmp(line, job->delimiters) == 0)
 		{
 			free(line);
 			break ;
@@ -72,8 +40,55 @@ int	handle_heredoc(t_jobs *job)
 		free(line);
 	}
 	close(redirected_input);
-	free_array(delimiters);
-	/* if (manage_redirection(job) < 0)
-		return (-1); */
 	return (0);
 }
+
+
+// int	handle_heredoc(t_jobs *job)
+// {
+// 	int		redirected_input;
+// 	char	*line;
+// 	char	**delimiters;
+// 	int		i;
+// 	int		max;
+// 	i = 0;
+// 	max = 0;
+// 	delimiters = ft_split(job->delimiters, ' ');
+// 	while (delimiters[max])
+// 		max++;
+// 	redirected_input = open(".heredoc", O_CREAT | O_RDWR | O_TRUNC, 0644);
+// 	if (redirected_input < 0)
+// 		return (-1);
+// 	signal(SIGINT, handle_signal_heredoc);
+// 	signal(SIGQUIT, SIG_IGN);
+// 	while (i < (max - 1))
+// 	{
+// 		while (1)
+// 		{
+// 			line = readline("fake heredoc>");
+// 			if (!line || ft_strcmp(line, delimiters[i]) == 0)
+// 			{
+// 				free(line);
+// 				break ;
+// 			}
+// 			free(line);
+// 		}
+// 		i++;
+// 	}
+// 	while (1)
+// 	{
+// 		line = readline("heredoc>");
+// 		if (!line || ft_strcmp(line, delimiters[i]) == 0)
+// 		{
+// 			free(line);
+// 			break ;
+// 		}
+// 		ft_putendl_fd(line, redirected_input);
+// 		free(line);
+// 	}
+// 	close(redirected_input);
+// 	free_array(delimiters);
+// 	/* if (manage_redirection(job) < 0)
+// 		return (-1); */
+// 	return (0);
+// }

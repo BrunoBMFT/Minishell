@@ -3,14 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/12 18:21:47 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/09/13 00:32:47 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+int		choose_input(t_jobs **jobs)
+{
+	t_jobs *copy;
+	int 	input;
+
+	copy = *jobs;
+	while (copy)
+	{
+		if (handle_heredoc(copy) < 0)
+			return (-1);
+	}
+}
+
 //errors should return
 int	start_executor(t_jobs *job, t_env env)
 {
@@ -25,38 +39,42 @@ int	start_executor(t_jobs *job, t_env env)
 	int i = 0;
 	while (job)
 	{
-		modify_array(job->job, env);
-		if (job->heredoc)
-			if ((redirected_input = handle_heredoc(job)) < 0)
-					return (127);
+		if (job->job)
+			modify_array(job->job, env);
+		//redirections
 		if (job->input)
-		{
-			redirected_input = open(job->input, O_RDONLY);
-			if (redirected_input < 0)
-			{
-				ft_printf_fd(2, "minishell: %s: No such file or directory\n", job->input);
-				return (127);
-			}
-			if (dup2(redirected_input, STDIN_FILENO) < 0)
-				status = 127;
-			close (redirected_input);
-		}
+        {
+            redirected_input = open(job->input, O_RDONLY);
+            if (redirected_input < 0) {
+                perror("Failed to open input file");
+                status = 127;
+            } else if (dup2(redirected_input, STDIN_FILENO) < 0) {
+                perror("dup2 failed for input");
+                status = 127;
+            }
+            close(redirected_input);
+        }
 		if (job->output)
-		{
-			if (job->append)
-				redirected_output = open(job->output, O_CREAT | O_APPEND | O_RDWR, 0644);
-			else
-			{
-				if (access(job->output, F_OK) == 0)
-					remove(job->output);
-				redirected_output = open(job->output, O_CREAT | O_RDWR, 0644);
-			}
-			if (redirected_output < 0)
-				perror("output file error\n");
-			if (dup2(redirected_output, STDOUT_FILENO) < 0)
-				status = 127;
-			close(redirected_output);
-		}
+        {
+            if (job->append)
+                redirected_output = open(job->output, O_CREAT | O_APPEND | O_RDWR, 0644);
+            else
+            {
+                if (access(job->output, F_OK) == 0)
+                    remove(job->output);
+                redirected_output = open(job->output, O_CREAT | O_RDWR, 0644);
+            }
+
+            if (redirected_output < 0) {
+                perror("Failed to open output file");
+                status = 127;
+            } else if (dup2(redirected_output, STDOUT_FILENO) < 0) {
+                perror("dup2 failed for output");
+                status = 127;
+            }
+            close(redirected_output);
+        }
+		//pipes
 		if (job->next && job->next->type == PIPE)
 		{
 			child_process(job, env);
@@ -64,14 +82,17 @@ int	start_executor(t_jobs *job, t_env env)
 			piped = true;
 			continue;
 		}
-
+		//executing jobs
 		else if (job->job && job->job[0] && piped)
 			status = child_process(job, env);
-			
 		else if (job->job && job->job[0])
 			status = simple_process(job, env);
-		if (dup2(saved_stdin, STDIN_FILENO) < 0 || dup2(saved_stdout, STDOUT_FILENO) < 0)
-			status = 127;
+		if (dup2(saved_stdin, STDIN_FILENO) < 0 || dup2(saved_stdout, STDOUT_FILENO) < 0) {
+            perror("dup2 reset failed");
+            status = 127;
+        }
+		if (access(job->heredoc_file, F_OK) == 0)
+            remove(job->heredoc_file);
 		if (job->next && job->next->type == AND)
 		{
 			job = job->next->next;
