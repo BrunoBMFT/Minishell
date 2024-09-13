@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/12 17:28:29 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/09/13 19:49:17 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	export_no_execd(char **env)
 	return (0);
 }
 
-void	export_new(char *var, char **env)
+void	export_new(char *var, char **env, int size)
 {
 	char	**new_env;
 	int		i;
@@ -81,7 +81,7 @@ void	export_new(char *var, char **env)
 	if (is_in_env(var, env))
 		return ;
 	i = 0;
-	new_env = ft_calloc(sizeof(char *), ft_split_wordcount(env) + 1);
+	new_env = ft_calloc(sizeof(char *), ft_split_wordcount(env) + size + 1);
 	if (!new_env)
 		return ;
 	new_env = env;
@@ -90,7 +90,8 @@ void	export_new(char *var, char **env)
 	new_env[i] = ft_strdup(var);//error check
 	new_env[i + 1] = NULL;
 }
-
+//maybe problem is repetition.
+//after testing, no statement above seems wrong
 int	caught_export(t_jobs *job, t_env env)//fix export var =value (the space)
 {
 	int	status;
@@ -101,6 +102,7 @@ int	caught_export(t_jobs *job, t_env env)//fix export var =value (the space)
 	status = 0;
 	while (*job->job)
 	{
+		printf("here\n");
 		if (!parse_export(*job->job, len_to_equal(*job->job)))
 		{
 			ft_printf_fd(2, "minishell: export: '%s': not a valid identifier\n", *job->job);
@@ -108,7 +110,7 @@ int	caught_export(t_jobs *job, t_env env)//fix export var =value (the space)
 		}
 		else if (ft_strchr(*job->job, '='))//parse in case it just sends a variable name
 		{
-			export_new(*job->job, env.env);//error check
+			export_new(*job->job, env.env, ft_split_wordcount(job->job + 1));//error check
 		}
 		job->job++;
 	}

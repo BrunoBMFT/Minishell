@@ -6,11 +6,12 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 00:13:28 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/13 00:30:02 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/13 17:00:50 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
 t_token	*developed_cmdline_tokenization(char *command_line, t_env env)
 {
 	char	*converted;
@@ -154,6 +155,8 @@ void	make_job_list(t_jobs **job_list, t_token **tok_list, t_env env)
 			cur = cur->next;
 			continue ;
 		}
+		if (new->heredoc_file)
+    		free(new->heredoc_file);
 		new->heredoc_file = filename(i);
 		new->job = job_array(&cur, &new, env);
 		new->type = WORD;

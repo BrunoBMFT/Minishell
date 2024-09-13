@@ -174,6 +174,7 @@ int parse_separators(t_token **token, t_token *cur, int flag)
     return (flag);
 }
 
+
 // int	parse(t_token **token)
 // {
 // 	t_token	*cur;

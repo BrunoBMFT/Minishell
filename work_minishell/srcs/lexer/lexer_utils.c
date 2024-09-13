@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/09/06 18:48:22 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/13 17:01:06 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ t_jobs	*addjob(void *content)
 	list->type = 0;
 	list->append = 0;
 	list->heredoc = 0;
+	list->heredoc_file = NULL;
 	list->delimiters = NULL;
 	list->mult_input_flag = 0;
 	list->input = NULL;
@@ -72,4 +73,3 @@ int	count_tokens_in_job(t_token *cur)
 	}
 	return (count);
 }
-

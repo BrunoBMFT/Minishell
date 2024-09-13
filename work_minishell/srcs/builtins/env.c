@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 23:09:17 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/07 18:06:18 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/13 19:39:21 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	caught_env(t_jobs *job, t_env env)
 	i = 0;
 	while (env.env[i])
 	{
-		ft_putendl_fd(env.env[i], 1);
+		ft_printf("%d: %s\n", i, env.env[i]);
 		i++;
 	}
 	return (0);

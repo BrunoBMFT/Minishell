@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   frees.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:18:01 by ycantin           #+#    #+#             */
-/*   Updated: 2024/09/12 16:41:41 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/09/13 01:03:06 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void	clear_jobs(t_jobs **lst)
 		temp = current->next;
 		if(current->job)
 			free_array(current->job);
+		free(current->heredoc_file);
 		free(current->input);
 		free(current->delimiters);
 		free(current->output);
