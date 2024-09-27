@@ -1,26 +1,23 @@
-FIX PIPE priorities in lines with ||
-
-fix echo -> echo hello "" world
+Signals
+export leaking memory
+export printing env prints in alphabetical order
 
 test with "" as commands (cat)
 
-export leaking memory
-export printing env prints in alphabetical order
+FIX PIPE priorities in lines with ||
+cat kasdkasdkads | cat kasdkadskasdkdas || exit (fix output and exit)
 
 segfault printenv $variable
 
 clearjobs has to clear old jobs (pipes)
 fix "" and " " as a command, (command not found)
 
-fix panic in forks
-
 bool pipe can be sent in struct
-FIX PIPED IN EXECUTOR
-check priorities, seems alright
-
-just a | doesnt act how it's supposed to
+	FIX PIPED IN EXECUTOR
+	check priorities, seems alright
+	
+	fix echo -> echo hello "" world
 parse_quotes doesnt need to read unclosed quotations
-signals
 ctrl-d
 
 is it allowed to create a child process even if command isnt found?

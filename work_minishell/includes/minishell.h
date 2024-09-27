@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/09/12 17:48:55 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/09/27 02:00:45 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include <unistd.h>
 # include <signal.h>
 # include <sys/wait.h>
+# include <sys/stat.h>
+# include <sys/types.h>
 # include <signal.h>
 # include <fcntl.h>
 # include <limits.h>
@@ -47,6 +49,14 @@ typedef enum s_types
 	APPEND_OUT,
 	EXPORT
 }			t_types;
+
+typedef enum e_signal
+{
+	ROOT_SIG,
+	CHILD_SIG,
+	HEREDOC_SIG,
+	IGNORE_SIG,
+}						t_signal;
 
 typedef struct s_env
 {
@@ -168,6 +178,7 @@ void	clean_up_build(t_token **list, char *cmd_line);
 void	free_all(t_token **list, char **array, char *message, int len);
 
 //signals:
+void	choose_signal(t_signal type);//goncalo
 void sigquit(int sig);
 void handle_signal_main(int sig);
 void handle_signal_child(int sig);

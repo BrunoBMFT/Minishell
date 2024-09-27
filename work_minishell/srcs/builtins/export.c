@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/13 19:49:17 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/17 21:16:54 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,6 @@ int	caught_export(t_jobs *job, t_env env)//fix export var =value (the space)
 	status = 0;
 	while (*job->job)
 	{
-		printf("here\n");
 		if (!parse_export(*job->job, len_to_equal(*job->job)))
 		{
 			ft_printf_fd(2, "minishell: export: '%s': not a valid identifier\n", *job->job);

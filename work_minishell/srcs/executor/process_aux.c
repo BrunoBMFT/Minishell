@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_aux.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/12 18:32:40 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/09/27 01:58:20 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ int	execute_job(t_jobs *job, t_env env)
 {
 	if (!job->job[0])//check execd being ""
 		return (ft_printf("job error\n"), 126);
+	choose_signal(CHILD_SIG);
+	choose_signal(IGNORE_SIG);
 	if (ft_strchr(job->job[0], '/'))
 		execute_executable(job, env);
 	else

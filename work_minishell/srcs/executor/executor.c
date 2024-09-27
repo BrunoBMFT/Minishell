@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/13 01:04:35 by bruno            ###   ########.fr       */
+/*   Updated: 2024/09/27 01:54:36 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,9 @@ int	start_executor(t_jobs *job, t_env env)
 	int 	redirected_input;
 	int 	redirected_output;
 	bool	piped = false;// TODO check if works
-	signal(SIGINT, handle_signal_child);
-	signal(SIGQUIT, sigquit);
+/* 	signal(SIGINT, handle_signal_child);
+	signal(SIGQUIT, sigquit); */
+	
 	int i = 0;
 	while (job)
 	{
@@ -111,6 +112,7 @@ int	start_executor(t_jobs *job, t_env env)
 			}
 			else
 				job = job->next;
+			piped = false;
 		}
 		else
 			job = job->next;
