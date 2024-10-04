@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/17 21:16:54 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/04 01:44:06 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,33 +73,25 @@ int	export_no_execd(char **env)
 	return (0);
 }
 
-void	export_new(char *var, char **env, int size)
-{
-	char	**new_env;
-	int		i;
-
-	if (is_in_env(var, env))
-		return ;
-	i = 0;
-	new_env = ft_calloc(sizeof(char *), ft_split_wordcount(env) + size + 1);
-	if (!new_env)
-		return ;
-	new_env = env;
-	while (env[i])
-		i++;
-	new_env[i] = ft_strdup(var);//error check
-	new_env[i + 1] = NULL;
-}
-//maybe problem is repetition.
-//after testing, no statement above seems wrong
-int	caught_export(t_jobs *job, t_env env)//fix export var =value (the space)
+int	caught_export(t_jobs *job, t_env *env)//fix export var =value (the space)
 {
 	int	status;
 
 	if (!job->job[1])
-		return (export_no_execd(env.env));//fix
+		return (export_no_execd(env->env));//fix
 	job->job++;
 	status = 0;
+
+	int oldenv_count = ft_split_wordcount(env->env);
+	int var_count = ft_split_wordcount(job->job);
+	char **new_env = ft_calloc(sizeof(char *), var_count + oldenv_count + 1);
+	
+	int i = 0;
+	while (env->env[i])
+	{
+		new_env[i] = ft_strdup(env->env[i]);//free env[i]
+		i++;
+	}
 	while (*job->job)
 	{
 		if (!parse_export(*job->job, len_to_equal(*job->job)))
@@ -107,11 +99,50 @@ int	caught_export(t_jobs *job, t_env env)//fix export var =value (the space)
 			ft_printf_fd(2, "minishell: export: '%s': not a valid identifier\n", *job->job);
 			status = 1;//check exit code
 		}
-		else if (ft_strchr(*job->job, '='))//parse in case it just sends a variable name
+		else
 		{
-			export_new(*job->job, env.env, ft_split_wordcount(job->job + 1));//error check
+			if (!is_in_env(*job->job, env->env))
+				new_env[i] = ft_strdup(*job->job);
 		}
+		i++;
 		job->job++;
 	}
+	new_env[i] = NULL;
+	
+/* 	i = 0;
+	while (new_env[i])
+	{
+		printf("%d: %s\n", i, new_env[i]);
+		i++;
+	}
+	// * new_env is saved correctly */
+	//! updating env NOT WORKING
+	i = 0;
+	while (env->env[i])
+	{
+		free (env->env[i]);
+		i++;
+	}
+	free (env->env);
+	env->env = ft_calloc(sizeof(char *), ft_split_wordcount(new_env) + 1);
+	i = 0;
+	while (new_env[i])
+	{
+		env->env[i] = ft_strdup(new_env[i]);
+		i++;
+	}
+	env->env[i] = NULL;
+
+	
+/* 	//freeing new_env
+	i = 0;
+	while (new_env[i])
+	{
+		free (new_env[i]);
+		i++;
+	}
+	free (new_env); */
+
+
 	return (status);
 }
