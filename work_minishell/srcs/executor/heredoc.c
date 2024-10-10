@@ -25,10 +25,10 @@ int	handle_heredoc(t_jobs *job)
 	redirected_input = open(job->heredoc_file, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (redirected_input < 0)
 		return (-1);
-/* 	signal(SIGINT, handle_signal_heredoc);
-	signal(SIGQUIT, SIG_IGN); */
-	choose_signal(IGNORE_SIG);
-	choose_signal(HEREDOC_SIG);
+	signal(SIGINT, handle_signal_heredoc);
+	signal(SIGQUIT, SIG_IGN);
+//	choose_signal(IGNORE_SIG);
+//	choose_signal(HEREDOC_SIG);
 	while (1)
 	{
 		line = readline("heredoc>");

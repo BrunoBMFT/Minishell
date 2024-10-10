@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/04 01:44:06 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/07 14:27:25 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,15 +108,8 @@ int	caught_export(t_jobs *job, t_env *env)//fix export var =value (the space)
 		job->job++;
 	}
 	new_env[i] = NULL;
-	
-/* 	i = 0;
-	while (new_env[i])
-	{
-		printf("%d: %s\n", i, new_env[i]);
-		i++;
-	}
-	// * new_env is saved correctly */
-	//! updating env NOT WORKING
+
+	//free old env
 	i = 0;
 	while (env->env[i])
 	{
@@ -124,11 +117,14 @@ int	caught_export(t_jobs *job, t_env *env)//fix export var =value (the space)
 		i++;
 	}
 	free (env->env);
+
+	//sending to new env
 	env->env = ft_calloc(sizeof(char *), ft_split_wordcount(new_env) + 1);
 	i = 0;
 	while (new_env[i])
 	{
 		env->env[i] = ft_strdup(new_env[i]);
+		free (new_env[i]);
 		i++;
 	}
 	env->env[i] = NULL;

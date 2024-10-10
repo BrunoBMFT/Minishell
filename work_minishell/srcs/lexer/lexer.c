@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 00:13:28 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/13 17:00:50 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/09 12:31:52 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,8 @@ void	make_job_list(t_jobs **job_list, t_token **tok_list, t_env env)
 		new->heredoc_file = filename(i);
 		new->job = job_array(&cur, &new, env);
 		new->type = WORD;
+		new->piped = false;
+		//add here piped = false
 		go_to_next_job(job_list, new);
 		i++;
 	}

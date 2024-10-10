@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/27 01:59:17 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/09 13:34:34 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	child_process(t_jobs *job, t_env env)
+int	child_process(t_jobs *job, t_env *env)
 {
 	pid_t	pid;
 	int		fd[2];
@@ -39,20 +39,24 @@ int	child_process(t_jobs *job, t_env env)
 	return (WEXITSTATUS(status));
 }
 
-int	simple_process(t_jobs *job, t_env env)
+int	simple_process(t_jobs *job, t_env *env)
 {
 	pid_t	pid;
 	int	status;
 
-	choose_signal(IGNORE_SIG);
+//	choose_signal(IGNORE_SIG);
+
 	if (job->job && job->job[0] && (ft_strcmp(job->job[0], "cd")) == 0)
 		return (caught_cd(job, env));
+
 	status = try_builtins(job, env, false);
 	if (status != 200)
 		return (status);
+		
 	pid = fork();
 	if (pid < 0)
 		return(ft_printf_fd(2, "fork() error\n"), 1);
+	
 	if (pid == 0)
 		execute_job(job, env);//error check?
 	waitpid(pid, &status, 0);

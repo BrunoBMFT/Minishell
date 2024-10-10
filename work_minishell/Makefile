@@ -6,7 +6,7 @@
 #    By: bruno <bruno@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/23 16:39:56 by ycantin           #+#    #+#              #
-#    Updated: 2024/09/17 23:52:11 by bruno            ###   ########.fr        #
+#    Updated: 2024/10/07 23:51:35 by bruno            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,12 +62,12 @@ run: all
 vrun: all
 	clear && valgrind --leak-check=full --suppressions=includes/readline.supp ./minishell
 fullvrun: all
-	clear && valgrind --leak-check=full --suppressions=includes/readline.supp --show-leak-kinds=all --track-origins=yes ./minishell
+	clear && valgrind --leak-check=full --track-fds=yes --suppressions=includes/readline.supp --show-leak-kinds=all --track-origins=yes ./minishell
 
 fullvrunenv: all
-	clear && env -i valgrind --leak-check=full --suppressions=includes/readline.supp --show-leak-kinds=all --track-origins=yes ./minishell
+	clear && env -i valgrind --leak-check=full --track-fds=yes --suppressions=includes/readline.supp --show-leak-kinds=all --track-origins=yes ./minishell
 fullvrununset: all
-	clear && unset PATH && /usr/bin/valgrind --leak-check=full --suppressions=includes/readline.supp --show-leak-kinds=all --track-origins=yes ./minishell
+	clear && unset PATH && /usr/bin/valgrind --track-fds=yes --leak-check=full --suppressions=includes/readline.supp --show-leak-kinds=all --track-origins=yes ./minishell
 
 
 .PHONY: all fclean clean re

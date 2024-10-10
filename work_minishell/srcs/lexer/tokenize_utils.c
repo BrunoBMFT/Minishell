@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 16:52:00 by ycantin           #+#    #+#             */
-/*   Updated: 2024/09/13 17:00:22 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/07 14:16:24 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	define_type(char *str)
 	return (type);
 }
 
-void	modify_array(char **array, t_env env)
+void	modify_array(char **array, t_env *env)
 {
 	int		i;
 	char	*temp;

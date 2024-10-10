@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 19:21:05 by brfernan          #+#    #+#             */
-/*   Updated: 2024/09/06 21:53:06 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/09 11:46:07 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	main(int ac, char **av)
 	i = 1;
 	while (i < ac)
 	{
-		ft_printf_fd(1, "%s\n", av[i]);
+		ft_printf("%s\n", av[i]);
 		i++;
 	}
 	return (0);

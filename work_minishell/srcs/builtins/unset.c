@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 23:09:17 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/12 17:52:25 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/10/08 00:28:30 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ int	unset_aux(char **to_remove, char **env)
 		i = 0;
 		if (!env)
 			return (1);
-		while (env && env[i] && ft_strncmp(env[i], *to_remove, ft_strlen(*to_remove)))
+		while (env && env[i] && 
+			ft_strncmp(env[i], *to_remove, ft_strlen(*to_remove)))
 			i++;
 		if (!env[i])
 			return (1);
@@ -36,10 +37,10 @@ int	unset_aux(char **to_remove, char **env)
 	return (0);
 }
 
-int	caught_unset(t_jobs *job, t_env env)//dont need aux
+int	caught_unset(t_jobs *job, t_env *env)//dont need aux
 {
 	if (!job->job[1])
 		return (0);
-	unset_aux(job->job + 1, env.env);
+	unset_aux(job->job + 1, env->env);
 	return (0);
 }

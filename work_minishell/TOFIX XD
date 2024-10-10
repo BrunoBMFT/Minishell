@@ -1,28 +1,26 @@
 Signals
-export leaking memory
-export printing env prints in alphabetical order
 
+fix expander ( $"$USER" )
+close stdin and stdout in exit
+export hello="ls -l"
+test output
+test append output
+test the env builtins (env unset export)
 test with "" as commands (cat)
+fix "" and " " as a command, (command not found)
+cat kasdkasdkads | cat kasdkadskasdkdas || exit (fix output)
 
-FIX PIPE priorities in lines with ||
-cat kasdkasdkads | cat kasdkadskasdkdas || exit (fix output and exit)
-
-segfault printenv $variable
+switch things to getenv instead of ft_getenv
 
 clearjobs has to clear old jobs (pipes)
-fix "" and " " as a command, (command not found)
-
-bool pipe can be sent in struct
-	FIX PIPED IN EXECUTOR
-	check priorities, seems alright
 	
 	fix echo -> echo hello "" world
 parse_quotes doesnt need to read unclosed quotations
-ctrl-d
 
 is it allowed to create a child process even if command isnt found?
 
-signals
+
+
 
 tests:
 	cd folder && rm -rf ../folder

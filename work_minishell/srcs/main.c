@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/09/27 01:54:30 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/09 14:17:47 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	print_jobs(char *line, t_jobs *jobs)
 	int i = 0;
 	while (jobs->job[i])
 	{
-		printf("job %d: %s\n", i, jobs->job[i]);
+		ft_printf_fd(2, "job %d: %s\n", i, jobs->job[i]);
 		i++;
 	}
 }
@@ -34,9 +34,9 @@ int	main(int ac, char **av, char **envp)
 	env = init_env(envp);
 	while (1)
 	{
-/* 		signal(SIGINT, handle_signal_main);
-		signal(SIGQUIT, SIG_IGN); */
-		choose_signal(ROOT_SIG);
+		signal(SIGINT, handle_signal_main);
+		signal(SIGQUIT, SIG_IGN);
+//		choose_signal(ROOT_SIG);
 		env.prompt = update_prompt();
 		line = readline(env.prompt);
 		free(env.prompt);
@@ -57,7 +57,7 @@ int	main(int ac, char **av, char **envp)
 		jobs = build(line, env);
 //print_jobs(line, jobs);
 		curr = jobs;
-		env.status = start_executor(curr, env);
+		start_executor(curr, &env);
 		clear_jobs(&jobs);
 	}
 	return (0);

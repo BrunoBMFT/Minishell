@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 18:16:48 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/13 19:36:31 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/08 00:23:40 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ char	*ft_env_var(char *str)
 char	*ft_getenv(char *str, char **env)
 {
 	char	*temp;
+	char	*temp2;
 	int		i;
 
 	if (!str || !*str || !env || !*env)
@@ -57,7 +58,7 @@ char	*ft_getenv(char *str, char **env)
 			return (NULL);
 		if (ft_strcmp(str, temp) == 0)
 		{
-			char	*temp2 = ft_env_var(env[i]);
+			temp2 = ft_env_var(env[i]);
 			return (free (temp), temp2);
 		}
 		free (temp);

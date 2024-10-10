@@ -6,14 +6,14 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/03 17:38:12 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/08 00:26:00 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 //dont use bool pipe
 
-int	try_builtins(t_jobs *job, t_env env, bool pipe)
+int	try_builtins(t_jobs *job, t_env *env, bool pipe)
 {
 	int	status;
 
@@ -23,14 +23,14 @@ int	try_builtins(t_jobs *job, t_env env, bool pipe)
 	else if (ft_strcmp(job->job[0], "pwd") == 0)
 		status = caught_pwd(job);
 	else if (ft_strcmp(job->job[0], "export") == 0)
-		status = caught_export(job, &env);
+		status = caught_export(job, env);
 	else if (ft_strcmp(job->job[0], "unset") == 0)
-		status = caught_unset(job, env);//use & as well?
+		status = caught_unset(job, env);
 	else if (ft_strcmp(job->job[0], "env") == 0)
 		status = caught_env(job, env);
 	else if (ft_strcmp(job->job[0], "exit") == 0)
 		status = caught_exit(job, env, pipe);
 	if (pipe && status != 200)
-		clean_exit(job, env, status);//use some other function
+		clean_exit(job, env, status);//use some other function?
 	return (status);
 }

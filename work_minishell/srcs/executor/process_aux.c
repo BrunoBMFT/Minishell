@@ -6,19 +6,19 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/27 01:58:20 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/07 21:42:17 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char	*find_command_path(char	**cmd, t_env env)
+char	*find_command_path(char	**cmd, t_env *env)
 {
 	char	**path_array;
 	char	*path;
 	int		i;
 
-	path = ft_getenv("PATH", env.env);
+	path = ft_getenv("PATH", env->env);
 	path_array = ft_split(path, ':');
 	free (path);
 	if (!path_array)
@@ -38,14 +38,14 @@ char	*find_command_path(char	**cmd, t_env env)
 	return (ft_printf_fd(2, "minishell: %s: command not found\n", cmd[0]), NULL);
 }
 
-void	execute_command(t_jobs *job, t_env env)
+void	execute_command(t_jobs *job, t_env *env)
 {
 	char	*path;
 
 	path = find_command_path(job->job, env);
 	if (!path)
 		clean_exit(job, env, 127);
-	execve(path, job->job, env.env);
+	execve(path, job->job, env->env);
 	clean_exit(job, env, 127);
 }
 
@@ -70,25 +70,25 @@ char	*find_executable_path(char *cmd)
 	return (NULL);
 }
 
-void execute_executable(t_jobs *job, t_env env)
+void execute_executable(t_jobs *job, t_env *env)
 {
 	char	*path;
 
 	path = find_executable_path(job->job[0]);
 	if (!path)
 		clean_exit(job, env, 127);
-	execve(path, job->job, env.env);
+	execve(path, job->job, env->env);
 	ft_printf_fd(2, "execve() failed\n");
 	free (path);
 	clean_exit(job, env, 127);
 }
 
-int	execute_job(t_jobs *job, t_env env)
+int	execute_job(t_jobs *job, t_env *env)
 {
 	if (!job->job[0])//check execd being ""
 		return (ft_printf("job error\n"), 126);
-	choose_signal(CHILD_SIG);
-	choose_signal(IGNORE_SIG);
+//	choose_signal(CHILD_SIG);
+//	choose_signal(IGNORE_SIG);
 	if (ft_strchr(job->job[0], '/'))
 		execute_executable(job, env);
 	else

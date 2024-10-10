@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/03 17:37:49 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/09 13:20:22 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,13 +90,13 @@ typedef struct s_token
 	struct s_token	*next;
 }				t_token;
 
-
 typedef struct s_jobs
 {
 	int				type;
 	char			**job;
 	char			*input;
 	char			*output;
+	bool			piped;
 	char			*delimiters;
 	int				append;
 	int				heredoc;
@@ -108,7 +108,7 @@ typedef struct s_jobs
 //tokenizer:
 void	tokenize(t_token **list, char *str, t_env env);
 char	**token_array(char *str);
-void	modify_array(char **array, t_env env);
+void	modify_array(char **array, t_env *env);
 int		count_words(char *str);
 int		define_type(char *str);
 t_token	*addtok(void *content);
@@ -125,18 +125,18 @@ int		count_tokens_in_job(t_token *cur);
 
 //error_correction:
 int		count_quotes(char *str, int *i);
-int 	count_normal_chars(char *str, int *i);
+int		count_normal_chars(char *str, int *i);
 int		count_special_chars(char *str, int *i);
-char 	*split_complex_args(char *str);
+char	*split_complex_args(char *str);
 
 //expansions:
 char	*ft_env_var(char *str);
 char	*ft_getenv(char *str, char **env);
-char	*expand_env_vars(char *input, t_env env);
+char	*expand_env_vars(char *input, t_env *env);
 char	*no_expansion(char *str, t_var_holder h);
-char	*expand(char *str, t_env env);
-char	*expansion(char *str, t_var_holder *h, t_env env);
-char	*unquote_and_direct(char *str, t_env env);
+char	*expand(char *str, t_env *env);
+char	*expansion(char *str, t_var_holder *h, t_env *env);
+char	*unquote_and_direct(char *str, t_env *env);
 
 //parser:
 int		parse(t_token **token);
@@ -145,33 +145,33 @@ int		secondquote(char *line);
 int		parse_last_token(char **cmd_line, t_token **list, t_token **last);
 
 //executor
-int		start_executor(t_jobs *job, t_env env);
-int		child_process(t_jobs *job, t_env env);
-int		simple_process(t_jobs *job, t_env env);
-int		execute_job(t_jobs *job, t_env env);
-void	process_exit(t_jobs *job, t_env env, int status);
+void	start_executor(t_jobs *job, t_env *env);
+int		child_process(t_jobs *job, t_env *env);
+int		simple_process(t_jobs *job, t_env *env);
+int		execute_job(t_jobs *job, t_env *env);
+void	process_exit(t_jobs *job, t_env *env, int status);
 int		new_fork(void);
 void	panic(char *s);
 
 //builtins:
-int		try_builtins(t_jobs *job, t_env env, bool pipe);
+int		try_builtins(t_jobs *job, t_env *env, bool pipe);
 int		caught_echo(t_jobs *job);
-int		caught_cd(t_jobs *job, t_env env);
+int		caught_cd(t_jobs *job, t_env *env);
 int		caught_pwd(t_jobs *job);
 int		caught_export(t_jobs *job, t_env *env);
-int		caught_unset(t_jobs *job, t_env env);
-int		caught_env(t_jobs *job, t_env env);
-int		caught_exit(t_jobs *jobs, t_env env, bool pipe);
+int		caught_unset(t_jobs *job, t_env *env);
+int		caught_env(t_jobs *job, t_env *env);
+int		caught_exit(t_jobs *jobs, t_env *env, bool pipe);
 
 //redirections
 void	update_input(t_jobs *job);
 int		update_output(t_jobs *job, char **env, char **temp_vars);
 int		append_to_file(t_jobs *job, char **env, char **temp_vars);
-int 	handle_heredoc(t_jobs *job);
+int		handle_heredoc(t_jobs *job);
 void	print_file(int fd);
 
 //free:
-void	clean_exit(t_jobs *jobs, t_env env, int status);
+void	clean_exit(t_jobs *jobs, t_env *env, int status);
 void	clear_jobs(t_jobs **lst);
 void	clear_list(t_token **lst);
 void	clean_up_build(t_token **list, char *cmd_line);
@@ -179,10 +179,10 @@ void	free_all(t_token **list, char **array, char *message, int len);
 
 //signals:
 void	choose_signal(t_signal type);//goncalo
-void sigquit(int sig);
-void handle_signal_main(int sig);
-void handle_signal_child(int sig);
-void handle_signal_heredoc(int sig);
+void	sigquit(int sig);
+void	handle_signal_main(int sig);
+void	handle_signal_child(int sig);
+void	handle_signal_heredoc(int sig);
 
 //aux:
 char	*update_prompt(void);

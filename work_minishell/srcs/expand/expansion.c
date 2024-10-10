@@ -6,13 +6,13 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/17 17:25:48 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/07 14:17:08 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char	*expand(char *str, t_env env)
+char	*expand(char *str, t_env *env)
 {
 	t_var_holder	h;
 
@@ -38,7 +38,7 @@ char	*expand(char *str, t_env env)
 	return (h.result);
 }
 
-char	*no_quotes(char *str, t_var_holder *h, t_env env)
+char	*no_quotes(char *str, t_var_holder *h, t_env *env)
 {
 	h->temp = ft_strndup(str + h->start, h->i - h->start);
 	if (!h->temp)
@@ -81,7 +81,7 @@ char	*single_quotes(char *str, t_var_holder *h)
 	return (h->new);
 }
 
-char *double_quotes(char *str, t_var_holder *h, t_env env)
+char *double_quotes(char *str, t_var_holder *h, t_env *env)
 {
     h->start = ++h->i;
     while (str[h->i] && str[h->i] != '\"')
@@ -90,7 +90,7 @@ char *double_quotes(char *str, t_var_holder *h, t_env env)
     return (h->new);
 }
 
-char *unquote_and_direct(char *str, t_env env)
+char *unquote_and_direct(char *str, t_env *env)
 {
     t_var_holder h;
 
@@ -118,11 +118,11 @@ char *unquote_and_direct(char *str, t_env env)
     return (h.new);
 }
 
-char	*expand_env_vars(char *input, t_env env)
+char	*expand_env_vars(char *input, t_env *env)
 {
 	char	*temp;
 
-	temp = ft_getenv(input + 1, env.env);
+	temp = ft_getenv(input + 1, env->env);
 	if (!temp)
 		temp = ft_strdup("");
 	return (temp);
@@ -144,7 +144,7 @@ char	*no_expansion(char *str, t_var_holder h)
 	return(h.temp);
 }
 
-char	*expansion(char *str, t_var_holder *h, t_env env)
+char	*expansion(char *str, t_var_holder *h, t_env *env)
 {
 	if (str[h->i] == '\0' || str[h->i] == ' ' || str[h->i] == '\t')
 		h->expanded = ft_strdup("$");
@@ -155,7 +155,7 @@ char	*expansion(char *str, t_var_holder *h, t_env env)
 	}
 	else if (str[h->i] == '?')
 	{
-		h->expanded = ft_itoa(env.status);
+		h->expanded = ft_itoa(env->status);
 		h->i++;
 	}
 	else

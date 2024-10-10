@@ -6,18 +6,18 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:15:54 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/12 17:48:48 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/10/09 13:12:37 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	ft_getpid(void)//does this work>
+int	ft_getpid(void)//does this work?
 {
 	FILE *fp;
 	int	pid;
+
 	fp = fopen("/proc/self/stat", "r");
-	fp = NULL;
 	if (!fp)
 		return (ft_putendl_fd("minishell: getpid() error", 2), 0);
 	fscanf(fp, "%d", &pid);
@@ -33,7 +33,7 @@ char	*update_prompt(void)//make better
 	char	**folders;
 	int		i;
 
-	getcwd(cwd, PATH_MAX);//error check clean exit
+	getcwd(cwd, PATH_MAX);
 	if (!*cwd)
 		return (ft_putendl_fd("getcwd() error", 2), NULL);
 	folders = ft_split(cwd, '/');
