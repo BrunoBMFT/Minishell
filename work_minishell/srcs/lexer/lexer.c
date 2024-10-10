@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 00:13:28 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/09 12:31:52 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/10/10 12:49:58 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ t_jobs	*build(char *command_line, t_env env)
 			return (NULL);
 	make_job_list(&jobs, &list, env);
 	clear_list(&list);
-	free(command_line);
+//	free(command_line);
 	return (jobs);
 }
 

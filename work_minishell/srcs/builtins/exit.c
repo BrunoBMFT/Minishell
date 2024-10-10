@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 21:01:01 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/09 15:11:13 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/10/10 14:18:47 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 void	clean_exit(t_jobs *jobs, t_env *env, int status)
 {
 	clear_jobs(&jobs);
+	close (env->saved_stdin);
+	close (env->saved_stdout);
 	free_array(env->env);
 	exit (status);
 }

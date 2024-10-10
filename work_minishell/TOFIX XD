@@ -1,23 +1,29 @@
 Signals
 
-fix expander ( $"$USER" )
-close stdin and stdout in exit
-export hello="ls -l"
-test output
+export hello="ls -l"   (if job[0] == export etc etc etc)
+	free line in lexer
+test with "" as commands (cat) (command not found, just a "")
+
+test output (will be fixed with pipe logic if we want)
 test append output
-test the env builtins (env unset export)
-test with "" as commands (cat)
-fix "" and " " as a command, (command not found)
-cat kasdkasdkads | cat kasdkadskasdkdas || exit (fix output)
+cat kasdkasdkads | cat kasdkadskasdkdas || exit			(fix output)
+ls | grep s > out | wc < out | cat
+""|""
+test|cat> (very bad)
+work_minishell$ cd ../../../../../../.. (very bad, update prompt)
+echo test|>cat
+exit codes
+export $var
+$var >
+echo Good luck > $var
 
-switch things to getenv instead of ft_getenv
+TESTER DA MARGARIDA
 
-clearjobs has to clear old jobs (pipes)
-	
-	fix echo -> echo hello "" world
-parse_quotes doesnt need to read unclosed quotations
+fix echo -> echo hello "" world
 
-is it allowed to create a child process even if command isnt found?
+
+
+
 
 
 
@@ -25,19 +31,17 @@ is it allowed to create a child process even if command isnt found?
 tests:
 	cd folder && rm -rf ../folder
 	env -i
-	unset PATH
+	unset PATH (same fix as pipex)
 	fix leaks in normal cases (no errors)
 	fix leaks in error cases
-	fix leaks in NULL cases
+	fix leaks in NULL cases?
+test every malloc functions with NULLS and see if everything is freed and protected?
+# define malloc(x) NULL?
 
-test every malloc functions with NULLS and see if everything is freed and protected
-# define malloc(x) NULL
 
 norminette
 
-change errors to use printf_fd
-job.array doesnt need env
-
+switch things to getenv instead of ft_getenv?
 improve echo
 rename variables
 add colors to prompt
@@ -47,4 +51,4 @@ messages.h
 
 
 
-export dasasd=asd weqweq=weq fgfdg=dfg wqeweq=weq gfhfhg=fhg werwer=rwe fnbnbv=vnb cxvxcv=cvx fhgfhgfhg=fhg fsdsdf=sdf asdasd=asd fghfgh=dzfg weqrwer=wer fdfhgfdgh=sdfg fvgnvbn=sdf asdasfddcfvb=sdf wertter=dfg qwweq=fasd dfgfdg=dfg asdasdsda=asd rthryhthrt=rth wefwe=fwe fnggb=fgb weqweq=weq vsdfvfsd=cvfsd dwqdwq=dwqweq ergertg=erg acsdvdwce=cwe ergerg=g wfefweq=wfe rhthrt=hrt dqwedwq=dwq hrthrt=rht qdwdwqdwq=qdw hrthrt=hrt yujujy=yuj fwefwe=fwe dwqdwq=dwq
+export aaa=aaa bbb=bbb ccc=ccc ddd=ddd eee=eee fff=fff ggg=ggg hhh=hhh jjj=jjj

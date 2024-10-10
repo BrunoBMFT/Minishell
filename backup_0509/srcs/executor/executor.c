@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/09/05 15:45:59 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/10/10 12:24:08 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	start_executor(t_jobs *job, t_env env)
 	signal(SIGQUIT, sigquit);
 	while (job)
 	{
+		print_jobs(job);
 		if (job->input)
 		{
 			if (job->heredoc)

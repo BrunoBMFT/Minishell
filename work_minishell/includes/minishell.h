@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/09 13:20:22 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/10/10 14:18:03 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ typedef struct s_env
 	int		status;
 	char	*prompt;
 	char	**env;
+	int		saved_stdin;
+	int		saved_stdout;
 }				t_env;
 
 typedef struct variable_holder
