@@ -6,14 +6,13 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 21:01:01 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/12 00:06:24 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/12 16:14:13 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "../../includes/minishell.h"
 
-//clear rl history
 void	clean_exit(t_jobs *jobs, t_env *env, int status)
 {
 	clear_jobs(&jobs);//if

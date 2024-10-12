@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:04 by brfernan          #+#    #+#             */
-/*   Updated: 2024/10/08 00:28:01 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/12 16:09:15 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	*cd_get_pwd(void)
 
 int	caught_cd(t_jobs *job, t_env *env)
 {
-	char 	*directory;
+	char 	*dir;
 	char	*oldpwd;
 	
 	oldpwd = cd_get_pwd();
@@ -53,10 +53,12 @@ int	caught_cd(t_jobs *job, t_env *env)
 		if (chdir(ft_getenv("HOME", env->env)))
 			return (ft_printf_fd(2, "cd home failed"), free (oldpwd), 1);
 	}
+	else if (job->job[2])
+		return (ft_printf_fd(2, "minishell: cd: too many arguments\n"), free (oldpwd), 1);
 	else
 	{
-		directory = job->job[1];
-		if (chdir(directory))
+		dir = job->job[1];
+		if (chdir(dir))
 			return (ft_printf_fd(2, "minishell: cd: %s: No such file or directory\n", job->job[1]), free (oldpwd), 1);
 	}
 	cd_update_aux1(env, "OLDPWD=", oldpwd);

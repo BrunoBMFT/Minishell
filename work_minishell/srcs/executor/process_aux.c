@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/12 00:10:12 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/12 15:23:10 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,13 +69,13 @@ char	*find_executable_path(t_jobs *job, t_env *env)
 		getcwd(cwd, PATH_MAX);
 		path = ft_strjoin3(cwd, "/", job->job[0]);
 		if (!path)
-		clean_exit(job, env, 127);
+			clean_exit(job, env, 127);
 	}
 	if (access(path, F_OK) == 0)
 		return (path);
 	free (path);
 	ft_printf_fd(2, "minishell: %s: No such file or directory\n", job->job[0]);
-		clean_exit(job, env, 127);
+	clean_exit(job, env, 127);
 }
 
 void execute_executable(t_jobs *job, t_env *env)

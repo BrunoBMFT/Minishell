@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   aux.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:15:54 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/09 13:12:37 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/10/12 13:14:06 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	ft_getpid(void)//does this work?
 	return (pid);
 }
 
-char	*update_prompt(void)//make better
+char	*update_prompt(void)//void
 {
 	char	cwd[PATH_MAX];
 	char	*dir;
@@ -40,6 +40,8 @@ char	*update_prompt(void)//make better
 	if (!folders)
 		return (free(folders), NULL);
 	i = 0;
+	if (!folders[i])
+		return (free_array(folders), ft_strdup("/$ "));//strdup because env frees this return
 	while (folders[i])
 		i++;
 	prompt = ft_strjoin(folders[i - 1], "$ ");

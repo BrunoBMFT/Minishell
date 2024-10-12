@@ -30,11 +30,6 @@ fix echo -> echo hello "" world
 
 
 
-
-
-change errors from writing minishell to writing bash
-
-
 tests:
 	cd folder && rm -rf ../folder
 	env -i
@@ -46,6 +41,10 @@ test every malloc functions with NULLS and see if everything is freed and protec
 # define malloc(x) NULL?
 
 
+change errors from writing minishell to writing bash
+clean_exit receive error str?
+
+
 norminette
 
 switch things to getenv instead of ft_getenv?
@@ -53,7 +52,6 @@ improve echo
 rename variables
 add colors to prompt
 change SHELL=binzsh to shell=minishell
-messages.h
 
 
 

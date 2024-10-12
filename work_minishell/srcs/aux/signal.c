@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 03:18:24 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/11 18:33:13 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/12 14:15:05 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,12 +98,14 @@ void	choose_signal(t_signal type)
 
 //mine
 
-int	ctrld(char *line, t_env env)
+//can call clean_exit and maybe have exit print a line for why its closing
+void	ctrld(char *line, t_env *env)//receives line to free it
 {
 	free (line);
-	//rl clear history
 	printf("exit\n");
-	return (env.status);
+	free_array(env->env);//if
+	rl_clear_history();
+	exit (env->status);
 }
 
 //old

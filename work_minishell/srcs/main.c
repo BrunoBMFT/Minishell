@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/12 01:19:00 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/12 15:59:01 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	main(int ac, char **av, char **envp)
 		line = readline(env.prompt);
 		free(env.prompt);
 		if (!line)
-			exit (ctrld(line, env));//for ctrl+d, bad?
+			ctrld(line, &env);
 		if (secondquote(line) == 1)	//remove if you want to request additional info to finish prompt
 		{
 			free(line);
@@ -49,8 +49,9 @@ int	main(int ac, char **av, char **envp)
 			continue ;
 		}
 		add_history(line);
-		line = parse_quotes(line);//not working correctly
+		line = parse_quotes(line);//not working correctly?
 		jobs = build(line, env);
+		free (line);
 		curr = jobs;//why use curr?
 		start_executor(curr, &env);
 		clear_jobs(&jobs);

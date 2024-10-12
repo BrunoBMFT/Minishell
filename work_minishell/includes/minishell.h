@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/11 23:56:53 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/12 15:43:57 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,7 @@ void	sigquit(int sig);
 void	handle_signal_main(int sig);
 void	handle_signal_child(int sig);
 void	handle_signal_heredoc(int sig);
-int	ctrld(char *line, t_env env);
+void	ctrld(char *line, t_env *env);
 
 //aux:
 char	*update_prompt(void);
