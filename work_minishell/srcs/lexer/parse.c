@@ -147,13 +147,13 @@ int	parse_redirections(t_token **token, t_token *cur, int flag)
 {
 	if (!cur->next)
 	{
-		ft_printf("Minishell: syntax error near unexpected token`\\n\'\n");
+		ft_printf("minishell: syntax error near unexpected token`\\n\'\n");
 		clear_list(token);
 		return (flag + 1);
 	}
 	else if (cur->next && cur->next->type != WORD)
 	{
-		ft_printf("Minishell: syntax error near unexpected token `%s\'\n", cur->next->token);
+		ft_printf("minishell: syntax error near unexpected token `%s\'\n", cur->next->token);
 		clear_list(token);
 		return (flag + 1);
 	}
@@ -166,7 +166,7 @@ int parse_separators(t_token **token, t_token *cur, int flag)
     {
         if (cur->type >= PIPE && cur->type <= OR) // Check for double delimiters
         {
-            ft_printf("Minishell: syntax error near unexpected token `%s\'\n", cur->next->token);
+            ft_printf("minishell: syntax error near unexpected token `%s\'\n", cur->next->token);
             clear_list(token);
             return (flag + 1);
         }
@@ -205,7 +205,7 @@ int parse(t_token **token)
     // Check for separator at the beginning of the list
     if (cur && cur->type >= PIPE && cur->type <= OR)
     {
-        ft_printf("Minishell: syntax error near unexpected token `%s\'\n", cur->token);
+        ft_printf_fd(2, "bash: syntax error near unexpected token `%s\'\n", cur->token);
         clear_list(token);
         return (-1);
     }
@@ -224,7 +224,7 @@ int parse(t_token **token)
     // Check for separator at the end of the list
     if (cur && cur->type >= PIPE && cur->type <= OR)
     {
-        ft_printf("Minishell: syntax error near unexpected token `%s\'\n", cur->token);
+        ft_printf_fd(2, "minishell: syntax error near unexpected token `%s\'\n", cur->token);
         clear_list(token);
         return (-1);
     }
@@ -282,7 +282,7 @@ char	*parse_quotes(char *line)
 				if (!newline)
 					new = ft_strjoin(line, "\n"); //not working rn
 				else
-					new = ft_strjoin(line, newline);
+					new = ft_strjoin3(line, "\n", newline);//seems to be working
 				free(line);
 				free(newline);
 				line = new;

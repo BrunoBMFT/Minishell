@@ -8,16 +8,23 @@ test output (will be fixed with pipe logic if we want)
 test append output
 cat kasdkasdkads | cat kasdkadskasdkdas || exit			(fix output)
 ls | grep s > out | wc < out | cat
-""|""
+
+maria tester
+""
+''
+$var >  (count_tokens_in_job)
+echo "agora 'mais' fdd" (single quotes and double quotes wrong, '"abc"')
+echo test|>
+echo test|>cat
+echo "$var""Makefile"
+echo "$var"Makefile
+
+
+
+
+
 test|cat> (very bad)
 work_minishell$ cd ../../../../../../.. (very bad, update prompt)
-echo test|>cat
-exit codes
-export $var
-$var >
-echo Good luck > $var
-
-TESTER DA MARGARIDA
 
 fix echo -> echo hello "" world
 
@@ -25,7 +32,7 @@ fix echo -> echo hello "" world
 
 
 
-
+change errors from writing minishell to writing bash
 
 
 tests:

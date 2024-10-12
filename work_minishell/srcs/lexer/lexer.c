@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 00:13:28 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/10 12:49:58 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/10/11 17:44:58 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ t_jobs	*build(char *command_line, t_env env)
 	t_token	*list;
 	t_token	*last;
 
+	if (!command_line[0])
+		return (NULL);
 	jobs = NULL;
 	list = NULL;
 	last = NULL;

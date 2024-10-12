@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/09 13:34:34 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/10/11 16:14:42 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	simple_process(t_jobs *job, t_env *env)
 	pid_t	pid;
 	int	status;
 
-//	choose_signal(IGNORE_SIG);
+	choose_signal(IGNORE_SIG);
 
 	if (job->job && job->job[0] && (ft_strcmp(job->job[0], "cd")) == 0)
 		return (caught_cd(job, env));

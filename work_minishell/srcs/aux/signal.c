@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 03:18:24 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/07 21:42:41 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/11 18:33:13 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 //goncalo
 //nao funciona
 
-/* void	ignore_signal(struct sigaction *sa, int signal)
+void	ignore_signal(struct sigaction *sa, int signal)
 {
 	struct sigaction	original_sa;
 	int					original_flags;
@@ -94,16 +94,27 @@ void	choose_signal(t_signal type)
 	}
 	else
 		choose_signal_aux(type, sa);
-} */
+}
 
+//mine
 
+int	ctrld(char *line, t_env env)
+{
+	free (line);
+	//rl clear history
+	printf("exit\n");
+	return (env.status);
+}
+
+//old
+/* 
 void	sigquit(int sig)
 {
 	(void)sig;
 	write(1, "Quit:\n", 7);
 }
 
-void	setup_sigquit_handler(void)
+void	setup_sigquit_handler(void)//not called
 {
 	struct sigaction	sa;
 
@@ -134,4 +145,4 @@ void	handle_signal_child(int sig)
 {
 	(void)sig;
 	write(STDOUT_FILENO, "\n", 1);
-}
+} */

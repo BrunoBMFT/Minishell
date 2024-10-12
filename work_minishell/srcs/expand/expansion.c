@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/10 12:34:37 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/10/11 19:17:25 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,8 +123,8 @@ char	*expand_env_vars(char *input, t_env *env)
 	char	*temp;
 
 	temp = ft_getenv(input + 1, env->env);
-	if (!temp)
-		temp = ft_strdup("");
+//	if (!temp)
+//		temp = ft_strdup("");keeping it at NULL???
 	return (temp);
 }
 

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+         #
+#    By: bruno <bruno@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/23 16:39:56 by ycantin           #+#    #+#              #
-#    Updated: 2024/10/10 17:22:22 by brfernan         ###   ########.fr        #
+#    Updated: 2024/10/11 17:11:37 by bruno            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,8 @@ $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
 LIBFT_DIR = ./includes/libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-FLAGS = -Wall -Werror -Wextra -g -fsanitize=address
+#FLAGS = -Wall -Werror -Wextra -g -fsanitize=address
+FLAGS = -Wall -Werror -Wextra -g
 DEPS = -lreadline
 RM = rm -f
 

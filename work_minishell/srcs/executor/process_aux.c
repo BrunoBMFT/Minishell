@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/07 21:42:17 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/12 00:10:12 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,49 +46,52 @@ void	execute_command(t_jobs *job, t_env *env)
 	if (!path)
 		clean_exit(job, env, 127);
 	execve(path, job->job, env->env);
+	ft_printf_fd(2, "execve() failed\n");//invalid frees?
 	clean_exit(job, env, 127);
 }
 
-char	*find_executable_path(char *cmd)
+char	*find_executable_path(t_jobs *job, t_env *env)
 {
 	char	*path;
 	char	cwd[PATH_MAX];
 
-	if (cmd[0] == '/')
-		path = cmd;
+	if (job->job[0][0] == '/')
+	{
+		if (opendir(job->job[0]))
+		{
+			ft_printf_fd(2, "minishell: %s: Is a directory\n", job->job[0]);
+			clean_exit(job, env, 126);
+		}
+		path = job->job[0];
+	}
 	else
 	{
-		getcwd(cwd, PATH_MAX);//error check
-		path = ft_strjoin3(cwd, "/", cmd);//error check
+		getcwd(cwd, PATH_MAX);
+		path = ft_strjoin3(cwd, "/", job->job[0]);
 		if (!path)
-			return (NULL);
+		clean_exit(job, env, 127);
 	}
 	if (access(path, F_OK) == 0)
 		return (path);
 	free (path);
-	ft_printf_fd(2, "minishell: %s: No such file or directory\n", cmd);
-	return (NULL);
+	ft_printf_fd(2, "minishell: %s: No such file or directory\n", job->job[0]);
+		clean_exit(job, env, 127);
 }
 
 void execute_executable(t_jobs *job, t_env *env)
 {
 	char	*path;
 
-	path = find_executable_path(job->job[0]);
-	if (!path)
-		clean_exit(job, env, 127);
+	path = find_executable_path(job, env);
 	execve(path, job->job, env->env);
-	ft_printf_fd(2, "execve() failed\n");
+	ft_printf_fd(2, "execve() failed\n");//invalid frees
 	free (path);
 	clean_exit(job, env, 127);
 }
 
 int	execute_job(t_jobs *job, t_env *env)
 {
-	if (!job->job[0])//check execd being ""
-		return (ft_printf("job error\n"), 126);
-//	choose_signal(CHILD_SIG);
-//	choose_signal(IGNORE_SIG);
+	choose_signal(CHILD_SIG);
 	if (ft_strchr(job->job[0], '/'))
 		execute_executable(job, env);
 	else
