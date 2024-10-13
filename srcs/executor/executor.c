@@ -3,26 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/10 16:21:01 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/13 16:08:25 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-// int		choose_input(t_jobs **jobs)
-// {
-// 	t_jobs *copy;
-// 	int 	input;
-// 	copy = *jobs;
-// 	while (copy)
-// 	{
-// 		if (handle_heredoc(copy) < 0)
-// 			return (-1);
-// 	}
-// }
 
 int	executor_input(t_jobs *job, int *status)
 {

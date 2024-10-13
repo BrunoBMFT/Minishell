@@ -1,0 +1,60 @@
+Signals
+
+export USER=something new
+export hello="ls -l"   (if job[0] == export etc etc etc)
+	free line in lexer
+test with "" as commands (cat) (command not found, just a "")
+
+test output (will be fixed with pipe logic if we want)
+test append output
+cat kasdkasdkads | cat kasdkadskasdkdas || exit			(fix output)
+ls | grep s > out | wc < out | cat
+
+maria tester
+""
+''
+$var >  (count_tokens_in_job)
+echo "agora 'mais' fdd" (single quotes and double quotes wrong, '"abc"')
+echo test|>
+echo test|>cat
+echo "$var""Makefile"
+echo "$var"Makefile
+
+
+
+
+
+test|cat> (very bad)
+work_minishell$ cd ../../../../../../.. (very bad, update prompt)
+
+fix echo -> echo hello "" world
+
+
+check error messages
+tests:
+	cd folder && rm -rf ../folder
+	env -i
+	unset PATH (same fix as pipex)
+	fix leaks in normal cases (no errors)
+	fix leaks in error cases
+	fix leaks in NULL cases?
+test every malloc functions with NULLS and see if everything is freed and protected?
+# define malloc(x) NULL?
+
+
+change errors from writing minishell to writing bash
+clean_exit receive error str?
+
+
+norminette
+
+switch things to getenv instead of ft_getenv?
+improve echo
+rename variables
+add colors to prompt
+change SHELL=binzsh to shell=minishell
+
+
+
+
+export aaa=aaa bbb=bbb ccc=ccc ddd=ddd eee=eee fff=fff ggg=ggg hhh=hhh jjj=jjj

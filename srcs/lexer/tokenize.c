@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 01:39:10 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/13 15:55:13 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/13 16:19:22 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ void	handle_quotes(t_var_holder *h, char *str)
 // int	count_words(char *str)
 // {
 // 	t_var_holder	h;
-
 // 	h.i = 0;
 // 	h.wc = 0;
 // 	while (str[h.i])

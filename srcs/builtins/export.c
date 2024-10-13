@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/12 15:10:37 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/13 16:12:57 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 // 	int	i;
 // 	char	*temp1 = NULL;
 // 	char	*temp2 = NULL;
-
 // 	if (!to_add || !env)
 // 		return false;
 // 	i = 0;
@@ -159,15 +158,6 @@ int	caught_export(t_jobs *job, t_env *env)//fix export var =value (the space)
 	env->env[i] = NULL;
 	
 	free(new_env);
-	
-/* 	//freeing new_env
-	i = 0;
-	while (new_env[i])
-	{
-		free (new_env[i]);
-		i++;
-	}
-	free (new_env); */
 
 
 	return (status);
