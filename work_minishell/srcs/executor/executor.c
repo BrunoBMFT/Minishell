@@ -3,18 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/13 16:34:24 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/14 12:44:32 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	executor_input(t_jobs *job, int *status)//return values negligeble
+int	executor_input(t_jobs *job, int *status)//return values negligeble?
 {
 	int	redirected_input;
+
 /* 
 	if (job->input && (job->input[0] = '$'))// TODO for now commented, messes up apply_redir
 	{
@@ -22,21 +23,14 @@ int	executor_input(t_jobs *job, int *status)//return values negligeble
 //		return (ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->input), -1);
 	} */
 	redirected_input = open(job->input, O_RDONLY);
-	if (redirected_input == -1)//never gets here??????????????????????????? since if input fails, it automatically is dev/null
-	{
-		//never gets here???????????????????????????
-		ft_printf_fd(2, "minsdihsdfkjsdfksdf: %s: No such file or directory\n", job->input);//change to perror?
+	if (ft_strcmp("/dev/null", job->input))
 		*status = 1;
-		return (-1);
-	}
-	if (job->input == "/dev/null")
-		*status = 1;
-	dup2(redirected_input, STDIN_FILENO);//wrong input + pipe not working
+	dup2(redirected_input, STDIN_FILENO);
 	close(redirected_input);
 	return (0);
 }
 
-int	executor_output(t_jobs *job, int *status)//return values negligeble
+int	executor_output(t_jobs *job, int *status)//return values negligeble, remake
 {
 	int	redirected_output;
 
@@ -94,9 +88,9 @@ void	start_executor(t_jobs *job, t_env *env)
 
 		
 		//executing jobs
-		else if (job->job && job->job[0] && job->job[0][0] && job->piped)//maybe not needed?
+		else if (job->job && job->job[0] && job->piped)//maybe not needed?
 			env->status = child_process(job, env);//last proc
-		else if (job->job && job->job[0] && job->job[0][0])//make it so it doesnt check like this
+		else if (job->job && job->job[0])
 			env->status = simple_process(job, env);
 
 

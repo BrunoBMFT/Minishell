@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/13 20:40:40 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/13 21:35:53 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,6 @@ char	*no_quotes(char *str, t_var_holder *h, t_env *env)
 		free(h->new);
 		h->new = h->temp;
 	}
-	if (!h->new)//does this work?
-		h->new = ft_strdup("");//does this work?
 	free(h->before);
 	if (!h->new)
 		return (NULL);
@@ -92,32 +90,54 @@ char *double_quotes(char *str, t_var_holder *h, t_env *env)
     return (h->new);
 }
 
+bool	is_empty_arg(char *str, char end)
+{
+	int	i;
+	int	found;
+
+	i = 0;
+	found = 1;
+	while (str[i] && str[i] != end)
+	{
+		if (ft_isascii(str[i]) && str[i] != '\0')//check for spaces as well?
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
 char *unquote_and_direct(char *str, t_env *env)
 {
-    t_var_holder h;
+	t_var_holder h;
 
-    h.new = NULL;
-    h.before = NULL;
-    h.quoted = NULL;
-    h.after = NULL;
-    h.temp = NULL;
-    h.i = 0;
-    h.start = 0;
-    while (str[h.i])
-    {
-        h.start = h.i;
-        while (str[h.i] && str[h.i] != '\'' && str[h.i] != '\"')
-            h.i++;
-        if (h.i > h.start) 
-            h.new = no_quotes(str, &h, env);
-        if (str[h.i] == '\'')
-            h.new = single_quotes(str, &h);
-        else if (str[h.i] == '\"') 
-            h.new = double_quotes(str, &h, env);
-        if (str[h.i])
-            h.i++;
-    }
-    return (h.new);
+	h.new = NULL;
+	h.before = NULL;
+	h.quoted = NULL;
+	h.after = NULL;
+	h.temp = NULL;
+	h.i = 0;
+	h.start = 0;
+	//check if the if statements are correct, basically it gets triggered at the wrong timing
+	
+	if (is_empty_arg(str, '\'') || is_empty_arg(str, '\"'))
+	{
+		h.new = ft_strdup("");
+	}
+	while (str[h.i])
+	{
+		h.start = h.i;
+		while (str[h.i] && str[h.i] != '\'' && str[h.i] != '\"')
+			h.i++;
+		if (h.i > h.start)
+			h.new = no_quotes(str, &h, env);
+		if (str[h.i] == '\'')
+			h.new = single_quotes(str, &h);
+		else if (str[h.i] == '\"') 
+			h.new = double_quotes(str, &h, env);
+		if (str[h.i])
+			h.i++;
+	}
+	return (h.new);
 }
 
 char	*expand_env_vars(char *input, t_env *env)

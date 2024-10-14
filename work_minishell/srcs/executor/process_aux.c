@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_aux.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/12 15:23:10 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/14 13:12:17 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*find_command_path(char	**cmd, t_env *env)
 	if (!path_array)
 		return (NULL);
 	i = 0;
-	while (path_array[i])
+	while (path_array[i] && cmd[0][0])
 	{
 		path = ft_strjoin3(path_array[i], "/", cmd[0]);
 		if (!path)
@@ -76,6 +76,7 @@ char	*find_executable_path(t_jobs *job, t_env *env)
 	free (path);
 	ft_printf_fd(2, "minishell: %s: No such file or directory\n", job->job[0]);
 	clean_exit(job, env, 127);
+	return (NULL);
 }
 
 void execute_executable(t_jobs *job, t_env *env)

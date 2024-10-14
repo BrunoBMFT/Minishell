@@ -11,18 +11,15 @@ cat kasdkasdkads | cat kasdkadskasdkdas || exit			(fix output)
 ls | grep s > out | wc < out | cat
 
 maria tester
-""
-''
 $var >  (count_tokens_in_job)
-echo "agora 'mais' fdd" (single quotes and double quotes wrong, '"abc"')
 echo test|>
 echo test|>cat
 echo "$var""Makefile"
 echo "$var"Makefile
 
 
-
-
+parse_export and variable duplicates need to be checked before calloc
+export $var=kfdgkfgdk works
 
 test|cat> (very bad)
 work_minishell$ cd ../../../../../../.. (very bad, update prompt)
