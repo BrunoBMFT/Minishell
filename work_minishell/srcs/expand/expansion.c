@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/13 21:35:53 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/14 14:07:15 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,9 @@ char	*expand(char *str, t_env *env)
 		if (str[h.i] == '$')
 		{
 			h.start = h.i;
-			h.i++;
+			//h.i++;
 			h.result = expansion(str, &h, env);
+		}
 		}
 	}
 	return (h.result);
@@ -168,7 +169,12 @@ char	*no_expansion(char *str, t_var_holder h)
 
 char	*expansion(char *str, t_var_holder *h, t_env *env)
 {
-	if (str[h->i] == '$')//elif
+	if (!str[h.i + 1])
+	{
+		h.expanded = ft_strdup("$");
+	}
+	h.i++;
+	else if (str[h->i] == '$')//elif
 	{
 		h->expanded = ft_itoa(ft_getpid());//check if ft_getpid is working
 		h->i++;
