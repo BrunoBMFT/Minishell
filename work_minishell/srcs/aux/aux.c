@@ -3,90 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   aux.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:15:54 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/13 17:21:39 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/14 16:41:08 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-//remove
-void	memory_size(char **array, char *str, t_env *env, t_jobs *job)
-{
-	int count = 0;
-
-	if (array)
-	{
-		int i = 0;
-		while (array[i])
-		{
-			int j = 0;
-			while (array[i][j])
-			{
-				count++;
-				j++;
-			}
-			i++;
-		}
-	}
-	else if (str)
-	{
-		int i = 0;
-		while (str[i])
-		{
-			count++;
-			i++;
-		}
-	}
-	else if (env->env)
-	{
-		int i = 0;
-		while (env->env[i])
-		{
-			int j = 0;
-			while (env->env[i][j])
-			{
-				count++;
-				j++;
-			}
-			i++;
-		}
-	}
-/* void	print_jobs(char *line, t_jobs *jobs)
-{
-	printf("line: %s\n", line);
-	int i = 0;
-	while (jobs->job[i])
-	{
-		ft_printf_fd(2, "job %d: %s\n", i, jobs->job[i]);
-		i++;
-	}
-} */
-	else if (job->job)
-	{
-		while (job->job)
-		{
-			int i = 0;
-			while (job->job[i])
-			{
-				int j = 0;
-				while (job->job[i][j])
-				{
-					count++;
-					j++;
-				}
-				i++;
-			}
-			job = job->next;
-		}
-	}
-	printf("memory: %d\n", count);
-
-	return;
-}
-
 
 int	ft_getpid(void)//does this work?
 {

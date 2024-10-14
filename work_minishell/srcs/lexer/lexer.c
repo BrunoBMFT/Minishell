@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 00:13:28 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/13 16:35:43 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/14 16:04:06 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,11 @@ void    apply_redir(t_token *current, t_jobs *job)
     }
     if (current->type == OUTPUT || current->type == APPEND_OUT)
     {
+		// if (job->output && (job->output[0] == '$'))
+		// {
+		// 	ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->output);
+		// 	job->output = ft_strdup("/dev/null");
+		// }
         fd = open(current->next->token, O_CREAT | O_RDWR, 0644);
         close(fd);
         if (current->type == APPEND_OUT)

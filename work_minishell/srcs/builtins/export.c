@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/14 13:37:45 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/10/14 17:08:33 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	export_aux(t_jobs *job, char **new_env, t_env *env, int *status)
 		new_env[i] = ft_strdup(env->env[i]);
 	while (job->job[k])
 	{
-		if (!parse_export(job->job[k], len_to_equal(job->job[k])))
+		if (!parse_export(job->job[k], len_to_equal(job->job[k])))//can be in the main function
 		{
 			ft_printf_fd(2, "minishell: export: '%s': not a valid identifier\n", job->job[k]);
 			*status = 1;
@@ -108,7 +108,7 @@ int	caught_export(t_jobs *job, t_env *env)
 	char	**new_env;
 	int		status;
 	int		i;
-	if (!job->job[1])
+	if (!job->job[1] || !job->job[1][0])
 		return (export_no_execd(env->env));//fix pls
 	status = 0;
 	i = 0;

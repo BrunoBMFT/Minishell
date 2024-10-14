@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 04:38:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/13 21:11:28 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/14 17:04:11 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-//echo ola   ""    bruno
-//maybe use malloced string and print that string?
 int	caught_echo(t_jobs *job)
 {
 	bool	nl;

@@ -1,30 +1,25 @@
 Signals
 
-export USER=something new
-export hello="ls -l"   (if job[0] == export etc etc etc)
-	free line in lexer
+fix output redirection
+
+make parse export better
+parse_export and variable duplicates need to be checked before calloc (leaks)
+
+
+maria tester
+test|cat> (very bad)
+$var > (count_tokens_in_job)
+echo test|>
+
+
 test with "" as commands (cat) (command not found, just a "")
 
+#optional
 test output (will be fixed with pipe logic if we want)
 test append output
 cat kasdkasdkads | cat kasdkadskasdkdas || exit			(fix output)
 ls | grep s > out | wc < out | cat
 
-maria tester
-$var >  (count_tokens_in_job)
-echo test|>
-echo test|>cat
-echo "$var""Makefile"
-echo "$var"Makefile
-
-
-parse_export and variable duplicates need to be checked before calloc
-export $var=kfdgkfgdk works
-
-test|cat> (very bad)
-work_minishell$ cd ../../../../../../.. (very bad, update prompt)
-
-fix echo -> echo hello "" world
 
 
 check error messages
@@ -45,7 +40,7 @@ clean_exit receive error str?
 
 norminette
 
-switch things to getenv instead of ft_getenv?
+switch things to getenv instead of ft_getenv?, no because getenv doesnt check our env
 improve echo
 rename variables
 add colors to prompt

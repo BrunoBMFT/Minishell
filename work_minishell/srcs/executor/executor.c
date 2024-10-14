@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/14 12:44:32 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/10/14 16:04:11 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	executor_input(t_jobs *job, int *status)//return values negligeble?
 	int	redirected_input;
 
 /* 
-	if (job->input && (job->input[0] = '$'))// TODO for now commented, messes up apply_redir
+	if (job->input && (job->input[0] == '$'))// TODO for now commented, messes up apply_redir
 	{
 //		*status = 1;
 //		return (ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->input), -1);
@@ -30,13 +30,15 @@ int	executor_input(t_jobs *job, int *status)//return values negligeble?
 	return (0);
 }
 
-int	executor_output(t_jobs *job, int *status)//return values negligeble, remake
+int	executor_output(t_jobs *job, int *status)//return values negligeble
 {
 	int	redirected_output;
 
-/* 	
-if (job->output && (job->output[0] = '$'))// TODO for now commented, messes up apply_redir
-		return (ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->output), -1);//might be wrong */
+	// if (job->output && (job->output[0] == '$'))
+	// {
+	// 	ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->output);
+	// 	job->output = ft_strdup("/dev/null");
+	// }
 	if (job->append)
 		redirected_output = open(job->output, O_CREAT | O_APPEND | O_RDWR, 0644);
 	else
@@ -45,13 +47,8 @@ if (job->output && (job->output[0] = '$'))// TODO for now commented, messes up a
 			remove(job->output);
 		redirected_output = open(job->output, O_CREAT | O_RDWR, 0644);
 	}
-
-	if (redirected_output < 0)
-	{
-		ft_printf_fd(2, "bash: %s: No such file or directory\n", job->input);
-		*status = 127;//maybe its 1?
-		return (-1);
-	}
+	if (ft_strcmp("/dev/null", job->output))
+		*status = 1;
 	dup2(redirected_output, STDOUT_FILENO);
 	close(redirected_output);//else
 	return (0);

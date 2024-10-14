@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/14 14:07:15 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/14 17:16:21 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,17 @@ char	*expand(char *str, t_env *env)
 			h.result = no_expansion(str, h);
 		if (str[h.i] == '$')
 		{
-			h.start = h.i;
-			//h.i++;
-			h.result = expansion(str, &h, env);
-		}
+			// if (!str[h.i + 1])
+			// {
+			// 	h.expanded = ft_strdup("$");
+			// 	return (h.result);
+			// }
+			// else
+			// {
+				h.start = h.i;
+				h.i++;
+				h.result = expansion(str, &h, env);
+			// }
 		}
 	}
 	return (h.result);
@@ -118,12 +125,8 @@ char *unquote_and_direct(char *str, t_env *env)
 	h.temp = NULL;
 	h.i = 0;
 	h.start = 0;
-	//check if the if statements are correct, basically it gets triggered at the wrong timing
-	
 	if (is_empty_arg(str, '\'') || is_empty_arg(str, '\"'))
-	{
 		h.new = ft_strdup("");
-	}
 	while (str[h.i])
 	{
 		h.start = h.i;
@@ -133,7 +136,7 @@ char *unquote_and_direct(char *str, t_env *env)
 			h.new = no_quotes(str, &h, env);
 		if (str[h.i] == '\'')
 			h.new = single_quotes(str, &h);
-		else if (str[h.i] == '\"') 
+		else if (str[h.i] == '\"')
 			h.new = double_quotes(str, &h, env);
 		if (str[h.i])
 			h.i++;
@@ -146,8 +149,12 @@ char	*expand_env_vars(char *input, t_env *env)
 	char	*temp;
 
 	temp = ft_getenv(input + 1, env->env);
+	if (!temp)
+	{
+		// do something so that $var and "" are technically different things
+	}
 //	if (!temp)
-//		temp = ft_strdup("");keeping it at NULL???
+//		temp = ft_strdup("");//keeping it at NULL???
 	return (temp);
 }
 
@@ -169,12 +176,9 @@ char	*no_expansion(char *str, t_var_holder h)
 
 char	*expansion(char *str, t_var_holder *h, t_env *env)
 {
-	if (!str[h.i + 1])
-	{
-		h.expanded = ft_strdup("$");
-	}
-	h.i++;
-	else if (str[h->i] == '$')//elif
+	if (str[h->i] == '\0' || str[h->i] == ' ' || str[h->i] == '\t')
+		h->expanded = ft_strdup("$");
+	else if (str[h->i] == '$')
 	{
 		h->expanded = ft_itoa(ft_getpid());//check if ft_getpid is working
 		h->i++;

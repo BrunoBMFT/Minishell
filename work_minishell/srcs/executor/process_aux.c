@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/14 13:12:17 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/10/14 17:18:06 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*find_command_path(char	**cmd, t_env *env)
 	if (!path_array)
 		return (NULL);
 	i = 0;
-	while (path_array[i] && cmd[0][0])
+	while (path_array[i])
 	{
 		path = ft_strjoin3(path_array[i], "/", cmd[0]);
 		if (!path)
@@ -42,6 +42,8 @@ void	execute_command(t_jobs *job, t_env *env)
 {
 	char	*path;
 
+	if (!job->job[0][0])
+		clean_exit(job, env, 0);
 	path = find_command_path(job->job, env);
 	if (!path)
 		clean_exit(job, env, 127);
