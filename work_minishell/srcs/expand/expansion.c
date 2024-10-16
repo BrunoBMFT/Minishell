@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/14 17:16:21 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/10/16 18:22:36 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ char *double_quotes(char *str, t_var_holder *h, t_env *env)
     h->start = ++h->i;
     while (str[h->i] && str[h->i] != '\"')
         h->i++;
-    h->new = no_quotes(str, h, env);
+    h->temp = no_quotes(str, h, env);
     return (h->new);
 }
 

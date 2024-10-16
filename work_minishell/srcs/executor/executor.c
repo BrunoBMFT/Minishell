@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/14 16:04:11 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/10/16 20:23:51 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ void	start_executor(t_jobs *job, t_env *env)
 {
 //	signal(SIGINT, handle_signal_child);
 //	signal(SIGQUIT, sigquit);
-	
 	env->saved_stdin = dup(STDIN_FILENO);
 	env->saved_stdout = dup(STDOUT_FILENO);
 	while (job)
@@ -66,7 +65,6 @@ void	start_executor(t_jobs *job, t_env *env)
 		//expanding
 		if (job->job)
 			modify_array(job->job, env);
-		
 		//redirections
 		if (job->input)
 			executor_input(job, &env->status);

@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/16 13:40:28 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/16 20:37:58 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,9 @@ int	main(int ac, char **av, char **envp)
 //		signal(SIGINT, handle_signal_main);
 //		signal(SIGQUIT, SIG_IGN);
 		choose_signal(ROOT_SIG);
-		env.prompt = update_prompt();
-		line = readline(env.prompt);
+		// env.prompt = update_prompt();
+		// line = readline(env.prompt);
+		line = readline("Minishell>");
 		free(env.prompt);
 		if (!line)
 			ctrld(line, &env);

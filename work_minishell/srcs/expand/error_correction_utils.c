@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_correction_utils.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 03:18:24 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/13 16:17:02 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/16 20:20:37 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,23 +34,21 @@ int	count_quotes(char *str, int *i)
 
 int	count_special_chars(char *str, int *i)
 {
-	int	count;
+	int	count = 0;
 
-	count = 0;
 	while (str[*i] && (str[*i] == '&' || str[*i] == '|'
 			|| str[*i] == '<' || str[*i] == '>'))
 	{
 		count++;
 		(*i)++;
 	}
-	return (count + 1);
+	return count;
 }
 
 int	count_normal_chars(char *str, int *i)
 {
-	int	count;
+	int	count = 0;
 
-	count = 0;
 	while (str[*i] && str[*i] != '&' && str[*i] != '|'
 		&& str[*i] != '<' && str[*i] != '>'
 		&& str[*i] != '\t' && str[*i] != ' ')
@@ -58,5 +56,5 @@ int	count_normal_chars(char *str, int *i)
 		count++;
 		(*i)++;
 	}
-	return (count + 1);
+	return count;
 }

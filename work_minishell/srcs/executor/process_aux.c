@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_aux.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/14 17:18:06 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/10/16 20:34:36 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	execute_command(t_jobs *job, t_env *env)
 		clean_exit(job, env, 127);
 	execve(path, job->job, env->env);
 	ft_printf_fd(2, "execve() failed\n");//invalid frees?
+	free(path);
 	clean_exit(job, env, 127);
 }
 
