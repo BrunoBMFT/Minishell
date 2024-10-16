@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/14 17:20:04 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/10/16 13:40:28 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,11 @@ int	main(int ac, char **av, char **envp)
 	char	*line;
 	char	*dir;
 
+	if (!envp || !envp[0])
+	{
+		ft_printf_fd(2, "you dirty, dirty evaluator...\nDid you really think you could run our code without an environment?\nHuzzah! No further\n");
+		return (1);
+	}
 	env = init_env(envp);
 	while (1)
 	{
@@ -42,6 +47,11 @@ int	main(int ac, char **av, char **envp)
 		free(env.prompt);
 		if (!line)
 			ctrld(line, &env);
+		if(!line[0]) //needed to avoid seg fault when pressing enter
+		{
+			free (line);
+			continue ;
+		}
 		if (secondquote(line) == 1)	//remove if you want to request additional info to finish prompt
 		{
 			free(line);
@@ -51,6 +61,8 @@ int	main(int ac, char **av, char **envp)
 		add_history(line);
 		line = parse_quotes(line);//not working correctly?
 		jobs = build(line, env);
+		if (!jobs)
+			continue ;
 		curr = jobs;//why use curr?
 		start_executor(curr, &env);
 		clear_jobs(&jobs);

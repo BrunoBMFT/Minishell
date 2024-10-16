@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/13 17:14:42 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/16 16:57:28 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,10 @@ typedef struct variable_holder
 	int		wc;
 	int		k;
 	char	**array;
+	char	a;
+	char	b;
+	char	c;
+	char	d;
 }				t_var_holder;
 
 typedef struct s_token
@@ -175,7 +179,7 @@ int		caught_exit(t_jobs *jobs, t_env *env, bool pipe);
 void	update_input(t_jobs *job);
 int		update_output(t_jobs *job, char **env, char **temp_vars);
 int		append_to_file(t_jobs *job, char **env, char **temp_vars);
-int		handle_heredoc(t_jobs *job);
+int		handle_heredoc(t_jobs *job, t_env env);
 void	print_file(int fd);
 
 //free:
