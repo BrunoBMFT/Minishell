@@ -12,7 +12,7 @@
 
 #include "../../includes/minishell.h"
 
-void	heredoc_expand_check(int *expand_flag, t_jobs **job)
+void	heredoc_expand_check(int *expand_flag, t_jobs **job, t_env env)
 {
 	char *temp;
 
@@ -23,6 +23,11 @@ void	heredoc_expand_check(int *expand_flag, t_jobs **job)
 		(*job)->delimiters = temp;
 		*expand_flag = 0;
 	}
+}
+
+char * check_and_unquote_heredoc(char *delimiter, int *expand_flag)
+{
+
 }
 
 int	handle_heredoc(t_jobs *job, t_env env)
@@ -44,8 +49,9 @@ int	handle_heredoc(t_jobs *job, t_env env)
 //	signal(SIGQUIT, SIG_IGN);
 	choose_signal(HEREDOC_SIG);
 	choose_signal(IGNORE_SIG);
-	heredoc_expand_check(&must_expand, &job);
-	printf("%d\n", must_expand);
+	//heredoc_expand_check(&must_expand, &job, env);
+	job->delimiters = check_and_unquote_heredoc(job->delimiters, &must_expand);
+	printf("%s\n", job->delimiters);
 	while (1)
 	{
 		line = readline("heredoc>");

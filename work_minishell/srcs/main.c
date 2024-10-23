@@ -31,11 +31,11 @@ int	main(int ac, char **av, char **envp)
 	char	*line;
 	char	*dir;
 
-	if (!envp || !envp[0])
-	{
-		ft_printf_fd(2, "you dirty, dirty evaluator...\nDid you really think you could run our code without an environment?\nHuzzah! No further\n");
-		return (1);
-	}
+	// if (!envp || !envp[0])
+	// {
+	// 	ft_printf_fd(2, "you dirty, dirty evaluator...\nDid you really think you could run our code without an environment?\nHuzzah! No further\n");
+	// 	return (1);
+	// }
 	env = init_env(envp);
 	while (1)
 	{

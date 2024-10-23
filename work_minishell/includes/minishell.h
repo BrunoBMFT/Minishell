@@ -173,6 +173,7 @@ int		caught_pwd(t_jobs *job);
 int		caught_export(t_jobs *job, t_env *env);
 int		caught_unset(t_jobs *job, t_env *env);
 int		caught_env(t_jobs *job, t_env *env);
+int		caught_printenv(t_jobs *job, t_env *env);
 int		caught_exit(t_jobs *jobs, t_env *env, bool pipe);
 
 //redirections

@@ -90,6 +90,14 @@ t_env	init_env(char **envp)
 
 	env.prompt = NULL;
 	env.status = 0;
+	env.env = NULL;
+	if (!envp || !envp[0])
+	{
+		env.env = malloc(sizeof (char *));
+		if (!env.env)
+			return (ft_printf_fd(2, "error allocating private path\n"), env);
+		env.env[0] = ft_strjoin("PATH=", "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:.:/.local/bin:/usr/local/vcpkg");
+	} //change path so that it works at school ++ add protections in cd to check where we are to avoid seg faults ++ fix printenv and env to avoid seg faults
 	env.env = dup_env(envp);
 	return (env);
 }

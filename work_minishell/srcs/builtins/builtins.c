@@ -27,6 +27,8 @@ int	try_builtins(t_jobs *job, t_env *env, bool pipe)
 		status = caught_unset(job, env);
 	else if (ft_strcmp(job->job[0], "env") == 0)
 		status = caught_env(job, env);
+	else if (ft_strcmp(job->job[0], "printenv") == 0)
+		status = caught_printenv(job, env);
 	else if (ft_strcmp(job->job[0], "exit") == 0)
 		status = caught_exit(job, env, pipe);
 	if (pipe && status != 200)
