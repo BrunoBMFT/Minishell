@@ -149,6 +149,8 @@ char	*no_expansion(char *str, t_var_holder h);
 char	*expand(char *str, t_env *env);
 char	*expansion(char *str, t_var_holder *h, t_env *env);
 char	*unquote_and_direct(char *str, t_env *env);
+bool	is_empty_arg(char *str, char end);
+
 
 //parser:
 int		parse(t_token **token);
