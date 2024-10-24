@@ -3,14 +3,90 @@
 /*                                                        :::      ::::::::   */
 /*   aux.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:15:54 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/14 16:41:08 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/10/24 02:37:37 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+//remove
+void	memory_size(char **array, char *str, t_env *env, t_jobs *job)
+{
+	int count = 0;
+
+	if (array)
+	{
+		int i = 0;
+		while (array[i])
+		{
+			int j = 0;
+			while (array[i][j])
+			{
+				count++;
+				j++;
+			}
+			i++;
+		}
+	}
+	else if (str)
+	{
+		int i = 0;
+		while (str[i])
+		{
+			count++;
+			i++;
+		}
+	}
+	else if (env->env)
+	{
+		int i = 0;
+		while (env->env[i])
+		{
+			int j = 0;
+			while (env->env[i][j])
+			{
+				count++;
+				j++;
+			}
+			i++;
+		}
+	}
+/* void	print_jobs(char *line, t_jobs *jobs)
+{
+	printf("line: %s\n", line);
+	int i = 0;
+	while (jobs->job[i])
+	{
+		ft_printf_fd(2, "job %d: %s\n", i, jobs->job[i]);
+		i++;
+	}
+} */
+	else if (job->job)
+	{
+		while (job->job)
+		{
+			int i = 0;
+			while (job->job[i])
+			{
+				int j = 0;
+				while (job->job[i][j])
+				{
+					count++;
+					j++;
+				}
+				i++;
+			}
+			job = job->next;
+		}
+	}
+	printf("memory: %d\n", count);
+
+	return;
+}
+
 
 int	ft_getpid(void)//does this work?
 {
@@ -92,4 +168,21 @@ t_env	init_env(char **envp)
 	env.status = 0;
 	env.env = dup_env(envp);
 	return (env);
+}
+
+void	*ft_calloc_pids(size_t nitems, size_t size)
+{
+	int	*dest;
+	int		i;
+
+	dest = malloc(nitems * size);
+	if (!dest)
+		return (NULL);
+	while (dest[i])
+	{
+		dest[i] = -1;
+		i++;
+	}
+	dest[i] = 0;
+	return (dest);
 }

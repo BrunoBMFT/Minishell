@@ -12,30 +12,15 @@
 
 #include "../../includes/minishell.h"
 
-void	heredoc_expand_check(int *expand_flag, t_jobs **job)
-{
-	char *temp;
-
-	if ((*job)->delimiters[0] == '\'' || (*job)->delimiters[0] == '\"')
-	{
-		temp = ft_substr((*job)->delimiters, 1, (ft_strlen((*job)->delimiters) - 2));
-		free((*job)->delimiters);
-		(*job)->delimiters = temp;
-		*expand_flag = 0;
-	}
-}
-
-int	handle_heredoc(t_jobs *job, t_env env)
+int	handle_heredoc(t_jobs *job)
 {
 	int		redirected_input;
 	char	*line;
 	char	**delimiters;
 	int		i;
-	int		must_expand;
 	int		max;
 
 	i = 0;
-	must_expand = 1;
 	max = 0;
 	redirected_input = open(job->heredoc_file, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (redirected_input < 0)
@@ -44,25 +29,16 @@ int	handle_heredoc(t_jobs *job, t_env env)
 //	signal(SIGQUIT, SIG_IGN);
 	choose_signal(HEREDOC_SIG);
 	choose_signal(IGNORE_SIG);
-	heredoc_expand_check(&must_expand, &job);
-	printf("%d\n", must_expand);
 	while (1)
 	{
 		line = readline("heredoc>");
+		printf("%d\n", i);
 		if (!line || ft_strcmp(line, job->delimiters) == 0)
 		{
 			free(line);
 			break ;
 		}
-		if (must_expand)
-		{
-			char *temp = expand(line, &env);
-			ft_putendl_fd(temp, redirected_input);
-			free(temp);
-
-		}
-		else	
-			ft_putendl_fd(line, redirected_input);
+		ft_putendl_fd(line, redirected_input);
 		free(line);
 	}
 	close(redirected_input);

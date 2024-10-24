@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 00:13:28 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/16 16:56:58 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/13 16:35:43 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,11 @@ t_token	*developed_cmdline_tokenization(char *command_line, t_env env)
 	simplified = split_complex_args(command_line);
 	tokenize(&list, simplified, env);
 	free(simplified);
-	t_token *temp = list;
-	while (temp)
+	if (parse(&list) == -1)
 	{
-		if (temp->type >= 4 && temp->type <= 7 && !temp->next)
-		{
-			ft_printf_fd(2, "Minishell: syntax error near unexpected token `newline'\n");
-			free(command_line);
-			clear_list(&list);
-			return (NULL);
-		}
-		temp = temp->next;
+		clear_list(&list);
+		return (NULL);
 	}
-	
 	return (list);
 }
 
@@ -50,11 +42,8 @@ t_jobs	*build(char *command_line, t_env env)
 	list = NULL;
 	last = NULL;
 	list = developed_cmdline_tokenization(command_line, env);
-	if (!list)
-		return (NULL);
 	if (parse(&list) == -1)
 	{
-		free(command_line);
 		clear_list(&list);
 		return (NULL);
 	}
@@ -67,7 +56,7 @@ t_jobs	*build(char *command_line, t_env env)
 	free(command_line);
 	return (jobs);
 }
-void    apply_redir(t_token *current, t_jobs *job, t_env env)
+void    apply_redir(t_token *current, t_jobs *job)
 {
     int    fd;
     char *temp = NULL;
@@ -81,7 +70,7 @@ void    apply_redir(t_token *current, t_jobs *job, t_env env)
         if (job->input)
             free(job->input);
         job->input = ft_strdup(job->heredoc_file);
-        if (handle_heredoc(job, env) < 0)
+        if (handle_heredoc(job) < 0)
             printf ("error handling heredocs\n");
     }
     if (current->type == INPUT)
@@ -101,11 +90,6 @@ void    apply_redir(t_token *current, t_jobs *job, t_env env)
     }
     if (current->type == OUTPUT || current->type == APPEND_OUT)
     {
-		// if (job->output && (job->output[0] == '$'))
-		// {
-		// 	ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->output);
-		// 	job->output = ft_strdup("/dev/null");
-		// }
         fd = open(current->next->token, O_CREAT | O_RDWR, 0644);
         close(fd);
         if (current->type == APPEND_OUT)
@@ -130,7 +114,7 @@ char	**job_array(t_token **cur, t_jobs **job, t_env env)
 	{
 		if ((*cur)->type >= INPUT && (*cur)->type <= APPEND_OUT)
 		{
-			apply_redir(*cur, *job, env);
+			apply_redir(*cur, *job);
 			*cur = (*cur)->next->next;
 		}
 		else

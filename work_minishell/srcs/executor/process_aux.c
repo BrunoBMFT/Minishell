@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_aux.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/16 20:34:36 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/24 15:13:29 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*find_command_path(char	**cmd, t_env *env)
 	if (!path_array)
 		return (NULL);
 	i = 0;
-	while (path_array[i])
+	while (path_array[i] && cmd[0][0])
 	{
 		path = ft_strjoin3(path_array[i], "/", cmd[0]);
 		if (!path)
@@ -42,14 +42,12 @@ void	execute_command(t_jobs *job, t_env *env)
 {
 	char	*path;
 
-	if (!job->job[0][0])
-		clean_exit(job, env, 0);
 	path = find_command_path(job->job, env);
 	if (!path)
 		clean_exit(job, env, 127);
+//	ft_printf_fd(2, "com: %s\n", job->job[0]);
 	execve(path, job->job, env->env);
 	ft_printf_fd(2, "execve() failed\n");//invalid frees?
-	free(path);
 	clean_exit(job, env, 127);
 }
 
@@ -79,7 +77,6 @@ char	*find_executable_path(t_jobs *job, t_env *env)
 	free (path);
 	ft_printf_fd(2, "minishell: %s: No such file or directory\n", job->job[0]);
 	clean_exit(job, env, 127);
-	return (NULL);
 }
 
 void execute_executable(t_jobs *job, t_env *env)

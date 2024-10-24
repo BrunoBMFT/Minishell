@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/16 16:57:28 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/24 15:37:05 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ typedef struct s_env
 	char	**env;
 	int		saved_stdin;
 	int		saved_stdout;
+	int		*pids;
 }				t_env;
 
 typedef struct variable_holder
@@ -84,10 +85,6 @@ typedef struct variable_holder
 	int		wc;
 	int		k;
 	char	**array;
-	char	a;
-	char	b;
-	char	c;
-	char	d;
 }				t_var_holder;
 
 typedef struct s_token
@@ -112,9 +109,6 @@ typedef struct s_jobs
 	struct s_jobs	*next;
 }	t_jobs;
 
-
-//remove
-void	memory_size(char **array, char *str, t_env *env, t_jobs *job);
 
 
 //tokenizer:
@@ -179,7 +173,7 @@ int		caught_exit(t_jobs *jobs, t_env *env, bool pipe);
 void	update_input(t_jobs *job);
 int		update_output(t_jobs *job, char **env, char **temp_vars);
 int		append_to_file(t_jobs *job, char **env, char **temp_vars);
-int		handle_heredoc(t_jobs *job, t_env env);
+int		handle_heredoc(t_jobs *job);
 void	print_file(int fd);
 
 //free:
@@ -202,6 +196,7 @@ char	*update_prompt(void);
 int		ft_getpid(void);
 char	**dup_env(char **envp);
 t_env	init_env(char **envp);
+void	*ft_calloc_pids(size_t nitems, size_t size);//not good
 
 void	print_jobs(char *line, t_jobs *jobs);//to remove
 
