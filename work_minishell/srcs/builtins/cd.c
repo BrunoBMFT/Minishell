@@ -3,24 +3,62 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:04 by brfernan          #+#    #+#             */
-/*   Updated: 2024/10/25 02:30:59 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/25 19:19:38 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	cd_update_aux1(t_env *env, char *PWD, char *value)
+
+char	**add_oldpwd(char **envp)//error check
 {
-	char	cwd[PATH_MAX];
+	char	**new_env;
+	char	*temp;
 	int		i;
 
 	i = 0;
-	while (env->env[i]
-		&& ft_strncmp(env->env[i], PWD, ft_strlen(PWD)))
+	new_env = ft_calloc(sizeof(char *), ft_split_wordcount(envp) + 3);
+	if (!new_env || !envp || !envp[0])
+		return (NULL);//free new_env?
+	while (envp[i])
+	{
+		new_env[i] = ft_strdup(envp[i]);//error check
+		if (!new_env[i])
+		{
+			i = 0;
+			while (new_env[i])
+				free (new_env[i++]);//check if works
+			return (NULL);
+		}
 		i++;
+	}
+	new_env[i] = ft_strdup("OLDPWD=");
+    new_env[i + 1] = NULL;
+	return (new_env);
+}
+
+void	cd_update_aux1(t_env *env, char *PWD, char *value)
+{
+	char	cwd[PATH_MAX];
+    bool    found;
+	int		i;
+
+	i = 0;
+    found = false;
+	while (env->env[i])
+    {
+		if (ft_strncmp(env->env[i], PWD, ft_strlen(PWD)) == 0)
+        {
+            found = true;
+            break ;
+        }
+        i++;
+    }
+    if (!found)
+        env->env = add_oldpwd(env->env);
 	if (!value)
 		value = getcwd(cwd, PATH_MAX);
 	free (env->env[i]);
