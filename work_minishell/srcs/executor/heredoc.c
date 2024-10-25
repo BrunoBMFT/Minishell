@@ -12,7 +12,6 @@
 
 #include "../../includes/minishell.h"
 
-
 char	*no_quotes_hd(char *str, t_var_holder *h, t_env *env, int **expand_flag)
 {
 	h->temp = ft_strndup(str + h->start, h->i - h->start);

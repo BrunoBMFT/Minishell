@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 00:13:28 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/16 16:56:58 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/25 20:36:15 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,13 +91,14 @@ void    apply_redir(t_token *current, t_jobs *job, t_env env)
             job->mult_input_flag = 1;
             free(job->input);
         }
-        if (access(current->next->token, F_OK) != 0)
+		temp = unquote_and_direct(current->next->token, &env);
+        if (access(temp, F_OK) != 0)
         {
             ft_printf("bash: %s: No such file or directory\n", current->next->token);
             job->input = ft_strdup("/dev/null");
         }
         else
-            job->input = ft_strdup(current->next->token);
+            job->input = temp;
     }
     if (current->type == OUTPUT || current->type == APPEND_OUT)
     {
