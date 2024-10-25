@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 16:52:00 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/25 19:18:29 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/25 20:48:56 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,7 @@ void	modify_array(char **array, t_env *env)
 	i = 0;
 	while (array[i])
 	{
-		//printf("%s\n", array[i]);
 		temp = unquote_and_direct(array[i], env);
-		//printf("%s\n", temp);
 		free(array[i]);
 		array[i] = temp;
 		i++;

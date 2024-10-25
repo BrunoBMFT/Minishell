@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/25 16:52:24 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/25 20:32:52 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,16 +67,13 @@ void	simple_process(t_jobs *job, t_env *env)
 	status = try_builtins(job, env, false);
 	if (status != 200)
 		return (env->status = status, (void)NULL);
-	int i = 0;
-	while (env->pids[i] != -1)
-		i++;
-	env->pids[i] = new_fork();
-	if (env->pids[i] < 0)
+	pid = new_fork();
+	if (pid < 0)
 		return (env->status = 1, (void)NULL);//error check
-	if (env->pids[i] == 0)
+	if (pid == 0)
 		execute_job(job, env);//error check?
-	// waitpid(pid, &status, 0);//feels like it can be here, but should i do it outside??
-	// if (env->status == 0 && status != 0)
-	// 	env->status = WEXITSTATUS(status);
+	waitpid(pid, &status, 0);//feels like it can be here, but should i do it outside??
+	if (env->status == 0 && status != 0)
+		env->status = WEXITSTATUS(status);
 	return ;
 }

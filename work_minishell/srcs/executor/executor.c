@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/25 19:15:19 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/25 20:52:04 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,13 +92,14 @@ void	start_executor(t_jobs *job, t_env *env)
 		while (env->pids[i] != -1)
 		{
 			int status;
-			waitpid(env->pids[i], &status, 0);
+			waitpid(env->pids[i], &status, 0);//waiting too long for /dev/random
+			print_jobs("closed", job);
 			env->pids[i] = -1;
-//			ft_printf_fd(2, "env status: %d\nstatus: %d\n", env->status, status);
 			if (env->status == 0)//stupid
 				env->status = WEXITSTATUS(status);//exit codes not working haha
 			i++;
 		}
+//			ft_printf_fd(2, "env status: %d\n", env->status);
 
 
 
