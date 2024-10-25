@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/17 20:55:12 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/24 18:42:19 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ bool	is_in_env(char *to_add, char **env)
 	return (free(temp1), false);
 }
 
-bool	parse_export(char *str, int n)//error messages
+bool	parse_export(char *str, int n)//error messages?
 {
 	int	i;
 
@@ -79,24 +79,26 @@ int	export_no_execd(char **env)
 void	export_aux(t_jobs *job, char **new_env, t_env *env, int *status)
 {
 	int	i;
+	int	k;
 
 	i = -1;
+	k = 1;
 	while (env->env[++i])
 		new_env[i] = ft_strdup(env->env[i]);
-	while (*job->job)
+	while (job->job[k])
 	{
-		if (!parse_export(*job->job, len_to_equal(*job->job)))
+		if (!parse_export(job->job[k], len_to_equal(job->job[k])))//can be in the main function
 		{
-			ft_printf_fd(2, "minishell: export: '%s': not a valid identifier\n", *job->job);
+			ft_printf_fd(2, "minishell: export: '%s': not a valid identifier\n", job->job[k]);
 			*status = 1;
 		}
 		else
 		{
-			if (!is_in_env(*job->job, env->env))
-				new_env[i] = ft_strdup(*job->job);
+			if (!is_in_env(job->job[k], new_env))
+				new_env[i] = ft_strdup(job->job[k]);
 			i++;
 		}
-		job->job++;
+		k++;
 	}
 	new_env[i] = NULL;
 }
@@ -104,22 +106,19 @@ void	export_aux(t_jobs *job, char **new_env, t_env *env, int *status)
 int	caught_export(t_jobs *job, t_env *env)
 {
 	char	**new_env;
-	int		status;
 	int		i;
-	if (!job->job[1])
+	if (!job->job[1] || !job->job[1][0])
 		return (export_no_execd(env->env));//fix pls
-	job->job++;
-	status = 0;
-	i = -1;
+	i = 0;
 	int parse = 0;
-	while (job->job[++i])
+	while (job->job[++i])//run in another place???
 	{
-		if (!parse_export(job->job[i], len_to_equal(job->job[i])))
+		if (!parse_export(job->job[i], len_to_equal(job->job[i])))//check somewhere else?
 			parse++;
 	}
 	new_env = ft_calloc(sizeof(char *), ft_split_wordcount(env->env) 
-				+ ft_split_wordcount(job->job) - parse + 1);
-	export_aux(job, new_env, env, &status);
+				+ ft_split_wordcount(job->job) - parse + 1);//error check, (-parse) (-variables that already exist)
+	export_aux(job, new_env, env, &env->status);
 	free_array(env->env);
 	env->env = ft_calloc(sizeof(char *), ft_split_wordcount(new_env) + 1);//error check
 	i = -1;
@@ -127,5 +126,5 @@ int	caught_export(t_jobs *job, t_env *env)
 		env->env[i] = ft_strdup(new_env[i]);
 	free_array(new_env);
 	env->env[i] = NULL;
-	return (status);
+	return (env->status);
 }

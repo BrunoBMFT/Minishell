@@ -6,44 +6,39 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/24 16:03:47 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/25 18:36:11 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-// ! fix / test
-int	executor_input(t_jobs *job, int *status)//return values negligeble?
+int	executor_input(t_jobs *job, t_env *env)//return values negligeble?
 {
 	int	redirected_input;
 /* 
-	if (job->input && (job->input[0] = '$'))// TODO for now commented, messes up apply_redir
+	if (job->input && (job->input[0] == '$'))// TODO for now commented, messes up apply_redir
 	{
 //		*status = 1;
 //		return (ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->input), -1);
 	} */
 	redirected_input = open(job->input, O_RDONLY);
-	if (redirected_input == -1)//never gets here??????????????????????????? since if input fails, it automatically is dev/null
-	{
-		//never gets here???????????????????????????
-		ft_printf_fd(2, "minsdihsdfkjsdfksdf: %s: No such file or directory\n", job->input);//change to perror?
-		*status = 1;
-		return (-1);
-	}
-	if (job->input == "/dev/null")
-		*status = 1;
+	if (ft_strcmp("/dev/null", job->input) == 0)//not being saved?
+		env->status = 1;
 	dup2(redirected_input, STDIN_FILENO);
 	close(redirected_input);
 	return (0);
 }
-// ! fix / test
-int	executor_output(t_jobs *job, t_env *env)//return values negligeble?
+
+int	executor_output(t_jobs *job, t_env *env)//return values negligeble
 {
 	int	redirected_output;
 
-/* 	
-if (job->output && (job->output[0] = '$'))// TODO for now commented, messes up apply_redir
-		return (ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->output), -1);//might be wrong */
+	if (job->output && (job->output[0] == '$'))
+	{
+		ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->output);
+		job->output = ft_strdup("/dev/null");
+		env->status = 1;
+	}
 	if (job->append)
 		redirected_output = open(job->output, O_CREAT | O_APPEND | O_RDWR, 0644);
 	else
@@ -52,85 +47,60 @@ if (job->output && (job->output[0] = '$'))// TODO for now commented, messes up a
 			remove(job->output);
 		redirected_output = open(job->output, O_CREAT | O_RDWR, 0644);
 	}
-
-	if (redirected_output < 0)
-	{
-		ft_printf_fd(2, "bash: %s: No such file or directory\n", job->input);
-		env->status = 127;//maybe its 1?
-		return (-1);
-	}
+	if (ft_strcmp("/dev/null", job->output) == 0)
+		env->status = 1;
 	dup2(redirected_output, STDOUT_FILENO);
 	close(redirected_output);//else
 	return (0);
-}
-
-int    count_processes(t_jobs **jobs)//basically the has_pipes functions
-{
-    int i;
-    t_jobs *job;
-
-    i = 0;
-    job = *jobs;
-    while (job)
-    {
-        if (job->type == PIPE)
-            i++;
-        job = job->next;
-    }
-    return (i + 1);
 }
 
 void	start_executor(t_jobs *job, t_env *env)
 {
 //	signal(SIGINT, handle_signal_child);
 //	signal(SIGQUIT, sigquit);
-	
 	env->saved_stdin = dup(STDIN_FILENO);
 	env->saved_stdout = dup(STDOUT_FILENO);
-	env->pids = ft_calloc_pids(sizeof(int), count_processes(&job));//error check
+	env->pids = ft_calloc_pids(job);//error check
 	while (job)
 	{
 		//expanding
 		if (job->job)
 			modify_array(job->job, env);
-		
 		//redirections
 		if (job->input)
-			executor_input(job, &env->status);
+			executor_input(job, env);
 		if (job->output)
 			executor_output(job, env);
 
 		
 		//pipes
- 		// if (has_pipes(job))//does processes without reseting dups and heredocs, is it correct?
-		// {
-		// 	process_pipes(&job, env, &job);
-		// 	continue;
-		// }
-		// if (job->job && job->job[0])//have this check somewhere else?
-		// 	env->status = simple_process(job, env);
-		
-		if (job->next && job->next->type == PIPE)// < sdakaskddask cat | wc
+		if (job->next && job->next->type == PIPE)
 		{
-			env->status = child_process(job, env);
-			job = job->next->next;
 			job->piped = true;
+			child_process(job, env);
+			job = job->next->next;
 			continue;
-		}		
+		}
+
+		
 		//executing jobs
-		//maybe use the process_pipes function?
-		if (job->job && job->job[0] && job->piped)//maybe not needed?// ! still bad here, dont use job piped
-			env->status = child_process(job, env);//last proc
+		else if (job->job && job->job[0] && job->piped)
+			child_process(job, env);//builtins status check
 		else if (job->job && job->job[0])
-			env->status = simple_process(job, env);
-
-
+			simple_process(job, env);//builtins status check
 		int i = 0;
-		while (env->pids[i])
+		while (env->pids[i] != -1)
 		{
-			waitpid(env->pids[i], &env->status, 0);
+			int status;
+			waitpid(env->pids[i], &status, 0);
+			env->pids[i] = -1;
+//			ft_printf_fd(2, "env status: %d\nstatus: %d\n", env->status, status);
+			if (env->status == 0)//stupid
+				env->status = WEXITSTATUS(status);//exit codes not working haha
 			i++;
 		}
+
+
 
 		//resets
 		dup2(env->saved_stdin, STDIN_FILENO);
@@ -168,5 +138,6 @@ void	start_executor(t_jobs *job, t_env *env)
 		remove(".heredoc");
 	close(env->saved_stdin);
 	close(env->saved_stdout);
+	free (env->pids);
 	return ;
 }

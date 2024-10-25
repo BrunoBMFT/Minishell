@@ -6,64 +6,77 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/24 15:59:42 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/25 16:52:24 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	child_process(t_jobs *job, t_env *env)// ! signals
+int	new_fork()
 {
-//	pid_t	pid;
-	int		fd[2];
-	int		status = 0;
+	pid_t	pid;
 
-	pipe(fd);//error check?
-	int i = 0;//bad
-	while (env->pids[i] == -1)//bad
-		i++;//bad
-	env->pids[i] = fork();//error check
+	pid = fork();
+	if (pid < 0)
+	{
+		ft_printf_fd(2, "fork() error\n");
+		return (-1);
+	}
+	return (pid);
+}
+
+void	child_process(t_jobs *job, t_env *env)// ! signals
+{
+	int		fd[2];
+
+	pipe(fd);
+	int i = 0;
+	while (env->pids[i] != -1)
+		i++;
+	env->pids[i] = new_fork();
 	if (env->pids[i] < 0)
-		return(ft_printf_fd(2, "fork() error\n"), 1);
+		return (env->status = 1, (void)NULL);//error check
 	if (env->pids[i] == 0)
 	{
 		close(fd[READ]);
 		if (!job->output && job->next && job->next->type == PIPE)//checks whether it is last statement or not
 			dup2(fd[WRITE], STDOUT_FILENO);//error check
 		else if (!job->output)
-			dup2(env->saved_stdout, STDOUT_FILENO);//error check
+			dup2(env->saved_stdout, STDOUT_FILENO);
 		close(fd[WRITE]);
-		if (try_builtins(job, env, true) == 200)
+		env->status = try_builtins(job, env, false);
+		if (env->status == 200)
 			execute_job(job, env);
-		clean_exit(job, env, status);
+		clean_exit(job, env, env->status);//env.status
 	}
+//	ft_printf_fd(2, "env status after processes: %d\n", env->status);
 	close(fd[WRITE]);
-	dup2(fd[READ], STDIN_FILENO);//error check
+	dup2(fd[READ], STDIN_FILENO);
 	close(fd[READ]);
-	
-	return (WEXITSTATUS(status));
+	return ;
 }
 
-int	simple_process(t_jobs *job, t_env *env)
+void	simple_process(t_jobs *job, t_env *env)
 {
 	pid_t	pid;
-	int	status;
+	int		status;
 
 	choose_signal(IGNORE_SIG);
-
-	if (job->job && job->job[0] && (ft_strcmp(job->job[0], "cd")) == 0)
-		return (caught_cd(job, env));
-
+	if (job->job && job->job[0] && (ft_strcmp(job->job[0], "cd")) == 0)//a few of this checks are done before
+		return (caught_cd(job, env));//fix exit status and return value
 	status = try_builtins(job, env, false);
 	if (status != 200)
-		return (status);
-		
-	pid = fork();// ! change this pid as well?
-	if (pid < 0)
-		return(ft_printf_fd(2, "fork() error\n"), 1);
-	
-	if (pid == 0)
+		return (env->status = status, (void)NULL);
+	int i = 0;
+	while (env->pids[i] != -1)
+		i++;
+	env->pids[i] = new_fork();
+	if (env->pids[i] < 0)
+		return (env->status = 1, (void)NULL);//error check
+	if (env->pids[i] == 0)
 		execute_job(job, env);//error check?
-	waitpid(pid, &status, 0);
-	return (WEXITSTATUS(status));
+	// waitpid(pid, &status, 0);//feels like it can be here, but should i do it outside??
+	// if (env->status == 0 && status != 0)
+	// 	env->status = WEXITSTATUS(status);
+	return ;
 }

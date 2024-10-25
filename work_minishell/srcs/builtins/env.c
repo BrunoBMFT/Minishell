@@ -29,3 +29,34 @@ int	caught_env(t_jobs *job, t_env *env)
 	}
 	return (0);
 }
+
+int caught_printenv(t_jobs *job, t_env *env)
+{
+	int		i;
+	int 	j;
+	bool	print;
+
+	i = 0;
+	// if (job->job[1])
+	// {
+	// 	ft_printf_fd(2, "printenv: '%s': Permission denied\n", job->job[1]);
+	// 	return (126);
+	// }
+	while (env->env[i])
+	{
+		j = 0;
+		print = 0;
+		while (env->env[i][j])
+		{
+			if (env->env[i][j++] == '=')
+			{
+				print = 1;
+				break ;
+			}
+		}
+		if (print)
+			ft_printf("%s\n", env->env[i]);
+		i++;
+	}
+	return (0);
+}
