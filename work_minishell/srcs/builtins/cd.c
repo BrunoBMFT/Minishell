@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:04 by brfernan          #+#    #+#             */
-/*   Updated: 2024/10/24 17:16:14 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/25 19:19:38 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,29 +80,45 @@ char	*cd_get_pwd(void)
 	return (ret);
 }
 
-int    caught_cd(t_jobs *job, t_env *env)
+void	cd_error(char *str, char **oldpwd, char **dir, t_env *env)
 {
-    char     *dir;
-    char    *oldpwd;
-    
-    oldpwd = cd_get_pwd();
-     if (!job->job[1])
-    {
-        dir = ft_getenv("HOME", env->env);
-        if (chdir(dir))
-            return (ft_printf_fd(2, "cd home failed"), free (oldpwd), free (dir), 1);
-    }
-    else if (job->job[2])
-        return (ft_printf_fd(2, "minishell: cd: too many arguments\n"), free (oldpwd), 1);
-    else
-    {
-        dir = ft_strdup(job->job[1]);
-        if (chdir(dir))
-            return (ft_printf_fd(2, "minishell: cd: %s: No such file or directory\n", job->job[1]), free (oldpwd), free (dir), 1);
-    }
-    cd_update_aux1(env, "OLDPWD=", oldpwd);
-    cd_update_aux1(env, "PWD=", NULL);
-    free (dir);
-    free (oldpwd);
-    return (0);
+	if (str)
+	{
+		ft_printf_fd(2, "minishell: cd: %s\n", str);
+		free (str);//
+	}
+	if (dir)
+		free (*dir);
+	if (oldpwd)
+		free (*oldpwd);
+	env->status = 1;
+}
+
+void	caught_cd(t_jobs *job, t_env *env)
+{
+	char	*dir;
+	char	*oldpwd;
+
+	if (job->job[1] && job->job[2])
+		return (cd_error(ft_strdup("too many arguments"), NULL, NULL, env));
+	oldpwd = cd_get_pwd();
+	if (!job->job[1])
+	{
+		dir = ft_getenv("HOME", env->env);
+		if (chdir(dir))
+			return (cd_error(ft_strdup("~: No such file or directory")
+					, &oldpwd, &dir, env));
+	}
+	else
+	{
+		dir = ft_strdup(job->job[1]);
+		if (chdir(dir))
+			return (cd_error(ft_strjoin(job->job[1]
+						, ": No such file or directory"), &oldpwd, &dir, env));
+	}
+	cd_update_aux1(env, "OLDPWD=", oldpwd);
+	cd_update_aux1(env, "PWD=", NULL);
+	free (dir);
+	free (oldpwd);
+	return ;
 }

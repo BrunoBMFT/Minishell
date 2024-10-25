@@ -1,24 +1,26 @@
 Signals
 
-fix output redirection
+using /dev/null as the strcmp to change exit code might be bad
+
+echo <"Makefile" hi
+cat < "/file name with spaces"
+	doesnt like quotes in redirections
+./minishell MOREARGUMENTS
+echo hello <> out
+
+export 1=a | echo hi
 
 make parse export better
-parse_export and variable duplicates need to be checked before calloc (leaks)
-
+parse_export and variable duplicates need to be checked before calloc (leaks?)
 
 maria tester
 test|cat> (very bad)
 $var > (count_tokens_in_job)
 echo test|>
 
-
 test with "" as commands (cat) (command not found, just a "")
 
-#optional
-test output (will be fixed with pipe logic if we want)
 test append output
-cat kasdkasdkads | cat kasdkadskasdkdas || exit			(fix output)
-ls | grep s > out | wc < out | cat
 
 
 
@@ -36,7 +38,6 @@ test every malloc functions with NULLS and see if everything is freed and protec
 
 change errors from writing minishell to writing bash
 clean_exit receive error str?
-
 
 norminette
 

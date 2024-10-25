@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_aux.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/16 20:34:36 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/25 17:12:32 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*find_command_path(char	**cmd, t_env *env)
 	if (!path_array)
 		return (NULL);
 	i = 0;
-	while (path_array[i])
+	while (path_array[i] && cmd[0][0])
 	{
 		path = ft_strjoin3(path_array[i], "/", cmd[0]);
 		if (!path)
@@ -42,14 +42,11 @@ void	execute_command(t_jobs *job, t_env *env)
 {
 	char	*path;
 
-	if (!job->job[0][0])
-		clean_exit(job, env, 0);
 	path = find_command_path(job->job, env);
 	if (!path)
 		clean_exit(job, env, 127);
 	execve(path, job->job, env->env);
 	ft_printf_fd(2, "execve() failed\n");//invalid frees?
-	free(path);
 	clean_exit(job, env, 127);
 }
 
@@ -58,14 +55,14 @@ char	*find_executable_path(t_jobs *job, t_env *env)
 	char	*path;
 	char	cwd[PATH_MAX];
 
-	if (job->job[0][0] == '/')
+	if (job->job[0][0] == '/' || job->job[0][0] == '.')
 	{
 		if (opendir(job->job[0]))
 		{
 			ft_printf_fd(2, "minishell: %s: Is a directory\n", job->job[0]);
-			clean_exit(job, env, 126);
+			clean_exit(job, env, 126);//bash says its 126
 		}
-		path = job->job[0];
+		path = ft_strdup(job->job[0]);
 	}
 	else
 	{
@@ -74,12 +71,18 @@ char	*find_executable_path(t_jobs *job, t_env *env)
 		if (!path)
 			clean_exit(job, env, 127);
 	}
-	if (access(path, F_OK) == 0)
+	if (access(path, X_OK) == 0)
 		return (path);
+	else if (access(path, F_OK))//bad if statement, can do better
+	{
+		ft_printf_fd(2, "minishell: %s: No such file or directory\n", job->job[0]);
+		free (path);
+		clean_exit(job, env, 127);
+	}
+	//else
+	ft_printf_fd(2, "minishell: %s: Permission denied\n", job->job[0]);
 	free (path);
-	ft_printf_fd(2, "minishell: %s: No such file or directory\n", job->job[0]);
-	clean_exit(job, env, 127);
-	return (NULL);
+	clean_exit(job, env, 126);
 }
 
 void execute_executable(t_jobs *job, t_env *env)
@@ -89,13 +92,12 @@ void execute_executable(t_jobs *job, t_env *env)
 	path = find_executable_path(job, env);
 	execve(path, job->job, env->env);
 	ft_printf_fd(2, "execve() failed\n");//invalid frees
-	free (path);
 	clean_exit(job, env, 127);
 }
 
-int	execute_job(t_jobs *job, t_env *env)
+int	execute_job(t_jobs *job, t_env *env)//void?
 {
-	choose_signal(CHILD_SIG);
+	choose_signal(CHILD_SIG);	
 	if (ft_strchr(job->job[0], '/'))
 		execute_executable(job, env);
 	else

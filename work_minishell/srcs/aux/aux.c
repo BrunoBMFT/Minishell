@@ -6,12 +6,12 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:15:54 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/25 18:59:11 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/25 19:17:55 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
+//getpid
 int	ft_getpid(void)//does this work?
 {
 	FILE *fp;
@@ -24,7 +24,7 @@ int	ft_getpid(void)//does this work?
 	fclose(fp);
 	return (pid);
 }
-
+//prompt
 char	*update_prompt(void)//void
 {
 	char	cwd[PATH_MAX];
@@ -51,6 +51,8 @@ char	*update_prompt(void)//void
 	return (prompt);
 }
 
+
+//env
 char	**dup_env(char **envp)//error check
 {
 	char	**new_env;
@@ -106,3 +108,40 @@ t_env	init_env(char **envp)
 		env.env = dup_env(envp);
 	return (env);
 }
+
+//pids
+int    count_processes(t_jobs **jobs)//take double pointer
+{
+    int		i;
+    t_jobs *job;
+
+    i = 0;
+    job = *jobs;
+    while (job)
+    {
+        if (job->type == PIPE || job->job)
+            i++;
+        job = job->next;
+    }
+    return (i + 1);
+}
+
+void	*ft_calloc_pids(t_jobs *job)
+{
+	int		*dest;
+	int		i;
+	int		size;
+
+	size = count_processes(&job);
+	dest = malloc(sizeof(pid_t) * size);
+	if (!dest)
+		return (NULL);
+	i = 0;
+	while (i < size)
+	{
+		dest[i] = -1;
+		i++;
+	}
+	return (dest);
+}
+

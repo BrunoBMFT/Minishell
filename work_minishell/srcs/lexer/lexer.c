@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 00:13:28 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/16 16:56:58 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/25 17:06:30 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,10 @@ void    apply_redir(t_token *current, t_jobs *job, t_env env)
         }
         if (access(current->next->token, F_OK) != 0)
         {
-            ft_printf("bash: %s: No such file or directory\n", current->next->token);
+			if (!job->redir_error_flag)
+            	ft_printf_fd(2, "bash: %s: No such file or directory\n", current->next->token);
             job->input = ft_strdup("/dev/null");
+			job->redir_error_flag = true;
         }
         else
             job->input = ft_strdup(current->next->token);
@@ -125,6 +127,7 @@ char	**job_array(t_token **cur, t_jobs **job, t_env env)
 	array = malloc(sizeof(char *) * (count_tokens_in_job(*cur) + 1));
 	if (!array)
 		return (NULL);
+	(*job)->redir_error_flag = false;
 	while (*cur && (*cur)->type != AND && (*cur)->type != OR
 		&& (*cur)->type != PIPE)
 	{

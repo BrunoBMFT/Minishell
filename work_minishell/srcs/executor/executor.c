@@ -6,16 +6,15 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/25 15:47:54 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/25 19:15:19 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	executor_input(t_jobs *job, int *status)//return values negligeble?
+int	executor_input(t_jobs *job, t_env *env)//return values negligeble?
 {
 	int	redirected_input;
-
 /* 
 	if (job->input && (job->input[0] == '$'))// TODO for now commented, messes up apply_redir
 	{
@@ -23,22 +22,23 @@ int	executor_input(t_jobs *job, int *status)//return values negligeble?
 //		return (ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->input), -1);
 	} */
 	redirected_input = open(job->input, O_RDONLY);
-	if (ft_strcmp("/dev/null", job->input))
-		*status = 1;
+	if (ft_strcmp("/dev/null", job->input) == 0)//not being saved?
+		env->status = 1;
 	dup2(redirected_input, STDIN_FILENO);
 	close(redirected_input);
 	return (0);
 }
 
-int	executor_output(t_jobs *job, int *status)//return values negligeble
+int	executor_output(t_jobs *job, t_env *env)//return values negligeble
 {
 	int	redirected_output;
 
-	// if (job->output && (job->output[0] == '$'))
-	// {
-	// 	ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->output);
-	// 	job->output = ft_strdup("/dev/null");
-	// }
+	if (job->output && (job->output[0] == '$'))
+	{
+		ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->output);
+		job->output = ft_strdup("/dev/null");
+		env->status = 1;
+	}
 	if (job->append)
 		redirected_output = open(job->output, O_CREAT | O_APPEND | O_RDWR, 0644);
 	else
@@ -47,8 +47,8 @@ int	executor_output(t_jobs *job, int *status)//return values negligeble
 			remove(job->output);
 		redirected_output = open(job->output, O_CREAT | O_RDWR, 0644);
 	}
-	if (ft_strcmp("/dev/null", job->output))
-		*status = 1;
+	if (ft_strcmp("/dev/null", job->output) == 0)
+		env->status = 1;
 	dup2(redirected_output, STDOUT_FILENO);
 	close(redirected_output);//else
 	return (0);
@@ -60,6 +60,7 @@ void	start_executor(t_jobs *job, t_env *env)
 //	signal(SIGQUIT, sigquit);
 	env->saved_stdin = dup(STDIN_FILENO);
 	env->saved_stdout = dup(STDOUT_FILENO);
+	env->pids = ft_calloc_pids(job);//error check
 	while (job)
 	{
 		//expanding
@@ -67,26 +68,37 @@ void	start_executor(t_jobs *job, t_env *env)
 			modify_array(job->job, env);
 		//redirections
 		if (job->input)
-			executor_input(job, &env->status);
+			executor_input(job, env);
 		if (job->output)
-			executor_output(job, &env->status);
+			executor_output(job, env);
 
 		
 		//pipes
-		if (job->next && job->next->type == PIPE)// < sdakaskddask cat | wc
+		if (job->next && job->next->type == PIPE)
 		{
-			env->status = child_process(job, env);
-			job = job->next->next;
 			job->piped = true;
+			child_process(job, env);
+			job = job->next->next;
 			continue;
 		}
 
 		
 		//executing jobs
-		else if (job->job && job->job[0] && job->piped)//maybe not needed?
-			env->status = child_process(job, env);//last proc
+		else if (job->job && job->job[0] && job->piped)
+			child_process(job, env);//builtins status check
 		else if (job->job && job->job[0])
-			env->status = simple_process(job, env);
+			simple_process(job, env);//builtins status check
+		int i = 0;
+		while (env->pids[i] != -1)
+		{
+			int status;
+			waitpid(env->pids[i], &status, 0);
+			env->pids[i] = -1;
+//			ft_printf_fd(2, "env status: %d\nstatus: %d\n", env->status, status);
+			if (env->status == 0)//stupid
+				env->status = WEXITSTATUS(status);//exit codes not working haha
+			i++;
+		}
 
 
 
@@ -126,5 +138,6 @@ void	start_executor(t_jobs *job, t_env *env)
 		remove(".heredoc");
 	close(env->saved_stdin);
 	close(env->saved_stdout);
+	free (env->pids);
 	return ;
 }
