@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   aux.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:15:54 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/14 16:41:08 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/10/25 14:50:33 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,13 +91,18 @@ t_env	init_env(char **envp)
 	env.prompt = NULL;
 	env.status = 0;
 	env.env = NULL;
+	char 	buf[PATH_MAX];
 	if (!envp || !envp[0])
 	{
-		env.env = malloc(sizeof (char *));
+		env.env = malloc(sizeof (char *) * 3); //add currdir(use pwd?) add 
 		if (!env.env)
 			return (ft_printf_fd(2, "error allocating private path\n"), env);
-		env.env[0] = ft_strjoin("PATH=", "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:.:/.local/bin:/usr/local/vcpkg");
-	} //change path so that it works at school ++ add protections in cd to check where we are to avoid seg faults ++ fix printenv and env to avoid seg faults
-	env.env = dup_env(envp);
+		env.env[0] = ft_strdup("PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/snap/bin:");
+		env.env[1] = ft_strjoin("PWD=", getcwd(buf, PATH_MAX));
+		//env.env[2] = ft_strdup("OLDPWD= ");
+		env.env[2] = NULL;
+	}
+	else
+		env.env = dup_env(envp);
 	return (env);
 }
