@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/25 16:09:41 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/25 19:18:47 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,20 +156,6 @@ char *unquote_and_direct(char *str, t_env *env)
 	return (h.new);
 }
 
-char	*expand_env_vars(char *input, t_env *env)
-{
-	char	*temp;
-
-	temp = ft_getenv(input + 1, env->env);
-	if (!temp)
-	{
-		// do something so that $var and "" are technically different things
-	}
-//	if (!temp)
-//		temp = ft_strdup("");//keeping it at NULL???
-	return (temp);
-}
-
 char	*no_expansion(char *str, t_var_holder h)
 {
 	h.before = ft_strndup(str + h.start, h.i - h.start);
@@ -205,7 +191,7 @@ char	*expansion(char *str, t_var_holder *h, t_env *env)
 		while (str[h->i] && (ft_isalnum(str[h->i]) || str[h->i] == '_'))
 			h->i++;
 		h->temp2 = ft_strndup(str + h->start, h->i - h->start);
-		h->expanded = expand_env_vars(h->temp2, env);
+		h->expanded = ft_getenv(h->temp2 + 1, env->env);
 		free(h->temp2);
 	}
 	h->temp = ft_strjoin(h->result, h->expanded);
