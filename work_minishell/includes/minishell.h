@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/24 15:37:05 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/25 16:59:29 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ typedef struct s_env
 	char	**env;
 	int		saved_stdin;
 	int		saved_stdout;
-	int		*pids;
+	pid_t	*pids;
 }				t_env;
 
 typedef struct variable_holder
@@ -85,6 +85,10 @@ typedef struct variable_holder
 	int		wc;
 	int		k;
 	char	**array;
+	char	a;
+	char	b;
+	char	c;
+	char	d;
 }				t_var_holder;
 
 typedef struct s_token
@@ -106,9 +110,9 @@ typedef struct s_jobs
 	int				heredoc;
 	char			*heredoc_file;
 	int				mult_input_flag;
+	bool			redir_error_flag;
 	struct s_jobs	*next;
 }	t_jobs;
-
 
 
 //tokenizer:
@@ -143,6 +147,8 @@ char	*no_expansion(char *str, t_var_holder h);
 char	*expand(char *str, t_env *env);
 char	*expansion(char *str, t_var_holder *h, t_env *env);
 char	*unquote_and_direct(char *str, t_env *env);
+bool	is_empty_arg(char *str, char end);
+
 
 //parser:
 int		parse(t_token **token);
@@ -152,28 +158,28 @@ int		parse_last_token(char **cmd_line, t_token **list, t_token **last);
 
 //executor
 void	start_executor(t_jobs *job, t_env *env);
-int		child_process(t_jobs *job, t_env *env);
-int		simple_process(t_jobs *job, t_env *env);
+void	child_process(t_jobs *job, t_env *env);
+void	simple_process(t_jobs *job, t_env *env);
 int		execute_job(t_jobs *job, t_env *env);
-void	process_exit(t_jobs *job, t_env *env, int status);
 int		new_fork(void);
 void	panic(char *s);
 
 //builtins:
 int		try_builtins(t_jobs *job, t_env *env, bool pipe);
 int		caught_echo(t_jobs *job);
-int		caught_cd(t_jobs *job, t_env *env);
+void	caught_cd(t_jobs *job, t_env *env);
 int		caught_pwd(t_jobs *job);
 int		caught_export(t_jobs *job, t_env *env);
 int		caught_unset(t_jobs *job, t_env *env);
 int		caught_env(t_jobs *job, t_env *env);
+int		caught_printenv(t_jobs *job, t_env *env);
 int		caught_exit(t_jobs *jobs, t_env *env, bool pipe);
 
 //redirections
 void	update_input(t_jobs *job);
 int		update_output(t_jobs *job, char **env, char **temp_vars);
 int		append_to_file(t_jobs *job, char **env, char **temp_vars);
-int		handle_heredoc(t_jobs *job);
+int		handle_heredoc(t_jobs *job, t_env env);
 void	print_file(int fd);
 
 //free:
@@ -195,8 +201,8 @@ void	ctrld(char *line, t_env *env);
 char	*update_prompt(void);
 int		ft_getpid(void);
 char	**dup_env(char **envp);
+void	*ft_calloc_pids(t_jobs *job);
 t_env	init_env(char **envp);
-void	*ft_calloc_pids(size_t nitems, size_t size);//not good
 
 void	print_jobs(char *line, t_jobs *jobs);//to remove
 

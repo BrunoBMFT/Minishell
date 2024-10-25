@@ -1,33 +1,27 @@
 Signals
 
-export USER=something new
-export hello="ls -l"   (if job[0] == export etc etc etc)
-	free line in lexer
-test with "" as commands (cat) (command not found, just a "")
+using /dev/null as the strcmp to change exit code might be bad
 
-test output (will be fixed with pipe logic if we want)
-test append output
-cat kasdkasdkads | cat kasdkadskasdkdas || exit			(fix output)
-ls | grep s > out | wc < out | cat
+echo <"Makefile" hi
+cat < "/file name with spaces"
+	doesnt like quotes in redirections
+./minishell MOREARGUMENTS
+echo hello <> out
+
+export 1=a | echo hi
+
+make parse export better
+parse_export and variable duplicates need to be checked before calloc (leaks?)
 
 maria tester
-""
-''
-$var >  (count_tokens_in_job)
-echo "agora 'mais' fdd" (single quotes and double quotes wrong, '"abc"')
-echo test|>
-echo test|>cat
-echo "$var""Makefile"
-echo "$var"Makefile
-
-
-
-
-
 test|cat> (very bad)
-work_minishell$ cd ../../../../../../.. (very bad, update prompt)
+$var > (count_tokens_in_job)
+echo test|>
 
-fix echo -> echo hello "" world
+test with "" as commands (cat) (command not found, just a "")
+
+test append output
+
 
 
 check error messages
@@ -45,10 +39,9 @@ test every malloc functions with NULLS and see if everything is freed and protec
 change errors from writing minishell to writing bash
 clean_exit receive error str?
 
-
 norminette
 
-switch things to getenv instead of ft_getenv?
+switch things to getenv instead of ft_getenv?, no because getenv doesnt check our env
 improve echo
 rename variables
 add colors to prompt

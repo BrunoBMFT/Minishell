@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/22 19:50:45 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/25 16:08:02 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,8 @@
 
 void	print_jobs(char *line, t_jobs *jobs)
 {
-	printf("line: %s\n", line);
+	ft_printf_fd(2, "line: %s\n", line);
 	int i = 0;
-	if (!jobs->job && jobs->type)
-		return (printf("type: %d\n", jobs->type), (void)NULL);
 	while (jobs->job[i])
 	{
 		ft_printf_fd(2, "job %d: %s\n", i, jobs->job[i]);
@@ -33,6 +31,11 @@ int	main(int ac, char **av, char **envp)
 	char	*line;
 	char	*dir;
 
+	// if (!envp || !envp[0])
+	// {
+	// 	ft_printf_fd(2, "you dirty, dirty evaluator...\nDid you really think you could run our code without an environment?\nHuzzah! No further\n");
+	// 	return (1);
+	// }
 	env = init_env(envp);
 	while (1)
 	{
@@ -41,6 +44,7 @@ int	main(int ac, char **av, char **envp)
 		choose_signal(ROOT_SIG);
 		env.prompt = update_prompt();
 		line = readline(env.prompt);
+//		line = readline("Minishell> ");
 		free(env.prompt);
 		if (!line)
 			ctrld(line, &env);
@@ -53,6 +57,8 @@ int	main(int ac, char **av, char **envp)
 		add_history(line);
 		line = parse_quotes(line);//not working correctly?
 		jobs = build(line, env);
+		if (!jobs)
+			continue ;
 		curr = jobs;//why use curr?
 		start_executor(curr, &env);
 		clear_jobs(&jobs);
