@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/14 17:08:33 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/10/24 18:42:19 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,11 +106,9 @@ void	export_aux(t_jobs *job, char **new_env, t_env *env, int *status)
 int	caught_export(t_jobs *job, t_env *env)
 {
 	char	**new_env;
-	int		status;
 	int		i;
 	if (!job->job[1] || !job->job[1][0])
 		return (export_no_execd(env->env));//fix pls
-	status = 0;
 	i = 0;
 	int parse = 0;
 	while (job->job[++i])//run in another place???
@@ -120,7 +118,7 @@ int	caught_export(t_jobs *job, t_env *env)
 	}
 	new_env = ft_calloc(sizeof(char *), ft_split_wordcount(env->env) 
 				+ ft_split_wordcount(job->job) - parse + 1);//error check, (-parse) (-variables that already exist)
-	export_aux(job, new_env, env, &status);
+	export_aux(job, new_env, env, &env->status);
 	free_array(env->env);
 	env->env = ft_calloc(sizeof(char *), ft_split_wordcount(new_env) + 1);//error check
 	i = -1;
@@ -128,5 +126,5 @@ int	caught_export(t_jobs *job, t_env *env)
 		env->env[i] = ft_strdup(new_env[i]);
 	free_array(new_env);
 	env->env[i] = NULL;
-	return (status);
+	return (env->status);
 }

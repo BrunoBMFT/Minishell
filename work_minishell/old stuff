@@ -1,0 +1,26 @@
+
+// TODO USE THIS PIPE LOGIC INSTEAD
+// bool	has_pipes(t_jobs *job)//can be replaced by yohans function?
+// {
+// 	if (job && job->next && job->next->type == PIPE)
+// 		return (true);
+// 	return (false);
+// }
+// void	process_pipes(t_jobs **job, t_env *env, t_jobs **og)//error checks, return values
+// {
+// 	t_jobs	*left, *right;
+// 	(*job)->piped = true;
+// 	left = (*job);
+// 	right = (*job)->next->next;
+// 	(*og) = (*og)->next->next;
+// //	(*job) = (*job)->next->next;//not skipping enough jobs
+// 	child_process(left, env);
+// 	if (has_pipes(right))
+// 	{
+// //		(*job) = (*job)->next->next;
+// 		process_pipes(&right, env, og);
+// 	}
+// 	else
+// 		child_process(right, env);
+// 	//clearjobs right and left
+// }

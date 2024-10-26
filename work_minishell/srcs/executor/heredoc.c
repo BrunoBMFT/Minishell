@@ -12,25 +12,19 @@
 
 #include "../../includes/minishell.h"
 
-
-char	*no_quotes_hd(char *str, t_var_holder *h, t_env *env, int **expand_flag)
+char	*no_quotes_hd(char *str, t_var_holder *h, t_env *env)
 {
-	h->temp = ft_strndup(str + h->start, h->i - h->start);
-	if (!h->temp)
-		return (h->new);
-	h->before = expand(h->temp, env);
-	free(h->temp);
+	h->before = ft_strndup(str + h->start, h->i - h->start); //fix for heredoc expansions and such
 	if (!h->before)
 		return (h->new);
 	if (!h->new)
-		h->new = ft_strdup(h->before);//this is leaked in export????
+		h->new = ft_strdup(h->before);
 	else
 	{
 		h->temp = ft_strjoin(h->new, h->before);
 		free(h->new);
 		h->new = h->temp;
 	}
-	**expand_flag = 1;
 	free(h->before);
 	if (!h->new)
 		return (NULL);
@@ -60,15 +54,6 @@ char	*single_quotes_hd(char *str, t_var_holder *h, char quote, int **expand_flag
 
 void	heredoc_expand_check(int *expand_flag, t_jobs **job, t_env env)
 {
-	// char *temp;
-
-	// if ((*job)->delimiters[0] == '\'' || (*job)->delimiters[0] == '\"')
-	// {
-	// 	temp = ft_substr((*job)->delimiters, 1, (ft_strlen((*job)->delimiters) - 2));
-	// 	free((*job)->delimiters);
-	// 	(*job)->delimiters = temp;
-	// 	*expand_flag = 0;
-	// }
 	char *str = (*job)->delimiters;
 	t_var_holder h;
 
@@ -87,7 +72,10 @@ void	heredoc_expand_check(int *expand_flag, t_jobs **job, t_env env)
 		while (str[h.i] && str[h.i] != '\'' && str[h.i] != '\"')
 			h.i++;
 		if (h.i > h.start)
-			h.new = no_quotes_hd(str, &h, &env, &expand_flag);
+		{
+			printf("hey\n");
+			h.new = no_quotes_hd(str, &h, &env);
+		}
 		if (str[h.i] == '\'' || str[h.i] == '\"')
 			h.new = single_quotes_hd(str, &h, str[h.i], &expand_flag);
 		if (str[h.i])

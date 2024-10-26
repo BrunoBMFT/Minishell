@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/16 20:37:58 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/25 16:08:02 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	print_jobs(char *line, t_jobs *jobs)
 {
-	printf("line: %s\n", line);
+	ft_printf_fd(2, "line: %s\n", line);
 	int i = 0;
 	while (jobs->job[i])
 	{
@@ -42,17 +42,12 @@ int	main(int ac, char **av, char **envp)
 //		signal(SIGINT, handle_signal_main);
 //		signal(SIGQUIT, SIG_IGN);
 		choose_signal(ROOT_SIG);
-		// env.prompt = update_prompt();
-		// line = readline(env.prompt);
-		line = readline("Minishell>");
+		env.prompt = update_prompt();
+		line = readline(env.prompt);
+//		line = readline("Minishell> ");
 		free(env.prompt);
 		if (!line)
 			ctrld(line, &env);
-		if(!line[0]) //needed to avoid seg fault when pressing enter
-		{
-			free (line);
-			continue ;
-		}
 		if (secondquote(line) == 1)	//remove if you want to request additional info to finish prompt
 		{
 			free(line);

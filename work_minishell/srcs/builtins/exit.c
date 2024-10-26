@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 21:01:01 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/14 14:59:14 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/10/25 03:56:11 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	clean_exit(t_jobs *jobs, t_env *env, int status)
 	close (env->saved_stdin);//if
 	close (env->saved_stdout);//if
 	free_array(env->env);//if
+	free (env->pids);//if
 	rl_clear_history();
 	exit (status);
 }

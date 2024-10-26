@@ -6,21 +6,59 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:04 by brfernan          #+#    #+#             */
-/*   Updated: 2024/10/16 18:05:17 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/25 19:19:38 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	cd_update_aux1(t_env *env, char *PWD, char *value)
+
+char	**add_oldpwd(char **envp)//error check
 {
-	char	cwd[PATH_MAX];
+	char	**new_env;
+	char	*temp;
 	int		i;
 
 	i = 0;
-	while (env->env[i] && 
-		ft_strncmp(env->env[i], PWD, ft_strlen(PWD)))
+	new_env = ft_calloc(sizeof(char *), ft_split_wordcount(envp) + 3);
+	if (!new_env || !envp || !envp[0])
+		return (NULL);//free new_env?
+	while (envp[i])
+	{
+		new_env[i] = ft_strdup(envp[i]);//error check
+		if (!new_env[i])
+		{
+			i = 0;
+			while (new_env[i])
+				free (new_env[i++]);//check if works
+			return (NULL);
+		}
 		i++;
+	}
+	new_env[i] = ft_strdup("OLDPWD=");
+    new_env[i + 1] = NULL;
+	return (new_env);
+}
+
+void	cd_update_aux1(t_env *env, char *PWD, char *value)
+{
+	char	cwd[PATH_MAX];
+    bool    found;
+	int		i;
+
+	i = 0;
+    found = false;
+	while (env->env[i])
+    {
+		if (ft_strncmp(env->env[i], PWD, ft_strlen(PWD)) == 0)
+        {
+            found = true;
+            break ;
+        }
+        i++;
+    }
+    if (!found)
+        env->env = add_oldpwd(env->env);
 	if (!value)
 		value = getcwd(cwd, PATH_MAX);
 	free (env->env[i]);
@@ -42,29 +80,45 @@ char	*cd_get_pwd(void)
 	return (ret);
 }
 
-int    caught_cd(t_jobs *job, t_env *env)
+void	cd_error(char *str, char **oldpwd, char **dir, t_env *env)
 {
-    char     *dir;
-    char    *oldpwd;
-    
-    oldpwd = cd_get_pwd();
-     if (!job->job[1])
-    {
-        dir = ft_getenv("HOME", env->env);
-        if (chdir(dir))
-            return (ft_printf_fd(2, "cd home failed"), free (oldpwd), free (dir), 1);
-    }
-    else if (job->job[2])
-        return (ft_printf_fd(2, "minishell: cd: too many arguments\n"), free (oldpwd), 1);
-    else
-    {
-        dir = ft_strdup(job->job[1]);
-        if (chdir(dir))
-            return (ft_printf_fd(2, "minishell: cd: %s: No such file or directory\n", job->job[1]), free (oldpwd), free (dir), 1);
-    }
-    cd_update_aux1(env, "OLDPWD=", oldpwd);
-    cd_update_aux1(env, "PWD=", NULL);
-    free (dir);
-    free (oldpwd);
-    return (0);
+	if (str)
+	{
+		ft_printf_fd(2, "minishell: cd: %s\n", str);
+		free (str);//
+	}
+	if (dir)
+		free (*dir);
+	if (oldpwd)
+		free (*oldpwd);
+	env->status = 1;
+}
+
+void	caught_cd(t_jobs *job, t_env *env)
+{
+	char	*dir;
+	char	*oldpwd;
+
+	if (job->job[1] && job->job[2])
+		return (cd_error(ft_strdup("too many arguments"), NULL, NULL, env));
+	oldpwd = cd_get_pwd();
+	if (!job->job[1])
+	{
+		dir = ft_getenv("HOME", env->env);
+		if (chdir(dir))
+			return (cd_error(ft_strdup("~: No such file or directory")
+					, &oldpwd, &dir, env));
+	}
+	else
+	{
+		dir = ft_strdup(job->job[1]);
+		if (chdir(dir))
+			return (cd_error(ft_strjoin(job->job[1]
+						, ": No such file or directory"), &oldpwd, &dir, env));
+	}
+	cd_update_aux1(env, "OLDPWD=", oldpwd);
+	cd_update_aux1(env, "PWD=", NULL);
+	free (dir);
+	free (oldpwd);
+	return ;
 }
