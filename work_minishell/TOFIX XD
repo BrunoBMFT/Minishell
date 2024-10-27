@@ -1,14 +1,18 @@
 Signals
 
+MODIFY ARRAY HAS MEM LEAKS BECAUSE OF MY FIX
+
+MULTIPLE REDIRECTIONS HAS ERROR BECAUSE OF MY FIX
+(job_redir_flag needs to work in apply redir)
+
+
 errors from bash to minishell(output)
 
 using /dev/null as the strcmp to change exit code might be bad
 
-echo <"Makefile" hi
-cat < "/file name with spaces"
-	doesnt like quotes in redirections
 
 echo hi > out | echo bye
+
 (weird ones)
 ./minishell MOREARGUMENTS
 echo hello <> out

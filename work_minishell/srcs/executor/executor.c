@@ -6,30 +6,40 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/26 19:17:34 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/27 12:19:20 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	executor_input(t_jobs *job, t_env *env)//return values negligeble?
+void	executor_input(t_jobs *job, t_env *env)
 {
 	int	redirected_input;
+	
 /* 
 	if (job->input && (job->input[0] == '$'))// TODO for now commented, messes up apply_redir
 	{
 //		*status = 1;
 //		return (ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->input), -1);
 	} */
-	redirected_input = open(job->input, O_RDONLY);
-	if (ft_strcmp("/dev/null", job->input) == 0)//not being saved?
+	job->input = unquote_and_direct(job->input, env);
+	//the reason why input was in lexer was so that many inputs can be processed
+	if (access(job->input, F_OK) != 0)
+	{
+		if (!job->redir_error_flag)//FUCKING STUPID ITS NOT WORKING
+		{
+			ft_printf_fd(2, "bash: %s: No such file or directory\n", job->input);
+			job->redir_error_flag = true;//FUCKING STUPID ITS NOT WORKING
+		}
+		job->input = ft_strdup("/dev/null");
 		env->status = 1;
+	}
+	redirected_input = open(job->input, O_RDONLY);
 	dup2(redirected_input, STDIN_FILENO);
 	close(redirected_input);
-	return (0);
 }
 
-int	executor_output(t_jobs *job, t_env *env)//return values negligeble
+void	executor_output(t_jobs *job, t_env *env)
 {
 	int	redirected_output;
 
@@ -39,6 +49,7 @@ int	executor_output(t_jobs *job, t_env *env)//return values negligeble
 		job->output = ft_strdup("/dev/null");
 		env->status = 1;
 	}
+	job->output = unquote_and_direct(job->output, env);
 	if (job->append)
 		redirected_output = open(job->output, O_CREAT | O_APPEND | O_RDWR, 0644);
 	else
@@ -51,7 +62,6 @@ int	executor_output(t_jobs *job, t_env *env)//return values negligeble
 		env->status = 1;
 	dup2(redirected_output, STDOUT_FILENO);
 	close(redirected_output);//else
-	return (0);
 }
 
 void	start_executor(t_jobs *job, t_env *env)
@@ -66,13 +76,14 @@ void	start_executor(t_jobs *job, t_env *env)
 		//expanding
 		if (job->job)
 			modify_array(job->job, env);
-		env->status = 0;
 		//redirections
+		job->redir_error_flag = false;
 		if (job->input)
 			executor_input(job, env);
 		if (job->output)
 			executor_output(job, env);
 
+		
 		
 		//executing jobs
 		if (job->next && job->next->type == PIPE)
@@ -80,11 +91,13 @@ void	start_executor(t_jobs *job, t_env *env)
 			job->piped = true;
 			child_process(job, env);
 			job = job->next->next;
+			env->status = 0;
 			continue;
 		}
-		else if (job->job && job->job[0] && job->piped)
+		//is checking job.job[0][0] correct?
+		else if (job->job && job->piped)
 			child_process(job, env);//builtins status check
-		else if (job->job && job->job[0])
+		else if (job->job)
 			simple_process(job, env);//builtins status check
 
 
@@ -100,7 +113,8 @@ void	start_executor(t_jobs *job, t_env *env)
 		//operators
 		if (job->next && job->next->type == AND)
 		{
-			job = job->next->next;
+			if (env->status == 0)
+				job = job->next->next;
 			job->piped = false;
 		}
 		else if (job->next && job->next->type == OR)
@@ -130,8 +144,7 @@ void	start_executor(t_jobs *job, t_env *env)
 		int status;
 		waitpid(env->pids[i], &status, 0);
 		env->pids[i] = -1;
-		if (env->status == 0)//stupid
-			env->status = WEXITSTATUS(status);//exit codes not working haha
+		env->status = WEXITSTATUS(status);
 		i++;
 	}
 	// TODO function for this

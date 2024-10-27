@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/25 16:59:29 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/27 11:55:01 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,12 +160,12 @@ int		parse_last_token(char **cmd_line, t_token **list, t_token **last);
 void	start_executor(t_jobs *job, t_env *env);
 void	child_process(t_jobs *job, t_env *env);
 void	simple_process(t_jobs *job, t_env *env);
-int		execute_job(t_jobs *job, t_env *env);
+void	execute_job(t_jobs *job, t_env *env);
 int		new_fork(void);
 void	panic(char *s);
 
 //builtins:
-int		try_builtins(t_jobs *job, t_env *env, bool pipe);
+int		try_builtins(t_jobs *job, t_env *env);
 int		caught_echo(t_jobs *job);
 void	caught_cd(t_jobs *job, t_env *env);
 int		caught_pwd(t_jobs *job);

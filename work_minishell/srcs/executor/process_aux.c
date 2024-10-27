@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/25 17:12:32 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/27 11:53:03 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,13 +95,12 @@ void execute_executable(t_jobs *job, t_env *env)
 	clean_exit(job, env, 127);
 }
 
-int	execute_job(t_jobs *job, t_env *env)//void?
+void	execute_job(t_jobs *job, t_env *env)//void?
 {
-	choose_signal(CHILD_SIG);	
+	choose_signal(CHILD_SIG);
 	if (ft_strchr(job->job[0], '/'))
 		execute_executable(job, env);
-	else
+	else if (job->job[0][0])
 		execute_command(job, env);
-	return (0);
 }
 
