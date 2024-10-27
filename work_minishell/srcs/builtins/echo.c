@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 04:38:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/16 12:51:38 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/26 19:25:41 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	caught_echo(t_jobs *job)
 	while (job->job[i])
 	{
 		if (job->job[i][0])
-			ft_printf("%s", job->job[i]);
+			ft_printf("%s", job->job[i]);//use putstr instead?
 		if (job->job[i + 1])
 			ft_printf(" ");
 		i++;

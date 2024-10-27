@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/25 19:18:47 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/26 23:46:33 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,38 @@ char	*expand(char *str, t_env *env)
 	return (h.result);
 }
 
+void	handle_dollar_signs(t_var_holder *h)
+{
+	h->k = ft_strlen(h->new);
+	if (h->k > 0)
+		h->k -= 1; //end of word is now before the $ outside quotes when gibberish$"$"
+	printf ("%d\n", h->k);
+	if (ft_strcmp(h->new, "$") == 0) //fix for $"$" and such thangs
+	{
+		free(h->new);
+		h->new = ft_strdup(h->before);
+	}
+	else if (h->new[h->k] == '$')
+	{
+		h->temp = ft_strndup(h->new, h->k);
+		free(h->new);
+		h->new = ft_strdup(h->temp);
+		free(h->temp);
+		h->temp = ft_strjoin(h->new, h->before);
+		free(h->new);
+		h->new = h->temp;
+	}
+	else
+	{
+		h->temp = ft_strjoin(h->new, h->before);
+		free(h->new);
+		h->new = h->temp;
+	}
+}
+
 char	*no_quotes(char *str, t_var_holder *h, t_env *env)
 {
 	h->temp = ft_strndup(str + h->start, h->i - h->start);
-	//printf("quote::%s\n", h->temp);
 	if (!h->temp)
 		return (h->new);
 	h->before = expand(h->temp, env);
@@ -60,21 +88,9 @@ char	*no_quotes(char *str, t_var_holder *h, t_env *env)
 	if (!h->before)
 		return (h->new);
 	if (!h->new)
-		h->new = ft_strdup(h->before);//this is leaked in export????
-	else
-	{
-		if (ft_strcmp(h->new, "$") == 0) //fix for $"$" and such thangs
-		{
-			free(h->new);
 			h->new = ft_strdup(h->before);
-		}
-		else
-		{
-			h->temp = ft_strjoin(h->new, h->before);
-			free(h->new);
-			h->new = h->temp;
-		}
-	}
+	else
+		handle_dollar_signs(h);
 	free(h->before);
 	if (!h->new)
 		return (NULL);

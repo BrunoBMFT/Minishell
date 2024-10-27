@@ -1,10 +1,15 @@
 Signals
 
+errors from bash to minishell(output)
+
 using /dev/null as the strcmp to change exit code might be bad
 
 echo <"Makefile" hi
 cat < "/file name with spaces"
 	doesnt like quotes in redirections
+
+echo hi > out | echo bye
+(weird ones)
 ./minishell MOREARGUMENTS
 echo hello <> out
 

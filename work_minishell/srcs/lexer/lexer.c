@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 00:13:28 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/25 20:50:22 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/26 19:23:22 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,22 +84,7 @@ void    apply_redir(t_token *current, t_jobs *job, t_env env)
         if (handle_heredoc(job, env) < 0)
             printf ("error handling heredocs\n");
     }
-	// if (current->type == INPUT)
-    // {
-    //     if (job->input)
-    //     {
-    //         job->mult_input_flag = 1;
-    //         free(job->input);
-    //     }
-    //     temp = unquote_and_direct(current->next->token, &env);
-    //     if (access(temp, F_OK) != 0)
-    //     {
-    //         ft_printf("bash: %s: No such file or directory\n", current->next->token);
-    //         job->input = ft_strdup("/dev/null");
-    //     }
-    //     else
-    //         job->input = temp;
-    // }
+	
     if (current->type == INPUT)
     {
         if (job->input)
@@ -107,15 +92,38 @@ void    apply_redir(t_token *current, t_jobs *job, t_env env)
             job->mult_input_flag = 1;
             free(job->input);
         }
-        if (access(current->next->token, F_OK) != 0)
-        {
+
+		printf("temp bef %s\n", current->next->token);
+        temp = unquote_and_direct(current->next->token, &env);
+		printf("temp %s\n", temp);
+		if (access(temp, F_OK) != 0)
+		{
 			if (!job->redir_error_flag)//not really working
-            	ft_printf_fd(2, "bash: %s: No such file or directory\n", current->next->token);
-            job->input = ft_strdup("/dev/null");
+				ft_printf_fd(2, "bash: %s: No such file or directory\n", current->next->token);
+			job->input = ft_strdup("/dev/null");
 			job->redir_error_flag = true;
-        }
-        else
-            job->input = ft_strdup(current->next->token);
+		}
+		else
+			job->input = temp;
+		// printf("temp bef %s\n", current->next->token);
+        // temp = unquote_and_direct(current->next->token, &env);
+		// printf("temp %s\n", temp);
+        // if (access(temp, F_OK) != 0)
+        // {
+        //     ft_printf("bash: %s: No such file or directory\n", current->next->token);
+        //     job->input = ft_strdup("/dev/null");
+        // }
+        // else
+        //     job->input = temp;
+        // if (access(current->next->token, F_OK) != 0)
+        // {
+		// 	if (!job->redir_error_flag)//not really working
+        //     	ft_printf_fd(2, "bash: %s: No such file or directory\n", current->next->token);
+        //     job->input = ft_strdup("/dev/null");
+		// 	job->redir_error_flag = true;
+        // }
+        // else
+        //     job->input = ft_strdup(current->next->token);
     }
     if (current->type == OUTPUT || current->type == APPEND_OUT)
     {

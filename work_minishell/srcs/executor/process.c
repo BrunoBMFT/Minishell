@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/25 20:32:52 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/26 19:16:20 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ void	child_process(t_jobs *job, t_env *env)// ! signals
 	if (env->pids[i] == 0)
 	{
 		close(fd[READ]);
-		if (!job->output && job->next && job->next->type == PIPE)//checks whether it is last statement or not
-			dup2(fd[WRITE], STDOUT_FILENO);//error check
+		if (!job->output && job->next && job->next->type == PIPE)
+			dup2(fd[WRITE], STDOUT_FILENO);
 		else if (!job->output)
 			dup2(env->saved_stdout, STDOUT_FILENO);
 		close(fd[WRITE]);
@@ -49,7 +49,6 @@ void	child_process(t_jobs *job, t_env *env)// ! signals
 			execute_job(job, env);
 		clean_exit(job, env, env->status);//env.status
 	}
-//	ft_printf_fd(2, "env status after processes: %d\n", env->status);
 	close(fd[WRITE]);
 	dup2(fd[READ], STDIN_FILENO);
 	close(fd[READ]);

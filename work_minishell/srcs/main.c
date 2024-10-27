@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/25 16:08:02 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/26 17:20:58 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,13 @@ int	main(int ac, char **av, char **envp)
 		free(env.prompt);
 		if (!line)
 			ctrld(line, &env);
+		add_history(line);
 		if (secondquote(line) == 1)	//remove if you want to request additional info to finish prompt
 		{
 			free(line);
 			ft_printf("error: unclosed quote\n");
 			continue ;
 		}
-		add_history(line);
 		line = parse_quotes(line);//not working correctly?
 		jobs = build(line, env);
 		if (!jobs)

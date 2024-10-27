@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/25 20:52:04 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/26 19:17:34 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void	start_executor(t_jobs *job, t_env *env)
 		//expanding
 		if (job->job)
 			modify_array(job->job, env);
+		env->status = 0;
 		//redirections
 		if (job->input)
 			executor_input(job, env);
@@ -73,7 +74,7 @@ void	start_executor(t_jobs *job, t_env *env)
 			executor_output(job, env);
 
 		
-		//pipes
+		//executing jobs
 		if (job->next && job->next->type == PIPE)
 		{
 			job->piped = true;
@@ -81,25 +82,10 @@ void	start_executor(t_jobs *job, t_env *env)
 			job = job->next->next;
 			continue;
 		}
-
-		
-		//executing jobs
 		else if (job->job && job->job[0] && job->piped)
 			child_process(job, env);//builtins status check
 		else if (job->job && job->job[0])
 			simple_process(job, env);//builtins status check
-		int i = 0;
-		while (env->pids[i] != -1)
-		{
-			int status;
-			waitpid(env->pids[i], &status, 0);//waiting too long for /dev/random
-			print_jobs("closed", job);
-			env->pids[i] = -1;
-			if (env->status == 0)//stupid
-				env->status = WEXITSTATUS(status);//exit codes not working haha
-			i++;
-		}
-//			ft_printf_fd(2, "env status: %d\n", env->status);
 
 
 
@@ -137,6 +123,18 @@ void	start_executor(t_jobs *job, t_env *env)
 	}
 	if (access(".heredoc", F_OK) == 0)
 		remove(".heredoc");
+	// TODO function for this
+	int i = 0;
+	while (env->pids[i] != -1)
+	{
+		int status;
+		waitpid(env->pids[i], &status, 0);
+		env->pids[i] = -1;
+		if (env->status == 0)//stupid
+			env->status = WEXITSTATUS(status);//exit codes not working haha
+		i++;
+	}
+	// TODO function for this
 	close(env->saved_stdin);
 	close(env->saved_stdout);
 	free (env->pids);
