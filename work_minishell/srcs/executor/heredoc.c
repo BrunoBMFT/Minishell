@@ -118,11 +118,17 @@ int	handle_heredoc(t_jobs *job, t_env env)
 	choose_signal(IGNORE_SIG);
 	//heredoc_expand_check(&must_expand, &job, env);
 	heredoc_expand_check(&must_expand, &job, env);
-	printf("%s	%d\n", job->delimiters, must_expand);
 	while (1)
 	{
 		line = readline("heredoc>");
-		if (!line || ft_strcmp(line, job->delimiters) == 0)
+		if (!line)
+		{
+			//do output
+			//output error
+			free(line);
+			break ;
+		}
+		if (ft_strcmp(line, job->delimiters) == 0)
 		{
 			free(line);
 			break ;

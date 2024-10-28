@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/27 12:19:20 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/28 00:22:49 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,6 @@ void	executor_output(t_jobs *job, t_env *env)
 			remove(job->output);
 		redirected_output = open(job->output, O_CREAT | O_RDWR, 0644);
 	}
-	if (ft_strcmp("/dev/null", job->output) == 0)
-		env->status = 1;
 	dup2(redirected_output, STDOUT_FILENO);
 	close(redirected_output);//else
 }
