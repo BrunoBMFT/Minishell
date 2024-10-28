@@ -6,7 +6,7 @@
 #    By: bruno <bruno@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/23 16:39:56 by ycantin           #+#    #+#              #
-#    Updated: 2024/10/11 17:11:37 by bruno            ###   ########.fr        #
+#    Updated: 2024/10/28 17:53:50 by bruno            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,6 +14,10 @@ NAME =	minishell
 
 SRCS_DIR = ./srcs
 SRCS = main.c $(addprefix aux/, $(AUX_SRCS)) $(addprefix lexer/, $(LEXER_SRCS)) $(addprefix expand/, $(EXPAND_SRCS)) $(addprefix executor/, $(EXECUTOR_SRCS)) $(addprefix builtins/, $(BUILTINS_SRCS))
+
+CFLAGS = -Wall -Werror -Wextra -g
+DEPS = -lreadline
+RM = rm -f
 
 AUX_SRCS = aux.c frees.c signal.c
 EXPAND_SRCS = expansion.c error_correction.c error_correction_utils.c 
@@ -31,15 +35,10 @@ $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
 LIBFT_DIR = ./includes/libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-#FLAGS = -Wall -Werror -Wextra -g -fsanitize=address
-FLAGS = -Wall -Werror -Wextra -g
-DEPS = -lreadline
-RM = rm -f
-
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
-	@cc $(FLAGS) -o $(NAME) $(OBJS) $(LIBFT) $(DEPS)
+	@cc $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT) $(DEPS)
 	@echo $(NAME) ready
 
 $(LIBFT):

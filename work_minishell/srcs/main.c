@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/26 17:20:58 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/28 19:00:24 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	print_jobs(char *line, t_jobs *jobs)
 	int i = 0;
 	while (jobs->job[i])
 	{
-		ft_printf_fd(2, "job %d: %s\n", i, jobs->job[i]);
+		ft_printf_fd(2, "job str %d: %s\n", i, jobs->job[i]);
 		i++;
 	}
 }
@@ -29,8 +29,10 @@ int	main(int ac, char **av, char **envp)
 	t_jobs	*jobs;
 	t_jobs	*curr;
 	char	*line;
-	char	*dir;
 
+	(void)av;
+	if (ac != 1)
+		return (1);
 	// if (!envp || !envp[0])
 	// {
 	// 	ft_printf_fd(2, "you dirty, dirty evaluator...\nDid you really think you could run our code without an environment?\nHuzzah! No further\n");
@@ -48,7 +50,8 @@ int	main(int ac, char **av, char **envp)
 		free(env.prompt);
 		if (!line)
 			ctrld(line, &env);
-		add_history(line);
+		if (line && line[0])
+			add_history(line);
 		if (secondquote(line) == 1)	//remove if you want to request additional info to finish prompt
 		{
 			free(line);
@@ -56,7 +59,7 @@ int	main(int ac, char **av, char **envp)
 			continue ;
 		}
 		line = parse_quotes(line);//not working correctly?
-		jobs = build(line, env);
+		jobs = build(line, &env);
 		if (!jobs)
 			continue ;
 		curr = jobs;//why use curr?

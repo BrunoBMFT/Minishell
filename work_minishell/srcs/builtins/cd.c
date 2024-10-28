@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:04 by brfernan          #+#    #+#             */
-/*   Updated: 2024/10/25 19:19:38 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/28 18:01:31 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 char	**add_oldpwd(char **envp)//error check
 {
 	char	**new_env;
-	char	*temp;
 	int		i;
 
 	i = 0;
@@ -58,7 +57,7 @@ void	cd_update_aux1(t_env *env, char *PWD, char *value)
         i++;
     }
     if (!found)
-        env->env = add_oldpwd(env->env);
+		env->env = add_oldpwd(env->env);
 	if (!value)
 		value = getcwd(cwd, PATH_MAX);
 	free (env->env[i]);

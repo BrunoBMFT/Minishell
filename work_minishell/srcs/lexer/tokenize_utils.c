@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 16:52:00 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/27 11:56:58 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/28 15:49:00 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,27 +69,42 @@ int	define_type(char *str)
 	return (type);
 }
 
-void	modify_array(char **array, t_env *env)
+char	**modify_array(char **array, t_env *env)
 {
 	int		i;
-	int		j;
 	char	*temp;
+	char	**new;
+	int		j = 0;
 
 	i = 0;
-	j = 0;
+	int k = 0;
 	while (array[i])
 	{
 		temp = unquote_and_direct(array[i], env);
-		if (temp && temp[0])// ! THIS FIX DOES NOT SOLVE MEM LEAKS
+		if (temp && temp[0])
+			k++;
+		free(array[i]);
+		array[i] = temp;
+		i++;
+	}
+	array[i] = NULL;
+	new = ft_calloc(sizeof(char *), k + 1);
+	if (!new)
+		return (array);
+	i = 0;
+	while (array[i])
+	{
+		if (array[i][0])
 		{
-			free(array[j]);
-			array[j] = temp;
+			new[j] = array[i];
 			j++;
 		}
 		else
-			free (temp);
+			free (array[i]);
 		i++;
 	}
-	array[j] = NULL;
+	new[j] = NULL;
+	return (new);
 }
+
 

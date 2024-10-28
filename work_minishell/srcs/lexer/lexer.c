@@ -6,21 +6,20 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 00:13:28 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/28 00:22:50 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/28 17:56:58 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-t_token	*developed_cmdline_tokenization(char *command_line, t_env env)
+t_token	*developed_cmdline_tokenization(char *command_line)
 {
-	char	*converted;
 	char	*simplified;
 	t_token	*list;
 
 	list = NULL;
 	simplified = split_complex_args(command_line);
-	tokenize(&list, simplified, env);
+	tokenize(&list, simplified);
 	free(simplified);
 	t_token *temp = list;
 	while (temp)
@@ -38,7 +37,7 @@ t_token	*developed_cmdline_tokenization(char *command_line, t_env env)
 	return (list);
 }
 
-t_jobs	*build(char *command_line, t_env env)
+t_jobs	*build(char *command_line, t_env *env)
 {
 	t_jobs	*jobs;
 	t_token	*list;
@@ -49,7 +48,7 @@ t_jobs	*build(char *command_line, t_env env)
 	jobs = NULL;
 	list = NULL;
 	last = NULL;
-	list = developed_cmdline_tokenization(command_line, env);
+	list = developed_cmdline_tokenization(command_line);
 	if (!list)
 		return (NULL);
 	if (parse(&list) == -1)
@@ -67,10 +66,9 @@ t_jobs	*build(char *command_line, t_env env)
 	free(command_line);
 	return (jobs);
 }
-void    apply_redir(t_token *current, t_jobs *job, t_env env)
+void    apply_redir(t_token *current, t_jobs *job, t_env *env)
 {
     int    fd;
-    char *temp = NULL;
 
     if (current->type == HEREDOC)
     {
@@ -81,7 +79,7 @@ void    apply_redir(t_token *current, t_jobs *job, t_env env)
         if (job->input)
             free(job->input);
         job->input = ft_strdup(job->heredoc_file);
-        if (handle_heredoc(job, env) < 0)
+        if (handle_heredoc(job, *env) < 0)
             printf ("error handling heredocs\n");
     }
     if (current->type == INPUT)
@@ -91,14 +89,16 @@ void    apply_redir(t_token *current, t_jobs *job, t_env env)
             job->mult_input_flag = 1;
             free(job->input);
         }
-        // if (access(current->next->token, F_OK) != 0)
-        // {
-		// 	if (!job->redir_error_flag)//FUCKING STUPID ITS NOT WORKING
-        //     	ft_printf_fd(2, "bash: %s: No such file or directory\n", current->next->token);
-        //     job->input = ft_strdup("/dev/null");
-		// 	job->redir_error_flag = true;//FUCKING STUPID ITS NOT WORKING
-        // }
-        // else
+		current->next->token = unquote_and_direct(current->next->token, env);
+        if (access(current->next->token, F_OK) != 0)
+        {
+			if (!env->redir_error_flag)//replace with status flag
+            	ft_printf_fd(2, "bash: %s: No such file or directory\n", current->next->token);
+            job->input = ft_strdup("/dev/null");
+			env->redir_error_flag = true;//FUCKING STUPID ITS NOT WORKING
+			env->status = 1;
+        }
+        else 
             job->input = ft_strdup(current->next->token);
     }
     if (current->type == OUTPUT || current->type == APPEND_OUT)
@@ -118,7 +118,7 @@ void    apply_redir(t_token *current, t_jobs *job, t_env env)
     }
 }
 
-char	**job_array(t_token **cur, t_jobs **job, t_env env)
+char	**job_array(t_token **cur, t_jobs **job, t_env *env)
 {
 	int		i;
 	char	**array;
@@ -127,7 +127,6 @@ char	**job_array(t_token **cur, t_jobs **job, t_env env)
 	array = malloc(sizeof(char *) * (count_tokens_in_job(*cur) + 1));
 	if (!array)
 		return (NULL);
-	// (*job)->redir_error_flag = false;
 	while (*cur && (*cur)->type != AND && (*cur)->type != OR
 		&& (*cur)->type != PIPE)
 	{
@@ -158,19 +157,19 @@ char *filename(int i)
 	return (full);
 }
 
-void	make_job_list(t_jobs **job_list, t_token **tok_list, t_env env)
+void	make_job_list(t_jobs **job_list, t_token **tok_list, t_env *env)
 {
 	t_token	*cur;
 	t_jobs	*new;
-	char	*cmd;
 	int		i;
 
 	i = 0;
+	env->redir_error_flag = false;
 	cur = *tok_list;
 	while (cur)
 	{
 		new = addjob(NULL);
-		if (cur && cur->type == PIPE || cur->type == AND || cur->type == OR)
+		if (cur && (cur->type == PIPE || cur->type == AND || cur->type == OR))
 		{
 			if (cur->type > 0 && cur->type < 4)
 			{

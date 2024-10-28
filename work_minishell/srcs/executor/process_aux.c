@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/27 11:53:03 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/28 17:59:41 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,7 @@ char	*find_executable_path(t_jobs *job, t_env *env)
 	}
 	//else
 	ft_printf_fd(2, "minishell: %s: Permission denied\n", job->job[0]);
-	free (path);
-	clean_exit(job, env, 126);
+	return (clean_exit(job, env, 126), free(path), NULL);
 }
 
 void execute_executable(t_jobs *job, t_env *env)

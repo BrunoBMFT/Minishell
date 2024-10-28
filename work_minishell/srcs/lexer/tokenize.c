@@ -3,19 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 01:39:10 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/16 19:44:16 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/28 17:57:53 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-void	tokenize(t_token **list, char *str, t_env env)
+void	tokenize(t_token **list, char *str)
 {
 	int		i;
 	char	**array;
-	char	*temp;
 	t_token	*new_node;
 
 	i = 0;

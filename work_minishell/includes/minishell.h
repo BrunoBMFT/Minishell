@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/27 11:55:01 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/28 18:00:57 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ typedef struct s_env
 	char	**env;
 	int		saved_stdin;
 	int		saved_stdout;
+	bool	redir_error_flag;
 	pid_t	*pids;
 }				t_env;
 
@@ -110,15 +111,14 @@ typedef struct s_jobs
 	int				heredoc;
 	char			*heredoc_file;
 	int				mult_input_flag;
-	bool			redir_error_flag;
 	struct s_jobs	*next;
 }	t_jobs;
 
 
 //tokenizer:
-void	tokenize(t_token **list, char *str, t_env env);
+void	tokenize(t_token **list, char *str);
 char	**token_array(char *str);
-void	modify_array(char **array, t_env *env);
+char	**modify_array(char **array, t_env *env);
 int		count_words(char *str);
 int		define_type(char *str);
 t_token	*addtok(void *content);
@@ -126,11 +126,11 @@ t_token	*get_last_tok(t_token *lst);
 void	go_to_next(t_token **lst, t_token *new);
 
 //lexer:
-t_jobs	*build(char *command_line, t_env env);
+t_jobs	*build(char *command_line, t_env *env);
 t_jobs	*addjob(void *content);
 t_jobs	*get_last_job(t_jobs *lst);
 void	go_to_next_job(t_jobs **lst, t_jobs *new);
-void	make_job_list(t_jobs **job_list, t_token **tok_list, t_env env);
+void	make_job_list(t_jobs **job_list, t_token **tok_list, t_env *env);
 int		count_tokens_in_job(t_token *cur);
 
 //error_correction:
@@ -168,11 +168,11 @@ void	panic(char *s);
 int		try_builtins(t_jobs *job, t_env *env);
 int		caught_echo(t_jobs *job);
 void	caught_cd(t_jobs *job, t_env *env);
-int		caught_pwd(t_jobs *job);
+int		caught_pwd(void);
 int		caught_export(t_jobs *job, t_env *env);
 int		caught_unset(t_jobs *job, t_env *env);
 int		caught_env(t_jobs *job, t_env *env);
-int		caught_printenv(t_jobs *job, t_env *env);
+int		caught_printenv(t_env *env);
 int		caught_exit(t_jobs *jobs, t_env *env, bool pipe);
 
 //redirections

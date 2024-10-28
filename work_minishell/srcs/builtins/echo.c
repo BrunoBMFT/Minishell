@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 04:38:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/27 11:22:49 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/28 18:57:58 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ bool	n_flag(char *str) //fix the return so that as soon as it finds a wrong chaa
 
 int	caught_echo(t_jobs *job)
 {
-	bool	nl;
 	int		i;
 	bool 	has_n_flag;
 
@@ -51,9 +50,9 @@ int	caught_echo(t_jobs *job)
 	while (job->job[i])
 	{
 		if (job->job[i][0])
-			ft_printf("%s", job->job[i]);//use putstr instead?
+			ft_printf_fd(1, "%s", job->job[i]);//use putstr instead?
 		if (job->job[i + 1])
-			ft_printf(" ");
+			ft_printf_fd(1, " ");
 		i++;
 	}
 	if (!has_n_flag)

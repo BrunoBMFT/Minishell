@@ -5,11 +5,14 @@ MODIFY ARRAY HAS MEM LEAKS BECAUSE OF MY FIX
 MULTIPLE REDIRECTIONS HAS ERROR BECAUSE OF MY FIX
 (job_redir_flag needs to work in apply redir)
 
-
+eval sheet:
+expr $? + $? (env.status wrong)
+ctrl+c && ctrl+\ with blocking command (cat)
+check printenv only gets 1 job.job (export without the = sign does things different)
+echo hi > out | echo bye prints all to the same fd FIX URGENTLY
 
 TESTER:
-echo hi > out | echo bye prints all to the same fd
-
+echo hi > out | < out cat
 redirections with strings
 	also fucked up going into unquote
 redirections are supposed to only do the last redirection, and give error on the first one

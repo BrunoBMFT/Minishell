@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/28 00:22:49 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/28 19:06:31 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,6 @@ void	executor_input(t_jobs *job, t_env *env)
 //		return (ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->input), -1);
 	} */
 	job->input = unquote_and_direct(job->input, env);
-	//the reason why input was in lexer was so that many inputs can be processed
-	if (access(job->input, F_OK) != 0)
-	{
-		if (!job->redir_error_flag)//FUCKING STUPID ITS NOT WORKING
-		{
-			ft_printf_fd(2, "bash: %s: No such file or directory\n", job->input);
-			job->redir_error_flag = true;//FUCKING STUPID ITS NOT WORKING
-		}
-		job->input = ft_strdup("/dev/null");
-		env->status = 1;
-	}
 	redirected_input = open(job->input, O_RDONLY);
 	dup2(redirected_input, STDIN_FILENO);
 	close(redirected_input);
@@ -71,17 +60,17 @@ void	start_executor(t_jobs *job, t_env *env)
 	env->pids = ft_calloc_pids(job);//error check
 	while (job)
 	{
+		if (env->redir_error_flag)//JUST WRONG
+			break ;
 		//expanding
 		if (job->job)
-			modify_array(job->job, env);
+			job->job = modify_array(job->job, env);
+		
 		//redirections
-		job->redir_error_flag = false;
 		if (job->input)
 			executor_input(job, env);
 		if (job->output)
 			executor_output(job, env);
-
-		
 		
 		//executing jobs
 		if (job->next && job->next->type == PIPE)
@@ -97,8 +86,6 @@ void	start_executor(t_jobs *job, t_env *env)
 			child_process(job, env);//builtins status check
 		else if (job->job)
 			simple_process(job, env);//builtins status check
-
-
 
 		//resets
 		dup2(env->saved_stdin, STDIN_FILENO);
@@ -142,7 +129,8 @@ void	start_executor(t_jobs *job, t_env *env)
 		int status;
 		waitpid(env->pids[i], &status, 0);
 		env->pids[i] = -1;
-		env->status = WEXITSTATUS(status);
+		if (env->status == 0)
+			env->status = WEXITSTATUS(status);
 		i++;
 	}
 	// TODO function for this

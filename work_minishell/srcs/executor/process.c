@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/27 12:11:50 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/28 17:43:47 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	child_process(t_jobs *job, t_env *env)// ! signals
 		i++;
 	env->pids[i] = new_fork();
 	if (env->pids[i] < 0)
-		return (env->status = 1, (void)NULL);//error check
+		return (env->status = 1, (void)NULL);
 	if (env->pids[i] == 0)
 	{
 		close(fd[READ]);
@@ -47,7 +47,7 @@ void	child_process(t_jobs *job, t_env *env)// ! signals
 		env->status = try_builtins(job, env);
 		if (env->status == 200)
 			execute_job(job, env);
-		clean_exit(job, env, env->status);//env.status
+		clean_exit(job, env, env->status);
 	}
 	close(fd[WRITE]);
 	dup2(fd[READ], STDIN_FILENO);
@@ -62,8 +62,8 @@ void	simple_process(t_jobs *job, t_env *env)
 	if (!job->job[0])
 		return ;
 	choose_signal(IGNORE_SIG);
-	if (job->job && job->job[0] && (ft_strcmp(job->job[0], "cd")) == 0)//a few of this checks are done before
-		return (caught_cd(job, env));//fix exit status and return value?
+	if (job->job && job->job[0] && ft_strcmp(job->job[0], "cd") == 0)
+		return (caught_cd(job, env));
 	status = try_builtins(job, env);
 	if (status != 200)
 		return (env->status = status, (void)NULL);
@@ -72,8 +72,8 @@ void	simple_process(t_jobs *job, t_env *env)
 		i++;
 	env->pids[i] = new_fork();
 	if (env->pids[i] < 0)
-		return (env->status = 1, (void)NULL);//error check
+		return (env->status = 1, (void)NULL);
 	if (env->pids[i] == 0)
-		execute_job(job, env);//error check?
+		execute_job(job, env);
 	return ;
 }

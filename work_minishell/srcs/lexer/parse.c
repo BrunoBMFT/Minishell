@@ -278,7 +278,6 @@ int	parse_last_token(char **cmd_line, t_token **list, t_token **last)
 	char	*line;
 	char	*new;
 	char	*converted;
-	t_env	this_has_to_exist_to_work;
 
 	line = readline("> ");
 	if (!line)
@@ -289,7 +288,7 @@ int	parse_last_token(char **cmd_line, t_token **list, t_token **last)
 	*cmd_line = new;
 	clear_list(list);
 	converted = split_complex_args(*cmd_line);
-	tokenize(list, converted, this_has_to_exist_to_work);
+	tokenize(list, converted);
 	free(converted);
 	*last = get_last_tok(*list);
 	if (parse(list) == -1)

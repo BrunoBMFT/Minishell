@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:15:54 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/26 15:41:25 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/28 17:55:22 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int	ft_getpid(void)//does this work?
 char	*update_prompt(void)//void
 {
 	char	cwd[PATH_MAX];
-	char	*dir;
 	char	*prompt;
 	char	**folders;
 	int		i;

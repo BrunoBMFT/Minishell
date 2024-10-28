@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/27 09:13:08 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/28 18:26:19 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,10 +113,8 @@ char *double_quotes(char *str, t_var_holder *h, t_env *env)
 bool	is_empty_arg(char *str, char end)
 {
 	int	i;
-	int	found;
 
 	i = 0;
-	found = 1;
 	while (str[i] && str[i] != end)
 	{
 		if (ft_isascii(str[i]) && str[i] != '\0')//check for spaces as well?

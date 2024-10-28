@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/27 12:01:59 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/28 18:00:51 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	try_builtins(t_jobs *job, t_env *env)
 	if (ft_strcmp(job->job[0], "echo") == 0)
 		status = caught_echo(job);
 	else if (ft_strcmp(job->job[0], "pwd") == 0)
-		status = caught_pwd(job);
+		status = caught_pwd();
 	else if (ft_strcmp(job->job[0], "export") == 0)
 		status = caught_export(job, env);
 	else if (ft_strcmp(job->job[0], "unset") == 0)
@@ -28,12 +28,10 @@ int	try_builtins(t_jobs *job, t_env *env)
 	else if (ft_strcmp(job->job[0], "env") == 0)
 		status = caught_env(job, env);
 	else if (ft_strcmp(job->job[0], "printenv") == 0)
-		status = caught_printenv(job, env);
+		status = caught_printenv(env);
 	else if (ft_strcmp(job->job[0], "exit") == 0)
 		status = caught_exit(job, env, job->piped);
 	if (job->piped && status != 200)
 		clean_exit(job, env, status);
-	if (env->status == 0)
-		return (status);
-	return (env->status);
+	return (status);
 }
