@@ -1,10 +1,5 @@
 Signals
 
-MODIFY ARRAY HAS MEM LEAKS BECAUSE OF MY FIX
-
-MULTIPLE REDIRECTIONS HAS ERROR BECAUSE OF MY FIX
-(job_redir_flag needs to work in apply redir)
-
 eval sheet:
 expr $? + $? (env.status wrong)
 ctrl+c && ctrl+\ with blocking command (cat)
@@ -20,7 +15,6 @@ redirections are supposed to only do the last redirection, and give error on the
 env.status not resetting on pipe
 outputs broken, maybe same way as input
 having multiple redir types, have to check
-
 
 
 #invalid command, followed by empty variable, should clear the exit code
@@ -39,20 +33,10 @@ export 1=a | echo hi
 make parse export better
 parse_export and variable duplicates need to be checked before calloc (leaks?)
 
-maria tester
-test|cat> (very bad)
-$var > (count_tokens_in_job)
-echo test|>
-
 test with "" as commands (cat) (command not found, just a "")
-
-test append output
-
-
 
 check error messages
 tests:
-	cd folder && rm -rf ../folder
 	env -i
 	unset PATH (same fix as pipex)
 	fix leaks in normal cases (no errors)
@@ -61,19 +45,6 @@ tests:
 test every malloc functions with NULLS and see if everything is freed and protected?
 # define malloc(x) NULL?
 
-
-change errors from writing minishell to writing bash
-clean_exit receive error str?
-
 norminette
 
-switch things to getenv instead of ft_getenv?, no because getenv doesnt check our env
 improve echo
-rename variables
-add colors to prompt
-change SHELL=binzsh to shell=minishell
-
-
-
-
-export aaa=aaa bbb=bbb ccc=ccc ddd=ddd eee=eee fff=fff ggg=ggg hhh=hhh jjj=jjj
