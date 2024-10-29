@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 00:13:28 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/28 17:56:58 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/29 03:36:16 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void    apply_redir(t_token *current, t_jobs *job, t_env *env)
 			if (!env->redir_error_flag)//replace with status flag
             	ft_printf_fd(2, "bash: %s: No such file or directory\n", current->next->token);
             job->input = ft_strdup("/dev/null");
-			env->redir_error_flag = true;//FUCKING STUPID ITS NOT WORKING
+			env->redir_error_flag = true;
 			env->status = 1;
         }
         else 
@@ -103,11 +103,7 @@ void    apply_redir(t_token *current, t_jobs *job, t_env *env)
     }
     if (current->type == OUTPUT || current->type == APPEND_OUT)
     {
-		// if (job->output && (job->output[0] == '$'))
-		// {
-		// 	ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->output);
-		// 	job->output = ft_strdup("/dev/null");
-		// }
+		current->next->token = unquote_and_direct(current->next->token, env);
         fd = open(current->next->token, O_CREAT | O_RDWR, 0644);
         close(fd);
         if (current->type == APPEND_OUT)
@@ -143,7 +139,8 @@ char	**job_array(t_token **cur, t_jobs **job, t_env *env)
 	}
 	if (i == 0)
 		return (free(array), NULL);
-	return (array[i] = NULL, array);
+	array[i] = NULL;
+	return (array);
 }
 
 char *filename(int i)

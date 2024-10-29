@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/28 18:00:57 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/29 03:17:49 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,7 @@ int		caught_pwd(void);
 int		caught_export(t_jobs *job, t_env *env);
 int		caught_unset(t_jobs *job, t_env *env);
 int		caught_env(t_jobs *job, t_env *env);
-int		caught_printenv(t_env *env);
+int		caught_printenv(t_env *env);//not needed
 int		caught_exit(t_jobs *jobs, t_env *env, bool pipe);
 
 //redirections

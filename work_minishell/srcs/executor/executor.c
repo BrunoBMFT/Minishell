@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/28 19:06:31 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/29 03:32:50 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	executor_input(t_jobs *job, t_env *env)
 {
 	int	redirected_input;
 	
+//	if (!job->input)
+//		return (dup2(env->saved_stdin, STDIN_FILENO), (void)NULL);
 /* 
 	if (job->input && (job->input[0] == '$'))// TODO for now commented, messes up apply_redir
 	{
@@ -32,12 +34,15 @@ void	executor_output(t_jobs *job, t_env *env)
 {
 	int	redirected_output;
 
-	if (job->output && (job->output[0] == '$'))
-	{
-		ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->output);
-		job->output = ft_strdup("/dev/null");
-		env->status = 1;
-	}
+//	if (!job->output)
+//		return (dup2(env->saved_stdout, STDOUT_FILENO), (void)NULL);
+
+	// if (job->output && (job->output[0] == '$'))
+	// {
+	// 	ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->output);
+	// 	job->output = ft_strdup("/dev/null");
+	// 	env->status = 1;
+	// }
 	job->output = unquote_and_direct(job->output, env);
 	if (job->append)
 		redirected_output = open(job->output, O_CREAT | O_APPEND | O_RDWR, 0644);
@@ -53,15 +58,11 @@ void	executor_output(t_jobs *job, t_env *env)
 
 void	start_executor(t_jobs *job, t_env *env)
 {
-//	signal(SIGINT, handle_signal_child);
-//	signal(SIGQUIT, sigquit);
 	env->saved_stdin = dup(STDIN_FILENO);
 	env->saved_stdout = dup(STDOUT_FILENO);
 	env->pids = ft_calloc_pids(job);//error check
 	while (job)
 	{
-		if (env->redir_error_flag)//JUST WRONG
-			break ;
 		//expanding
 		if (job->job)
 			job->job = modify_array(job->job, env);
@@ -78,7 +79,6 @@ void	start_executor(t_jobs *job, t_env *env)
 			job->piped = true;
 			child_process(job, env);
 			job = job->next->next;
-			env->status = 0;
 			continue;
 		}
 		//is checking job.job[0][0] correct?
@@ -119,6 +119,7 @@ void	start_executor(t_jobs *job, t_env *env)
 		}
 		else
 			job = job->next;
+		env->redir_error_flag = true;
 	}
 	if (access(".heredoc", F_OK) == 0)
 		remove(".heredoc");

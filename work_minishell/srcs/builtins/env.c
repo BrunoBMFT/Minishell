@@ -6,13 +6,13 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 23:09:17 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/28 18:00:45 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/29 00:37:17 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	caught_printenv(t_env *env)
+int	caught_printenv(t_env *env)//not needed
 {
 	int		i;
 
