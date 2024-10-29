@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/29 03:32:50 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/29 19:17:28 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ void	executor_input(t_jobs *job, t_env *env)
 {
 	int	redirected_input;
 	
-//	if (!job->input)
-//		return (dup2(env->saved_stdin, STDIN_FILENO), (void)NULL);
 /* 
 	if (job->input && (job->input[0] == '$'))// TODO for now commented, messes up apply_redir
 	{
@@ -25,6 +23,8 @@ void	executor_input(t_jobs *job, t_env *env)
 //		return (ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->input), -1);
 	} */
 	job->input = unquote_and_direct(job->input, env);
+	if (ft_strcmp(job->input, "/dev/null") == 0)
+		env->status = 1;
 	redirected_input = open(job->input, O_RDONLY);
 	dup2(redirected_input, STDIN_FILENO);
 	close(redirected_input);
@@ -33,10 +33,7 @@ void	executor_input(t_jobs *job, t_env *env)
 void	executor_output(t_jobs *job, t_env *env)
 {
 	int	redirected_output;
-
-//	if (!job->output)
-//		return (dup2(env->saved_stdout, STDOUT_FILENO), (void)NULL);
-
+	
 	// if (job->output && (job->output[0] == '$'))
 	// {
 	// 	ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->output);
@@ -61,12 +58,13 @@ void	start_executor(t_jobs *job, t_env *env)
 	env->saved_stdin = dup(STDIN_FILENO);
 	env->saved_stdout = dup(STDOUT_FILENO);
 	env->pids = ft_calloc_pids(job);//error check
+	env->piped = false;
 	while (job)
 	{
 		//expanding
 		if (job->job)
 			job->job = modify_array(job->job, env);
-		
+		env->status = 0;
 		//redirections
 		if (job->input)
 			executor_input(job, env);
@@ -76,13 +74,12 @@ void	start_executor(t_jobs *job, t_env *env)
 		//executing jobs
 		if (job->next && job->next->type == PIPE)
 		{
-			job->piped = true;
+			env->piped = true;
 			child_process(job, env);
 			job = job->next->next;
 			continue;
 		}
-		//is checking job.job[0][0] correct?
-		else if (job->job && job->piped)
+		else if (job->job && env->piped)
 			child_process(job, env);//builtins status check
 		else if (job->job)
 			simple_process(job, env);//builtins status check
@@ -100,11 +97,11 @@ void	start_executor(t_jobs *job, t_env *env)
 		{
 			if (env->status == 0)
 				job = job->next->next;
-			job->piped = false;
+			env->piped  = false;
 		}
 		else if (job->next && job->next->type == OR)
 		{
-			if (env->status == 0)
+			if (env->status == 0)//WRONG AS FUCK
 			{
 				while(job->next && job->next->type == OR)
 					job = job->next->next;
@@ -115,7 +112,7 @@ void	start_executor(t_jobs *job, t_env *env)
 			}
 			else
 				job = job->next;
-			job->piped = false;
+			env->piped = false;
 		}
 		else
 			job = job->next;

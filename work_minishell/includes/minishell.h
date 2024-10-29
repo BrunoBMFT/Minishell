@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/29 03:17:49 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/29 16:37:45 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ typedef struct s_env
 	int		status;
 	char	*prompt;
 	char	**env;
+	bool	piped;
 	int		saved_stdin;
 	int		saved_stdout;
 	bool	redir_error_flag;
@@ -105,7 +106,6 @@ typedef struct s_jobs
 	char			**job;
 	char			*input;
 	char			*output;
-	bool			piped;
 	char			*delimiters;
 	int				append;
 	int				heredoc;
@@ -190,7 +190,7 @@ void	clean_up_build(t_token **list, char *cmd_line);
 void	free_all(t_token **list, char **array, char *message, int len);
 
 //signals:
-void	choose_signal(t_signal type);//goncalo
+void	choose_sig(t_signal type);//goncalo
 void	sigquit(int sig);
 void	handle_signal_main(int sig);
 void	handle_signal_child(int sig);

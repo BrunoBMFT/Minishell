@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 00:13:28 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/29 03:36:16 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/29 17:59:48 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,10 +93,12 @@ void    apply_redir(t_token *current, t_jobs *job, t_env *env)
         if (access(current->next->token, F_OK) != 0)
         {
 			if (!env->redir_error_flag)//replace with status flag
+			{
             	ft_printf_fd(2, "bash: %s: No such file or directory\n", current->next->token);
+				env->redir_error_flag = true;
+			}
             job->input = ft_strdup("/dev/null");
-			env->redir_error_flag = true;
-			env->status = 1;
+//			env->status = 1;
         }
         else 
             job->input = ft_strdup(current->next->token);
@@ -182,7 +184,6 @@ void	make_job_list(t_jobs **job_list, t_token **tok_list, t_env *env)
 		new->heredoc_file = filename(i);
 		new->job = job_array(&cur, &new, env);
 		new->type = WORD;
-		new->piped = false;
 		go_to_next_job(job_list, new);
 		i++;
 	}

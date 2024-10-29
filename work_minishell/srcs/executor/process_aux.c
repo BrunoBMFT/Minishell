@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/28 17:59:41 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/29 18:33:28 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void execute_executable(t_jobs *job, t_env *env)
 
 void	execute_job(t_jobs *job, t_env *env)//void?
 {
-	choose_signal(CHILD_SIG);
+	choose_sig(CHILD_SIG);//correct?
 	if (ft_strchr(job->job[0], '/'))
 		execute_executable(job, env);
 	else if (job->job[0][0])

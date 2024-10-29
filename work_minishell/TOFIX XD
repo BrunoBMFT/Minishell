@@ -4,15 +4,15 @@ FIX LEAKS!!! (redirs, job array)
 PUT FLAGS BACK ON
 
 eval sheet:
-expr $? + $? (env.status wrong)
+expr $? + $? (env.status wrong)✅
 ctrl+c && ctrl+\ with blocking command (cat)
 check printenv only gets 1 job.job (export without the = sign does things different)✅
-echo hi > out | echo bye 
+echo hi > out | echo bye ✅(maybe)
 	(maybe the fix is putting execute input and output inside of process functions, 
 			that way can decide whether its piped output or not more easily)
 
 TESTER:
-echo hi > out | < out cat
+echo hi > out | < out cat✅
 redirections with strings
 	also fucked up going into unquote
 redirections are supposed to only do the last redirection, and give error on the first one✅

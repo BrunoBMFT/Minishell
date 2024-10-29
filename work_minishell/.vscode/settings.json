@@ -19,5 +19,6 @@
 		"history.h": "c",
 		"limits.h": "c",
 		"stdlib.h": "c"
-	}
+	},
+	"makefile.configureOnOpen": false
 }

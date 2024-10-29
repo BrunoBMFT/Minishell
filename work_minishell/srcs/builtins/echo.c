@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 04:38:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/28 18:57:58 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/29 15:57:32 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,6 @@ int	caught_echo(t_jobs *job)
 		i++;
 	}
 	if (!has_n_flag)
-		ft_printf("\n");
+		ft_printf_fd(1, "\n");
 	return (0);
 }

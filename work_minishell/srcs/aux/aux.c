@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:15:54 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/28 17:55:22 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/29 17:11:56 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ t_env	init_env(char **envp)
 	t_env	env;
 
 	env.prompt = NULL;
-	env.status = 0;
+	env.status = 0;//not needed here? it gets init in executor
 	env.env = NULL;
 	char 	buf[PATH_MAX];
 	if (!envp || !envp[0])
