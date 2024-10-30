@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/29 19:17:28 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/30 04:01:50 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,6 @@ void	executor_input(t_jobs *job, t_env *env)
 {
 	int	redirected_input;
 	
-/* 
-	if (job->input && (job->input[0] == '$'))// TODO for now commented, messes up apply_redir
-	{
-//		*status = 1;
-//		return (ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->input), -1);
-	} */
 	job->input = unquote_and_direct(job->input, env);
 	if (ft_strcmp(job->input, "/dev/null") == 0)
 		env->status = 1;
@@ -33,13 +27,7 @@ void	executor_input(t_jobs *job, t_env *env)
 void	executor_output(t_jobs *job, t_env *env)
 {
 	int	redirected_output;
-	
-	// if (job->output && (job->output[0] == '$'))
-	// {
-	// 	ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->output);
-	// 	job->output = ft_strdup("/dev/null");
-	// 	env->status = 1;
-	// }
+
 	job->output = unquote_and_direct(job->output, env);
 	if (job->append)
 		redirected_output = open(job->output, O_CREAT | O_APPEND | O_RDWR, 0644);
@@ -89,9 +77,6 @@ void	start_executor(t_jobs *job, t_env *env)
 		dup2(env->saved_stdout, STDOUT_FILENO);
 		if (job->heredoc_file && access(job->heredoc_file, F_OK) == 0)
 			remove(job->heredoc_file);
-
-
-
 		//operators
 		if (job->next && job->next->type == AND)
 		{
@@ -116,7 +101,7 @@ void	start_executor(t_jobs *job, t_env *env)
 		}
 		else
 			job = job->next;
-		env->redir_error_flag = true;
+		env->redir_error_flag = false;
 	}
 	if (access(".heredoc", F_OK) == 0)
 		remove(".heredoc");

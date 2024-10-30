@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/29 18:33:28 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/30 04:03:31 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*find_command_path(char	**cmd, t_env *env)
 	char	*path;
 	int		i;
 
+	if (!cmd[0])
+		return (ft_printf_fd(2, "minishell: %s: command not found\n", cmd[0]), NULL);
 	path = ft_getenv("PATH", env->env);
 	path_array = ft_split(path, ':');
 	free (path);
@@ -41,7 +43,6 @@ char	*find_command_path(char	**cmd, t_env *env)
 void	execute_command(t_jobs *job, t_env *env)
 {
 	char	*path;
-
 	path = find_command_path(job->job, env);
 	if (!path)
 		clean_exit(job, env, 127);
@@ -97,9 +98,9 @@ void execute_executable(t_jobs *job, t_env *env)
 void	execute_job(t_jobs *job, t_env *env)//void?
 {
 	choose_sig(CHILD_SIG);//correct?
-	if (ft_strchr(job->job[0], '/'))
+	if (job->job[0] && ft_strchr(job->job[0], '/'))
 		execute_executable(job, env);
-	else if (job->job[0][0])
+	else
 		execute_command(job, env);
 }
 

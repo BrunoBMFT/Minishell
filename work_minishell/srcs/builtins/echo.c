@@ -6,34 +6,32 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 04:38:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/29 15:57:32 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/30 04:04:17 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-bool	n_flag(char *str) //fix the return so that as soon as it finds a wrong chaar, it stops
+int	n_flag(char **strs)
 {
-	int i;
+	int 	i = 1;
+	int 	j;
 
-	i = 0;
-	while (str[i] == ' ' && str[i] == '\t' && str[i] == '\n')
-		i++;
-	if (str[i] == '-') //arg is flag
+	while (strs[i])
 	{
-		i++;
-		if (str[i] == 'n')
+		if (strs[i][0] == '-' && strs[i][1] == 'n')
 		{
-			while (str[i] && (str[i] != ' ' && str[i] != '\t' && str[i] != '\n'))
-			{	
-				if (str[i] != 'n')
-					return (false); //flag not valid, print as if not a flag
-				i++;
-			}
-			return (true); //flag is valid, skip to next
+			j = 2;
+			while (strs[i][j] == 'n')
+				j++;
+			if (strs[i][j])
+				break ;
 		}
-	}
-	return (false); //argument is not a flag,  must be printed
+		else
+			break ;
+		i++;
+	} 
+	return (i);
 }
 
 int	caught_echo(t_jobs *job)
@@ -41,12 +39,12 @@ int	caught_echo(t_jobs *job)
 	int		i;
 	bool 	has_n_flag;
 
-	i = 1;
 	if (!job->job[1])
 		return (ft_nl_fd(1), 0);
-	has_n_flag = n_flag(job->job[1]);
-	if (has_n_flag)
-		i++;
+	has_n_flag = false;
+	i = n_flag(job->job);
+	if (i > 1)
+		has_n_flag = true;
 	while (job->job[i])
 	{
 		if (job->job[i][0])

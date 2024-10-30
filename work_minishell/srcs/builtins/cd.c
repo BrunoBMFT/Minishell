@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:04 by brfernan          #+#    #+#             */
-/*   Updated: 2024/10/29 16:42:09 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/30 03:59:38 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	cd_error(char *str, char **oldpwd, char **dir, t_env *env)
 	if (str)
 	{
 		ft_printf_fd(2, "minishell: cd: %s\n", str);
-		free (str);//
+		free (str);
 	}
 	if (dir)
 		free (*dir);

@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/29 16:39:02 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/30 00:00:17 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	try_builtins(t_jobs *job, t_env *env)
 	int	status;
 
 	status = 200;
+	if (!job->job[0])
+		return (status);
 	if (ft_strcmp(job->job[0], "echo") == 0)
 		status = caught_echo(job);
 	else if (ft_strcmp(job->job[0], "pwd") == 0)

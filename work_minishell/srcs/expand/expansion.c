@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/29 16:57:48 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/30 03:15:34 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,6 +190,8 @@ char	*expansion(char *str, t_var_holder *h, t_env *env)
 			h->i++;
 		h->temp2 = ft_strndup(str + h->start, h->i - h->start);
 		h->expanded = ft_getenv(h->temp2 + 1, env->env);
+		if (!h->expanded)
+			h->expanded = ft_strdup("");
 		free(h->temp2);
 	}
 	h->temp = ft_strjoin(h->result, h->expanded);

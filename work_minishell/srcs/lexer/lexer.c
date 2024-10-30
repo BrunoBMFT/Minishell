@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 00:13:28 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/29 17:59:48 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/30 04:01:45 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,13 +93,17 @@ void    apply_redir(t_token *current, t_jobs *job, t_env *env)
         if (access(current->next->token, F_OK) != 0)
         {
 			if (!env->redir_error_flag)//replace with status flag
-			{
             	ft_printf_fd(2, "bash: %s: No such file or directory\n", current->next->token);
-				env->redir_error_flag = true;
-			}
+			env->redir_error_flag = true;
             job->input = ft_strdup("/dev/null");
-//			env->status = 1;
         }
+		else if (job->input && (job->input[0] == '$'))
+		{
+			if (!env->redir_error_flag)//replace with status flag
+				ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->input);
+			env->redir_error_flag = true;
+            job->input = ft_strdup("/dev/null");
+		}
         else 
             job->input = ft_strdup(current->next->token);
     }
