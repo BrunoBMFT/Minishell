@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 16:52:00 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/25 19:18:29 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/31 17:08:47 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,12 +77,54 @@ void	modify_array(char **array, t_env *env)
 	i = 0;
 	while (array[i])
 	{
-		//printf("%s\n", array[i]);
 		temp = unquote_and_direct(array[i], env);
-		//printf("%s\n", temp);
 		free(array[i]);
 		array[i] = temp;
 		i++;
 	}
 }
 
+
+// char	**modify_array(char **array, t_env *env)
+// {
+// 	int		i;
+// 	int 	j;
+// 	int		total;
+// 	char 	*buf;
+// 	char	**temp;
+// 	char 	**new;
+
+// 	i = 0;
+// 	total = 0;
+// 	while (array[i])
+// 	{
+// 		j = 0;
+// 		buf = unquote_and_direct(array[i], env);
+// 		temp = ft_split(buf, ' ');
+// 		free(buf);
+// 		while(temp[j])
+// 			j++;
+// 		free_array(temp);
+// 		total += j;
+// 		i++;
+// 	}
+// 	new = malloc(sizeof (char *) * (total + 1));
+// 	if (!new)
+// 		return NULL;
+// 	i = 0;
+// 	total = 0;
+// 	while (array[i])
+// 	{
+// 		j = 0;
+// 		buf = unquote_and_direct(array[i], env);
+// 		temp = ft_split(buf, ' ');
+// 		free(buf);
+// 		while (temp[j])
+// 			new[total++] = ft_strdup(temp[j++]);
+// 		free_array(temp);
+// 		i++;
+// 	}
+// 	new[total] = NULL;
+// 	free_array(array);
+// 	return (new);
+// }

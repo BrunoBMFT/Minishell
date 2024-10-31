@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 00:13:28 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/25 20:50:03 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/28 17:16:26 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,9 @@ void    apply_redir(t_token *current, t_jobs *job, t_env env)
             job->mult_input_flag = 1;
             free(job->input);
         }
+		printf("%s\n", current->next->token);
 		temp = unquote_and_direct(current->next->token, &env);
+		printf("%s\n", temp);
         if (access(temp, F_OK) != 0)
         {
 			if (!job->redir_error_flag)

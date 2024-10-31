@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/25 19:18:47 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/28 17:14:42 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ void	handle_dollar_signs(t_var_holder *h)
 	h->k = ft_strlen(h->new);
 	if (h->k > 0)
 		h->k -= 1; //end of word is now before the $ outside quotes when gibberish$"$"
-	printf ("%d\n", h->k);
 	if (ft_strcmp(h->new, "$") == 0) //fix for $"$" and such thangs
 	{
 		free(h->new);

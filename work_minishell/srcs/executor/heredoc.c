@@ -72,10 +72,7 @@ void	heredoc_expand_check(int *expand_flag, t_jobs **job, t_env env)
 		while (str[h.i] && str[h.i] != '\'' && str[h.i] != '\"')
 			h.i++;
 		if (h.i > h.start)
-		{
-			printf("hey\n");
 			h.new = no_quotes_hd(str, &h, &env);
-		}
 		if (str[h.i] == '\'' || str[h.i] == '\"')
 			h.new = single_quotes_hd(str, &h, str[h.i], &expand_flag);
 		if (str[h.i])
@@ -106,7 +103,7 @@ int	handle_heredoc(t_jobs *job, t_env env)
 	choose_signal(IGNORE_SIG);
 	//heredoc_expand_check(&must_expand, &job, env);
 	heredoc_expand_check(&must_expand, &job, env);
-	printf("%s	%d\n", job->delimiters, must_expand);
+	// printf("%s	%d\n", job->delimiters, must_expand);
 	while (1)
 	{
 		line = readline("heredoc>");
