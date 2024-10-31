@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_aux.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/30 16:07:36 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/31 17:21:40 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ char	*find_executable_path(t_jobs *job, t_env *env)
 	}
 	//else
 	ft_printf_fd(2, "minishell: %s: Permission denied\n", job->job[0]);
-	return (clean_exit(job, env, 126), free(path), NULL);
+	return (free(path), clean_exit(job, env, 126), NULL);
 }
 
 void execute_executable(t_jobs *job, t_env *env)
