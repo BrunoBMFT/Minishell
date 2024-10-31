@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/30 03:13:42 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/30 14:41:27 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,6 @@ void	simple_process(t_jobs *job, t_env *env)
 {
 	int		status;
 
-/* 	if (!job->job[0])
-		return ; */
 	choose_sig(IGNORE_SIG);
 	if (job->job[0] && ft_strcmp(job->job[0], "cd") == 0)
 		return (caught_cd(job, env));

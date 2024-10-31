@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 16:52:00 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/28 15:49:00 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/30 15:01:56 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ char	**modify_array(char **array, t_env *env)
 		temp = unquote_and_direct(array[i], env);
 		if (temp && temp[0])
 			k++;
-		free(array[i]);
+		free(array[i]);//losing
 		array[i] = temp;
 		i++;
 	}
@@ -96,13 +96,12 @@ char	**modify_array(char **array, t_env *env)
 	{
 		if (array[i][0])
 		{
-			new[j] = array[i];
+			new[j] = ft_strdup(array[i]);
 			j++;
 		}
-		else
-			free (array[i]);
 		i++;
 	}
+	free_array(array);
 	new[j] = NULL;
 	return (new);
 }
