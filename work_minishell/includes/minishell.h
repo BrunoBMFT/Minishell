@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/30 15:04:44 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/31 18:08:31 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,8 @@ typedef struct s_jobs
 //tokenizer:
 void	tokenize(t_token **list, char *str);
 char	**token_array(char *str);
-char	**modify_array(char **array, t_env *env);
+// char	**modify_array(char **array, t_env *env);
+void	modify_array(char **array, t_env *env);
 int		count_words(char *str);
 int		define_type(char *str);
 t_token	*addtok(void *content);

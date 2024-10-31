@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/30 15:07:15 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/31 18:09:06 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	start_executor(t_jobs *job, t_env *env)
 	{
 		//expanding
 		if (job->job)
-			job->job = modify_array(job->job, env);
+			modify_array(job->job, env);
 		env->status = 0;
 		//redirections
 		if (job->input)

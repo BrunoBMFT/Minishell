@@ -43,154 +43,135 @@ int parse_separators(t_token **token, t_token *cur, int flag)
     }
     return (flag);
 }
-#include "../../includes/minishell.h"
+
+void	check_separator_syntax(char *str, char separator, int dir)
+{
+	char *newline;
+	char *unexpected;
+
+	newline = "minishell: syntax error near unexpected token `newline'\n";
+	unexpected = "minishell: syntax error near unexpected token `";
+	if (!dir)
+	{
+		if (*(str + 1) == separator && !*(str + 2))
+			ft_printf_fd(2, newline);
+		else if (!*(str + 2))
+			ft_printf_fd(2, newline);
+	}
+	else
+	{
+		if (*(str + 1) && *(str + 1) == separator)
+			ft_printf_fd(2, "%s%c%c\'\n", unexpected, separator, separator);
+		else
+			ft_printf_fd(2, "%s%c\'\n", unexpected, separator);
+	}
+}
+
+int	syntax_check_wrapper(char *str, char target)
+{
+	if (*(str + 1) == '>')
+		return (check_separator_syntax(str, '>', 0), -1);
+	else if (*(str + 1) == '<')
+		return (check_separator_syntax(str, '<', 0), -1);
+	else
+		return (check_separator_syntax(str, target, 1), -1);
+	return (0);
+}
 
 int	parse_string(char *str, t_var_holder *h)
 {
 	if (*str && *str == h->b)
-	{
-		if (*(str + 1) == '>')
-		{
-			if (*(str + 1) == '>' && !*(str + 2))
-				ft_printf_fd(2, "minishell: syntax error near unexpected token `newline'\n");
-			else if (!*(str + 2))
-				ft_printf_fd(2, "minishell: syntax error near unexpected token `newline'\n");
-			return (-1);
-		}
-		else if (*(str + 1) == '<')
-		{
-			if (*(str + 1) == '<' && !*(str + 2))
-				ft_printf_fd(2, "minishell: syntax error near unexpected token `newline'\n");
-			else if (!*(str + 2))
-				ft_printf_fd(2, "minishell: syntax error near unexpected token `newline'\n");
-			return (-1);
-		}
-		if (*(str + 1) && *(str + 1) == h->b)
-			ft_printf_fd(2, "minishell: syntax error near unexpected token `%c%c\'\n", h->b, h->b);
-		else
-			ft_printf_fd(2, "minishell: syntax error near unexpected token `%c\'\n", h->b);
-		return (-1);
-	}
+		return (syntax_check_wrapper(str, h->b));
 	else if (*str && *str == h->c)
-	{
-		if (*(str + 1) == '>')
-		{
-			if (*(str + 1) == '>' && !*(str + 2))
-				ft_printf_fd(2, "minishell: syntax error near unexpected token `newline'\n");
-			else if (!*(str + 2))
-				ft_printf_fd(2, "minishell: syntax error near unexpected token `newline'\n");
-			return (-1);
-		}
-		else if (*(str + 1) == '<')
-		{
-			if (*(str + 1) == '<' && !*(str + 2))
-				ft_printf_fd(2, "minishell: syntax error near unexpected token `newline'\n");
-			else if (!*(str + 2))
-				ft_printf_fd(2, "minishell: syntax error near unexpected token `newline'\n");
-			return (-1);
-		}
-		if (*(str + 1) && *(str + 1) == h->c)
-			ft_printf_fd(2, "minishell: syntax error near unexpected token `%c%c\'\n", h->c, h->c);
-		else
-			ft_printf_fd(2, "minishell: syntax error near unexpected token `%c\'\n", h->c);
-		return (-1);
-	}
+		return (syntax_check_wrapper(str, h->c));
 	else if (*str && *str == h->d)
-	{
-		if (*(str + 1) == '>')
-		{
-			if (*(str + 1) == '>' && !*(str + 2))
-				ft_printf_fd(2, "minishell: syntax error near unexpected token `newline'\n");
-			else if (!*(str + 2))
-				ft_printf_fd(2, "minishell: syntax error near unexpected token `newline'\n");
-			return (-1);
-		}
-		else if (*(str + 1) == '<')
-		{
-			if (*(str + 1) == '<' && !*(str + 2))
-				ft_printf_fd(2, "minishell: syntax error near unexpected token `newline'\n");
-			else if (!*(str + 2))
-				ft_printf_fd(2, "minishell: syntax error near unexpected token `newline'\n");
-			return (-1);
-		}
-		if (*(str + 1) && *(str + 1) == h->d)
-			ft_printf_fd(2, "minishell: syntax error near unexpected token `%c%c\'\n", h->d, h->d);
-		else
-			ft_printf_fd(2, "minishell: syntax error near unexpected token `%c\'\n", h->d);
-		return (-1);
-	}
+		return (syntax_check_wrapper(str, h->d));
 	return (0);
 }
 
-int parse(t_token **token)
+int	start_string_parse(char *str, char delimiter, t_var_holder *h)
 {
-	t_token *cur;
+	if (delimiter == '&')
+	{
+		h->b = '|';
+		h->c = '<';
+		h->d = '>';
+	}
+	else if(delimiter == '|')
+	{
+		h->b = '&';
+		h->c = '<';
+		h->d = '>';
+	}
+	else if (delimiter == '<')
+	{
+		h->b = '&';
+		h->c = '|';
+		h->d = '>';
+	}
+	else if (delimiter == '>')
+	{
+		h->b = '&';
+		h->c = '|';
+		h->d = '<';
+	}
+	return (parse_string(str, h));
+}
+
+int parse_token(char *token, bool *in_sq, bool *in_dq, t_var_holder *h)
+{
+	int i;
+	int j;
+	int count;
+
+	i = 0;
+	while (token[i])
+	{
+		if (token[i] == '\'' && !*in_dq)
+			*in_sq = !*in_sq;
+		else if (token[i] == '\"' && !*in_sq)
+			*in_dq = !*in_dq;
+		if (*in_sq || *in_dq)
+		{
+			i++;
+			continue ;
+		}
+		if (token[i] == '&' || token[i] == '|')
+		{
+			if (start_string_parse(token + (i + 1), token[i], h) == -1)
+				return (-1);
+		}
+		else if (token[i] == '<' || token[i] == '>')
+		{
+			j = i;
+			count = 0;
+			while (token[j] && token[j] == '>' || token[j] =='<')
+			{
+				j++;
+				count++;
+			}
+			if (count > 2)
+				return (ft_printf_fd(2, "minishell: syntax error: more than 2 redirection tokens found\n"), -1);
+			int len = ft_strlen(token) - 1;
+
+			printf("full:%s\n", token);
+			printf("here:%s\n", token + i);
+			printf("length:%d\n", len);
+			if (len != 1 && token[len] == '<' || token[len] == '>')
+				return (ft_printf_fd(2, "minishell: syntax error near unexpected token `newline'\n"), -1);
+			if (start_string_parse((token + (i + 1)), token[i], h) == -1)
+				return (-1);
+		}
+		i++;
+	}
+	return (0);
+} //handle case like echo<> or echo<"THERE"< as errors while still allowing echo<"THERE" -----> I might have to check my error correction function so that it splits when finding redirections 
+
+int	parse_seps_and_redirs(t_token **token, t_token *cur)
+{
 	int flag;
 
-	cur = *token;
 	flag = 0;
-
-	if (cur && cur->type >= PIPE && cur->type <= OR)
-	{
-			ft_printf_fd(2, "minishell: syntax error near unexpected token `%s\'\n", cur->token);
-			clear_list(token);
-			return (-1);
-	}
-	while (cur)
-	{
-		t_var_holder h;
-		int i = 0;
-		bool in_single_quotes = false;
-		bool in_double_quotes = false;
-
-		while (cur->token[i])
-		{
-			if (cur->token[i] == '\'' && !in_double_quotes)
-				in_single_quotes = !in_single_quotes;
-			else if (cur->token[i] == '\"' && !in_single_quotes)
-				in_double_quotes = !in_double_quotes;
-			if (in_single_quotes || in_double_quotes)
-			{
-				i++;
-				continue;
-			}
-			if (cur->token[i] == '&')
-			{
-				h.b = '|';
-				h.c = '<';
-				h.d = '>';
-				if (parse_string(cur->token + (i + 1), &h) == -1)
-					return (-1);
-			}
-			else if (cur->token[i] == '|')
-			{
-				h.b = '&';
-				h.c = '<';
-				h.d = '>';
-				if (parse_string(cur->token + (i + 1), &h) == -1)
-					return (-1);
-			}
-			else if (cur->token[i] == '<')
-			{
-				h.b = '&';
-				h.c = '|';
-				h.d = '>';
-				if (parse_string(cur->token + (i + 1), &h) == -1)
-					return (-1);
-			}
-			else if (cur->token[i] == '>')
-			{
-				h.b = '&';
-				h.c = '|';
-				h.d = '<';
-				if (parse_string(cur->token + (i + 1), &h) == -1)
-					return (-1);
-			}
-			i++;
-		}
-		cur = cur->next;
-	}
-	cur = *token;
 	while (cur && cur->next)
 	{ 
 		if (cur->type >= INPUT && cur->type <= APPEND_OUT)
@@ -199,6 +180,34 @@ int parse(t_token **token)
 		if (cur->type >= PIPE && cur->type <= OR)
 			if ((flag = parse_separators(token, cur, flag)) != 0)
 				return (-1);
+		cur = cur->next;
+	}
+	return (0);
+}
+
+int parse(t_token **token)
+{
+	t_var_holder h;
+	t_token *cur;
+	int flag;
+
+	cur = *token;
+	flag = 0;
+	if (cur && cur->type >= PIPE && cur->type <= OR)
+	{
+		ft_printf_fd(2, "minishell: syntax error near unexpected token `%s\'\n", cur->token);
+		clear_list(token);
+		return (-1);
+	}
+	if (parse_seps_and_redirs(token, cur) == -1)
+		return (-1);
+	cur = *token;
+	while (cur)
+	{
+		bool in_sq = false;
+		bool in_dq = false;
+		if (parse_token(cur->token, &in_sq, &in_dq, &h) == -1)
+			return (-1);
 		cur = cur->next;
 	}
 	if (cur && cur->type >= PIPE && cur->type <= OR)
