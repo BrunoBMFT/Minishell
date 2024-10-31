@@ -6,12 +6,12 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/24 18:42:19 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/30 04:06:43 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
+//export 123123=kqwekwqe USER=kasdkasdk kasdkasd=kjqwekjqwejweq
 bool	is_in_env(char *to_add, char **env)
 {
 	int		i;

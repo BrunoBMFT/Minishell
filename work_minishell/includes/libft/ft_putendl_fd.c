@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 19:44:10 by yohan             #+#    #+#             */
-/*   Updated: 2024/07/09 16:11:55 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/29 00:41:20 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void	ft_putendl_fd(char *s, int fd)
 
 void	ft_putendl(char *s)
 {
+	if (!s)
+		return ;
 	ft_putstr(s);
 	ft_putchar('\n');
 }

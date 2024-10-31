@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 16:52:00 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/25 19:18:29 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/28 15:49:00 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,20 +69,42 @@ int	define_type(char *str)
 	return (type);
 }
 
-void	modify_array(char **array, t_env *env)
+char	**modify_array(char **array, t_env *env)
 {
 	int		i;
 	char	*temp;
+	char	**new;
+	int		j = 0;
 
 	i = 0;
+	int k = 0;
 	while (array[i])
 	{
-		//printf("%s\n", array[i]);
 		temp = unquote_and_direct(array[i], env);
-		//printf("%s\n", temp);
+		if (temp && temp[0])
+			k++;
 		free(array[i]);
 		array[i] = temp;
 		i++;
 	}
+	array[i] = NULL;
+	new = ft_calloc(sizeof(char *), k + 1);
+	if (!new)
+		return (array);
+	i = 0;
+	while (array[i])
+	{
+		if (array[i][0])
+		{
+			new[j] = array[i];
+			j++;
+		}
+		else
+			free (array[i]);
+		i++;
+	}
+	new[j] = NULL;
+	return (new);
 }
+
 

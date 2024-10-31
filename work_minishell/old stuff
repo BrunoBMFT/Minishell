@@ -24,3 +24,19 @@
 // 		child_process(right, env);
 // 	//clearjobs right and left
 // }
+
+
+
+	//the reason why input was in lexer was so that many inputs can be processed
+	// if (access(job->input, F_OK) != 0)
+	// {
+	// 	if (!job->redir_error_flag)//FUCKING STUPID ITS NOT WORKING
+	// 	{
+	// 		ft_printf_fd(2, "bash: file: No such file or directory\n");
+	// 		job->redir_error_flag = true;//FUCKING STUPID ITS NOT WORKING
+	// 	}
+	// 	job->input = ft_strdup("/dev/null");
+	// 	env->status = 1;
+	// }
+	// if (ft_strcmp("/dev/null", job->input) == 0)
+	// 	env->status = 1;

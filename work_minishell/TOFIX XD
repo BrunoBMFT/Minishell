@@ -1,10 +1,27 @@
 Signals
 
-using /dev/null as the strcmp to change exit code might be bad
+FIX LEAKS!!! (redirs, job array)
 
-echo <"Makefile" hi
-cat < "/file name with spaces"
-	doesnt like quotes in redirections
+eval sheet:
+$vempty
+"" vs $empty
+ctrl+c && ctrl+\ with blocking command (cat)
+check printenv only gets 1 job.job (export without the = sign does things different)✅
+
+TESTER:
+echo hi > out | < out cat✅
+redirections with strings
+	also fucked up going into unquote
+redirections are supposed to only do the last redirection, and give error on the first one✅
+	it should check every redir to see if valid, if one isnt, process doesnt go forward✅
+having multiple redir types, have to check
+
+# Should skip the empty argument, and print hello after spaces
+echo - "" "  " hello
+
+errors from bash to minishell(output)
+
+(weird ones)
 ./minishell MOREARGUMENTS
 echo hello <> out
 
@@ -13,20 +30,10 @@ export 1=a | echo hi
 make parse export better
 parse_export and variable duplicates need to be checked before calloc (leaks?)
 
-maria tester
-test|cat> (very bad)
-$var > (count_tokens_in_job)
-echo test|>
-
 test with "" as commands (cat) (command not found, just a "")
-
-test append output
-
-
 
 check error messages
 tests:
-	cd folder && rm -rf ../folder
 	env -i
 	unset PATH (same fix as pipex)
 	fix leaks in normal cases (no errors)
@@ -35,19 +42,6 @@ tests:
 test every malloc functions with NULLS and see if everything is freed and protected?
 # define malloc(x) NULL?
 
-
-change errors from writing minishell to writing bash
-clean_exit receive error str?
-
 norminette
 
-switch things to getenv instead of ft_getenv?, no because getenv doesnt check our env
 improve echo
-rename variables
-add colors to prompt
-change SHELL=binzsh to shell=minishell
-
-
-
-
-export aaa=aaa bbb=bbb ccc=ccc ddd=ddd eee=eee fff=fff ggg=ggg hhh=hhh jjj=jjj

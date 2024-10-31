@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_correction.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/16 20:22:01 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/28 17:58:59 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,11 @@ void	split_quote(char *str, t_var_holder *h)
 	h->new[h->j++] = quote;
 	while (str[h->i] && str[h->i] != quote)
 		h->new[h->j++] = str[h->i++];
-	if (str[h->i] == quote)
-	{
-		h->new[h->j++] = quote;
-		h->i++;
-	}
+	// if (str[h->i] == quote)
+	// {
+	// 	h->new[h->j++] = quote;
+	// 	h->i++;
+	// }
 }
 
 
@@ -61,7 +61,7 @@ void	split_special_chars(char *str, t_var_holder *h)
 	while (str[h->i] && (str[h->i] == '&' || str[h->i] == '|'
 			|| str[h->i] == '<' || str[h->i] == '>'))
 		h->new[h->j++] = str[h->i++];
-		h->new[h->j++] = ' ';
+	h->new[h->j++] = ' ';
 }
 
 void	handle_default_split(char *str, t_var_holder *h)

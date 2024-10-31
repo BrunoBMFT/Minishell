@@ -3,60 +3,57 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 04:38:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/16 12:51:38 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/30 04:04:17 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	valid_flag(char *str) //fix the return so that as soon as it finds a wrong chaar, it stops
+int	n_flag(char **strs)
 {
-	int i;
+	int 	i = 1;
+	int 	j;
 
-	i = 0;
-	while (str[i] == ' ' && str[i] == '\t' && str[i] == '\n')
-		i++;
-	if (str[i] == '-') //arg is flag
+	while (strs[i])
 	{
-		i++;
-		if (str[i] == 'n')
+		if (strs[i][0] == '-' && strs[i][1] == 'n')
 		{
-			while (str[i] && (str[i] != ' ' && str[i] != '\t' && str[i] != '\n'))
-			{	
-				if (str[i] != 'n')
-					return (0); //flag not valid, print as if not a flag
-				i++;
-			}
-			return (1); //flag is valid, skip to next
+			j = 2;
+			while (strs[i][j] == 'n')
+				j++;
+			if (strs[i][j])
+				break ;
 		}
-	}
-	return (0); //argument is not a flag,  must be printed
+		else
+			break ;
+		i++;
+	} 
+	return (i);
 }
 
 int	caught_echo(t_jobs *job)
 {
-	bool	nl;
 	int		i;
-	int 	validFlag;
+	bool 	has_n_flag;
 
-	i = 0;
 	if (!job->job[1])
 		return (ft_nl_fd(1), 0);
-	validFlag = valid_flag(job->job[1]);
-	if (!validFlag)
-		i++;
+	has_n_flag = false;
+	i = n_flag(job->job);
+	if (i > 1)
+		has_n_flag = true;
 	while (job->job[i])
 	{
 		if (job->job[i][0])
-			ft_printf("%s", job->job[i]);
+			ft_printf_fd(1, "%s", job->job[i]);//use putstr instead?
 		if (job->job[i + 1])
-			ft_printf(" ");
+			ft_printf_fd(1, " ");
 		i++;
 	}
-	if (!validFlag)
-		ft_printf("\n");
+	if (!has_n_flag)
+		ft_printf_fd(1, "\n");
 	return (0);
 }

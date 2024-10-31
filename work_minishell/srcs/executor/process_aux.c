@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/25 17:12:32 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/30 04:03:31 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*find_command_path(char	**cmd, t_env *env)
 	char	*path;
 	int		i;
 
+	if (!cmd[0])
+		return (ft_printf_fd(2, "minishell: %s: command not found\n", cmd[0]), NULL);
 	path = ft_getenv("PATH", env->env);
 	path_array = ft_split(path, ':');
 	free (path);
@@ -41,7 +43,6 @@ char	*find_command_path(char	**cmd, t_env *env)
 void	execute_command(t_jobs *job, t_env *env)
 {
 	char	*path;
-
 	path = find_command_path(job->job, env);
 	if (!path)
 		clean_exit(job, env, 127);
@@ -81,8 +82,7 @@ char	*find_executable_path(t_jobs *job, t_env *env)
 	}
 	//else
 	ft_printf_fd(2, "minishell: %s: Permission denied\n", job->job[0]);
-	free (path);
-	clean_exit(job, env, 126);
+	return (clean_exit(job, env, 126), free(path), NULL);
 }
 
 void execute_executable(t_jobs *job, t_env *env)
@@ -95,13 +95,12 @@ void execute_executable(t_jobs *job, t_env *env)
 	clean_exit(job, env, 127);
 }
 
-int	execute_job(t_jobs *job, t_env *env)//void?
+void	execute_job(t_jobs *job, t_env *env)//void?
 {
-	choose_signal(CHILD_SIG);	
-	if (ft_strchr(job->job[0], '/'))
+	choose_sig(CHILD_SIG);//correct?
+	if (job->job[0] && ft_strchr(job->job[0], '/'))
 		execute_executable(job, env);
 	else
 		execute_command(job, env);
-	return (0);
 }
 

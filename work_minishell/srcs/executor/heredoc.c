@@ -101,28 +101,27 @@ int	handle_heredoc(t_jobs *job, t_env env)
 {
 	int		redirected_input;
 	char	*line;
-	char	**delimiters;
-	int		i;
 	int		must_expand;
-	int		max;
-
-	i = 0;
+	
 	must_expand = 1;
-	max = 0;
 	redirected_input = open(job->heredoc_file, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (redirected_input < 0)
 		return (-1);
-//	signal(SIGINT, handle_signal_heredoc);
-//	signal(SIGQUIT, SIG_IGN);
-	choose_signal(HEREDOC_SIG);
-	choose_signal(IGNORE_SIG);
+	choose_sig(HEREDOC_SIG);
+	choose_sig(IGNORE_SIG);
 	//heredoc_expand_check(&must_expand, &job, env);
 	heredoc_expand_check(&must_expand, &job, env);
-	printf("%s	%d\n", job->delimiters, must_expand);
 	while (1)
 	{
 		line = readline("heredoc>");
-		if (!line || ft_strcmp(line, job->delimiters) == 0)
+		if (!line)
+		{
+			//do output
+			//output error
+			free(line);
+			break ;
+		}
+		if (ft_strcmp(line, job->delimiters) == 0)
 		{
 			free(line);
 			break ;
@@ -163,8 +162,8 @@ int	handle_heredoc(t_jobs *job, t_env env)
 // 	redirected_input = open(".heredoc", O_CREAT | O_RDWR | O_TRUNC, 0644);
 // 	if (redirected_input < 0)
 // 		return (-1);
-// 	signal(SIGINT, handle_signal_heredoc);
-// 	signal(SIGQUIT, SIG_IGN);
+// 	choose_sig(SIGINT, handle_signal_heredoc);
+// 	choose_sig(SIGQUIT, SIG_IGN);
 // 	while (i < (max - 1))
 // 	{
 // 		while (1)

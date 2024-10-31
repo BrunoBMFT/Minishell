@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   aux.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:15:54 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/25 19:17:55 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/29 23:52:55 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int	ft_getpid(void)//does this work?
 char	*update_prompt(void)//void
 {
 	char	cwd[PATH_MAX];
-	char	*dir;
 	char	*prompt;
 	char	**folders;
 	int		i;
@@ -91,8 +90,9 @@ t_env	init_env(char **envp)
 	t_env	env;
 
 	env.prompt = NULL;
-	env.status = 0;
+	env.status = 0;//not needed here? it gets init in executor
 	env.env = NULL;
+	env.redir_error_flag = false;
 	char 	buf[PATH_MAX];
 	if (!envp || !envp[0])
 	{

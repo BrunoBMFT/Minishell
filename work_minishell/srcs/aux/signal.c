@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 03:18:24 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/12 14:15:05 by bruno            ###   ########.fr       */
+/*   Updated: 2024/10/29 16:11:27 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	here_handler(int signal, siginfo_t *info, void *context)
 	}
 }
 
-void	choose_signal_aux(t_signal type, struct sigaction sa)
+void	signal_aux(t_signal type, struct sigaction sa)
 {
 	if (type == HEREDOC_SIG)
 	{
@@ -70,7 +70,7 @@ void	choose_signal_aux(t_signal type, struct sigaction sa)
 		ignore_signal(&sa, SIGQUIT);
 	}
 }
-void	choose_signal(t_signal type)
+void	choose_sig(t_signal type)
 {
 	static struct sigaction	sa;
 
@@ -93,7 +93,7 @@ void	choose_signal(t_signal type)
 		sigaction(SIGQUIT, &sa, NULL);
 	}
 	else
-		choose_signal_aux(type, sa);
+		signal_aux(type, sa);
 }
 
 //mine
