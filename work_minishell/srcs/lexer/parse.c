@@ -118,48 +118,51 @@ int	start_string_parse(char *str, char delimiter, t_var_holder *h)
 	return (parse_string(str, h));
 }
 
-int parse_token(char *token, bool *in_sq, bool *in_dq, t_var_holder *h)
+int parse_token(t_token *t, bool *in_sq, bool *in_dq, t_var_holder *h)
 {
 	int i;
 	int j;
 	int count;
 
 	i = 0;
-	while (token[i])
+	while (t->token[i])
 	{
-		if (token[i] == '\'' && !*in_dq)
+		if (t->token[i] == '\'' && !*in_dq)
 			*in_sq = !*in_sq;
-		else if (token[i] == '\"' && !*in_sq)
+		else if (t->token[i] == '\"' && !*in_sq)
 			*in_dq = !*in_dq;
 		if (*in_sq || *in_dq)
 		{
 			i++;
 			continue ;
 		}
-		if (token[i] == '&' || token[i] == '|')
+		if (t->token[i] == '&' || t->token[i] == '|')
 		{
-			if (start_string_parse(token + (i + 1), token[i], h) == -1)
+			if (start_string_parse(t->token + (i + 1), t->token[i], h) == -1)
 				return (-1);
 		}
-		else if (token[i] == '<' || token[i] == '>')
+		else if (t->token[i] == '<' || t->token[i] == '>')
 		{
 			j = i;
 			count = 0;
-			while (token[j] && token[j] == '>' || token[j] =='<')
+			while (t->token[j] && t->token[j] == '>' || t->token[j] =='<')
 			{
 				j++;
 				count++;
 			}
 			if (count > 2)
-				return (ft_printf_fd(2, "minishell: syntax error: more than 2 redirection tokens found\n"), -1);
-			int len = ft_strlen(token) - 1;
+				return (ft_printf_fd(2, "minishell: syntax error near unexpected token `%c\n", t->token[count]), -1);
+			int len = ft_strlen(t->token) - 1;
 
-			printf("full:%s\n", token);
-			printf("here:%s\n", token + i);
+			printf("full:%s\n", t->token);
+			printf("here:%s\n", t->token + i);
 			printf("length:%d\n", len);
-			if (len != 1 && token[len] == '<' || token[len] == '>')
+			if (len != 1 && (t->token[len] == '<' || t->token[len] == '>') && !t->next)
+			{
+				printf("hey\n");
 				return (ft_printf_fd(2, "minishell: syntax error near unexpected token `newline'\n"), -1);
-			if (start_string_parse((token + (i + 1)), token[i], h) == -1)
+			}
+			if (start_string_parse((t->token + (i + 1)), t->token[i], h) == -1)
 				return (-1);
 		}
 		i++;
@@ -206,7 +209,7 @@ int parse(t_token **token)
 	{
 		bool in_sq = false;
 		bool in_dq = false;
-		if (parse_token(cur->token, &in_sq, &in_dq, &h) == -1)
+		if (parse_token(cur, &in_sq, &in_dq, &h) == -1)
 			return (-1);
 		cur = cur->next;
 	}

@@ -66,6 +66,7 @@ t_jobs	*build(char *command_line, t_env *env)
 	free(command_line);
 	return (jobs);
 }
+
 void    apply_redir(t_token *current, t_jobs *job, t_env *env)
 {
     int    fd;

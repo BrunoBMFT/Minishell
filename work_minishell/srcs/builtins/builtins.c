@@ -19,6 +19,9 @@ int	try_builtins(t_jobs *job, t_env *env)
 	status = 200;
 	if (!job->job[0])
 		return (status);
+
+	if (job->input && (ft_strcmp(job->input, "/dev/null") == 0))
+		return (1);
 	if (ft_strcmp(job->job[0], "echo") == 0)
 		status = caught_echo(job);
 	else if (ft_strcmp(job->job[0], "pwd") == 0)
