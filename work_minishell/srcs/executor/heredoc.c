@@ -12,7 +12,6 @@
 
 #include "../../includes/minishell.h"
 
-
 char	*no_quotes_hd(char *str, t_var_holder *h, t_env *env, int **expand_flag)
 {
 	h->temp = ft_strndup(str + h->start, h->i - h->start);
@@ -46,7 +45,7 @@ char	*single_quotes_hd(char *str, t_var_holder *h, char quote, int **expand_flag
 		h->i++;
 	h->quoted = ft_strndup(str + h->start, h->i - h->start);
 	if (!h->quoted)
-		return h->new;
+		return (h->new);
 	h->temp = ft_strdup(h->new);
 	free(h->new);
 	h->new = ft_strjoin(h->temp, h->quoted);
@@ -60,18 +59,10 @@ char	*single_quotes_hd(char *str, t_var_holder *h, char quote, int **expand_flag
 
 void	heredoc_expand_check(int *expand_flag, t_jobs **job, t_env env)
 {
-	// char *temp;
+	char			*str;
+	t_var_holder	h;
 
-	// if ((*job)->delimiters[0] == '\'' || (*job)->delimiters[0] == '\"')
-	// {
-	// 	temp = ft_substr((*job)->delimiters, 1, (ft_strlen((*job)->delimiters) - 2));
-	// 	free((*job)->delimiters);
-	// 	(*job)->delimiters = temp;
-	// 	*expand_flag = 0;
-	// }
-	char *str = (*job)->delimiters;
-	t_var_holder h;
-
+	str = (*job)->delimiters;
 	h.new = NULL;
 	h.before = NULL;
 	h.quoted = NULL;
@@ -102,7 +93,8 @@ int	handle_heredoc(t_jobs *job, t_env env)
 	int		redirected_input;
 	char	*line;
 	int		must_expand;
-	
+	char	*temp;
+
 	must_expand = 1;
 	redirected_input = open(job->heredoc_file, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (redirected_input < 0)
@@ -128,70 +120,14 @@ int	handle_heredoc(t_jobs *job, t_env env)
 		}
 		if (must_expand)
 		{
-			char *temp = expand(line, &env);
-			// if (ft_strcmp(line, temp) == 0)
-			// {
-			// 	free(line);
-			// 	break ;
-			// }
+			temp = expand(line, &env);
 			ft_putendl_fd(temp, redirected_input);
 			free(temp);
-
 		}
-		else	
+		else
 			ft_putendl_fd(line, redirected_input);
-		free(line);
+		free (line);
 	}
-	close(redirected_input);
+	close (redirected_input);
 	return (0);
 }
-
-
-// int	handle_heredoc(t_jobs *job)
-// {
-// 	int		redirected_input;
-// 	char	*line;
-// 	char	**delimiters;
-// 	int		i;
-// 	int		max;
-// 	i = 0;
-// 	max = 0;
-// 	delimiters = ft_split(job->delimiters, ' ');
-// 	while (delimiters[max])
-// 		max++;
-// 	redirected_input = open(".heredoc", O_CREAT | O_RDWR | O_TRUNC, 0644);
-// 	if (redirected_input < 0)
-// 		return (-1);
-// 	choose_sig(SIGINT, handle_signal_heredoc);
-// 	choose_sig(SIGQUIT, SIG_IGN);
-// 	while (i < (max - 1))
-// 	{
-// 		while (1)
-// 		{
-// 			line = readline("fake heredoc>");
-// 			if (!line || ft_strcmp(line, delimiters[i]) == 0)
-// 			{
-// 				free(line);
-// 				break ;
-// 			}
-// 			free(line);
-// 		}
-// 		i++;
-// 	}
-// 	while (1)
-// 	{
-// 		line = readline("heredoc>");
-// 		if (!line || ft_strcmp(line, delimiters[i]) == 0)
-// 		{
-// 			free(line);
-// 			break ;
-// 		}
-// 		ft_putendl_fd(line, redirected_input);
-// 		free(line);
-// 	}
-// 	close(redirected_input);
-// 	free_array(delimiters);
-// 	/* if (manage_redirection(job) < 0)
-// 		return (-1); */
-// 	return (0);
-// }
