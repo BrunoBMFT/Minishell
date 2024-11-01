@@ -2,6 +2,9 @@ Signals
 
 FIX LEAKS!!! (redirs, job array)
 
+< "" > ""
+.|.
+
 eval sheet:
 $vempty
 "" vs $empty

@@ -6,14 +6,13 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:04 by brfernan          #+#    #+#             */
-/*   Updated: 2024/10/30 03:59:38 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/01 02:30:48 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-
-char	**add_oldpwd(char **envp)//error check
+char	**add_oldpwd(char **envp)
 {
 	char	**new_env;
 	int		i;
@@ -21,42 +20,42 @@ char	**add_oldpwd(char **envp)//error check
 	i = 0;
 	new_env = ft_calloc(sizeof(char *), ft_split_wordcount(envp) + 3);
 	if (!new_env || !envp || !envp[0])
-		return (NULL);//free new_env?
+		return (NULL);
 	while (envp[i])
 	{
-		new_env[i] = ft_strdup(envp[i]);//error check
+		new_env[i] = ft_strdup(envp[i]);
 		if (!new_env[i])
 		{
 			i = 0;
 			while (new_env[i])
-				free (new_env[i++]);//check if works
+				free (new_env[i++]);
 			return (NULL);
 		}
 		i++;
 	}
 	new_env[i] = ft_strdup("OLDPWD=");
-    new_env[i + 1] = NULL;
+	new_env[i + 1] = NULL;
 	return (new_env);
 }
 
 void	cd_update_aux1(t_env *env, char *PWD, char *value)
 {
 	char	cwd[PATH_MAX];
-    bool    found;
+	bool	found;
 	int		i;
 
 	i = 0;
-    found = false;
+	found = false;
 	while (env->env[i])
-    {
+	{
 		if (ft_strncmp(env->env[i], PWD, ft_strlen(PWD)) == 0)
-        {
-            found = true;
-            break ;
-        }
-        i++;
-    }
-    if (!found)
+		{
+			found = true;
+			break ;
+		}
+		i++;
+	}
+	if (!found)
 		env->env = add_oldpwd(env->env);
 	if (!value)
 		value = getcwd(cwd, PATH_MAX);
