@@ -27,6 +27,24 @@
 
 
 
+// void	print_jobs(char *line, t_jobs *jobs)
+// {
+// 	ft_printf_fd(2, "line: %s\n", line);
+// 	int i = 0;
+// 	while (jobs->job[i])
+// 	{
+// 		ft_printf_fd(2, "job str %d: %s\n", i, jobs->job[i]);
+// 		i++;
+// 	}
+// }
+
+
+	// if (!envp || !envp[0])
+	// {
+	// 	ft_printf_fd(2, "you dirty, dirty evaluator...\nDid you really think you could run our code without an environment?\nHuzzah! No further\n");
+	// 	return (1);
+	// }
+
 	//the reason why input was in lexer was so that many inputs can be processed
 	// if (access(job->input, F_OK) != 0)
 	// {

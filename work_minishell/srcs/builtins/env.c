@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 23:09:17 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/29 00:37:17 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/01 02:32:34 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,16 @@ int	caught_printenv(t_env *env)//not needed
 	return (0);
 }
 
-int caught_env(t_jobs *job, t_env *env)
+int	caught_env(t_jobs *job, t_env *env)
 {
 	int		i;
-	int 	j;
+	int		j;
 	bool	print;
 
 	i = 0;
 	if (job->job[1])
-	{
-		ft_printf_fd(2, "env: '%s': Permission denied\n", job->job[1]);
-		return (126);
-	}
+		return (ft_printf_fd(2,
+				"env: '%s': Permission denied\n", job->job[1]), 126);
 	while (env->env[i])
 	{
 		j = 0;

@@ -6,12 +6,12 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/30 04:06:43 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/01 02:35:17 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-//export 123123=kqwekwqe USER=kasdkasdk kasdkasd=kjqwekjqwejweq
+
 bool	is_in_env(char *to_add, char **env)
 {
 	int		i;
@@ -21,7 +21,7 @@ bool	is_in_env(char *to_add, char **env)
 	temp1 = NULL;
 	temp2 = NULL;
 	if (!to_add || !env)
-		return false;
+		return (false);
 	i = 0;
 	temp1 = ft_substr(to_add, 0, len_to_equal(to_add));
 	while (env[i])
@@ -29,19 +29,19 @@ bool	is_in_env(char *to_add, char **env)
 		temp2 = ft_substr(env[i], 0, len_to_equal(env[i]));
 		if (ft_strcmp(temp1, temp2) == 0)
 		{
-            free(temp1);
-            free(temp2);
+			free (temp1);
+			free (temp2);
 			free (env[i]);
 			env[i] = ft_strdup(to_add);
 			return (true);
 		}
-        free(temp2);
+		free (temp2);
 		i++;
 	}
-	return (free(temp1), false);
+	return (free (temp1), false);
 }
 
-bool	parse_export(char *str, int n)//error messages?
+bool	parse_export(char *str, int n)
 {
 	int	i;
 
@@ -66,8 +66,8 @@ int	export_no_execd(char **env)
 	i = 0;
 	while (env[i])
 	{
-		temp1 = ft_substr(env[i], 0, len_to_equal(env[i]) + 1);//error check
-		temp2 = ft_substr(env[i], len_to_equal(env[i]) + 1, ft_strlen(env[i]));//error check
+		temp1 = ft_substr(env[i], 0, len_to_equal(env[i]) + 1);
+		temp2 = ft_substr(env[i], len_to_equal(env[i]) + 1, ft_strlen(env[i]));
 		ft_printf("declare -x %s\"%s\"\n", temp1, temp2);
 		free (temp1);
 		free (temp2);
@@ -87,9 +87,11 @@ void	export_aux(t_jobs *job, char **new_env, t_env *env, int *status)
 		new_env[i] = ft_strdup(env->env[i]);
 	while (job->job[k])
 	{
-		if (!parse_export(job->job[k], len_to_equal(job->job[k])))//can be in the main function
+		if (!parse_export(job->job[k], len_to_equal(job->job[k])))
 		{
-			ft_printf_fd(2, "minishell: export: '%s': not a valid identifier\n", job->job[k]);
+			ft_printf_fd(2,
+				"minishell: export: '%s': not a valid identifier\n",
+				job->job[k]);
 			*status = 1;
 		}
 		else
@@ -107,20 +109,22 @@ int	caught_export(t_jobs *job, t_env *env)
 {
 	char	**new_env;
 	int		i;
+	int		parse;
+
 	if (!job->job[1] || !job->job[1][0])
-		return (export_no_execd(env->env));//fix pls
+		return (export_no_execd(env->env));
 	i = 0;
-	int parse = 0;
-	while (job->job[++i])//run in another place???
+	parse = 0;
+	while (job->job[++i])
 	{
-		if (!parse_export(job->job[i], len_to_equal(job->job[i])))//check somewhere else?
+		if (!parse_export(job->job[i], len_to_equal(job->job[i])))
 			parse++;
 	}
-	new_env = ft_calloc(sizeof(char *), ft_split_wordcount(env->env) 
-				+ ft_split_wordcount(job->job) - parse + 1);//error check, (-parse) (-variables that already exist)
+	new_env = ft_calloc(sizeof(char *), ft_split_wordcount(env->env)
+			+ ft_split_wordcount(job->job) - parse + 1);
 	export_aux(job, new_env, env, &env->status);
 	free_array(env->env);
-	env->env = ft_calloc(sizeof(char *), ft_split_wordcount(new_env) + 1);//error check
+	env->env = ft_calloc(sizeof(char *), ft_split_wordcount(new_env) + 1);
 	i = -1;
 	while (new_env[++i])
 		env->env[i] = ft_strdup(new_env[i]);

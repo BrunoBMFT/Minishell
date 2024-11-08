@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/31 17:17:26 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/11/01 18:26:38 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,11 +158,13 @@ int		parse_last_token(char **cmd_line, t_token **list, t_token **last);
 
 //executor
 void	start_executor(t_jobs *job, t_env *env);
-void	child_process(t_jobs *job, t_env *env);
-void	simple_process(t_jobs *job, t_env *env);
+void	init_executor(t_jobs *job, t_env *env);
+void	executor_input(t_jobs *job, t_env *env);
+void	executor_output(t_jobs *job, t_env *env);
+void	do_child_process(t_jobs *job, t_env *env);
+void	do_simple_process(t_jobs *job, t_env *env);
 void	execute_job(t_jobs *job, t_env *env);
-int		new_fork(void);
-void	panic(char *s);
+
 
 //builtins:
 int		try_builtins(t_jobs *job, t_env *env);

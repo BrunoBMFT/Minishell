@@ -6,16 +6,16 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:15:54 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/29 23:52:55 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/01 02:52:25 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-//getpid
-int	ft_getpid(void)//does this work?
+
+int	ft_getpid(void)
 {
-	FILE *fp;
-	int	pid;
+	FILE	*fp;
+	int		pid;
 
 	fp = fopen("/proc/self/stat", "r");
 	if (!fp)
@@ -24,8 +24,8 @@ int	ft_getpid(void)//does this work?
 	fclose(fp);
 	return (pid);
 }
-//prompt
-char	*update_prompt(void)//void
+
+char	*update_prompt(void)
 {
 	char	cwd[PATH_MAX];
 	char	*prompt;
@@ -39,8 +39,9 @@ char	*update_prompt(void)//void
 	if (!folders)
 		return (free(folders), NULL);
 	i = 0;
+	//strdup because env frees this return
 	if (!folders[i])
-		return (free_array(folders), ft_strdup("/$ "));//strdup because env frees this return
+		return (free_array(folders), ft_strdup("/$ "));
 	while (folders[i])
 		i++;
 	prompt = ft_strjoin(folders[i - 1], "$ ");
@@ -50,9 +51,7 @@ char	*update_prompt(void)//void
 	return (prompt);
 }
 
-
-//env
-char	**dup_env(char **envp)//error check
+char	**dup_env(char **envp)
 {
 	char	**new_env;
 	char	*temp;
@@ -61,24 +60,19 @@ char	**dup_env(char **envp)//error check
 	i = 0;
 	new_env = ft_calloc(sizeof(char *), ft_split_wordcount(envp) + 2);
 	if (!new_env || !envp || !envp[0])
-		return (NULL);//free new_env?
+		return (NULL);
 	while (envp[i])
 	{
 		if (ft_strncmp(envp[i], "SHLVL=", 6) == 0)
 		{
-			temp = ft_itoa(ft_atoi(envp[i] + 6) + 1);//error check
-			new_env[i] = ft_strjoin("SHLVL=", temp);//error check
+			temp = ft_itoa(ft_atoi(envp[i] + 6) + 1);
+			new_env[i] = ft_strjoin("SHLVL=", temp);
 			free (temp);
 		}
 		else
-			new_env[i] = ft_strdup(envp[i]);//error check
+			new_env[i] = ft_strdup(envp[i]);
 		if (!new_env[i])
-		{
-			i = 0;
-			while (new_env[i])
-				free (new_env[i++]);//check if works
-			return (NULL);
-		}
+			free_array(new_env);//check
 		i++;
 	}
 	new_env[i] = NULL;
@@ -88,20 +82,19 @@ char	**dup_env(char **envp)//error check
 t_env	init_env(char **envp)
 {
 	t_env	env;
+	char	buf[PATH_MAX];
 
 	env.prompt = NULL;
-	env.status = 0;//not needed here? it gets init in executor
 	env.env = NULL;
+	env.status = 0;
 	env.redir_error_flag = false;
-	char 	buf[PATH_MAX];
 	if (!envp || !envp[0])
 	{
-		env.env = malloc(sizeof (char *) * 3); //add currdir(use pwd?) add 
+		env.env = malloc(sizeof (char *) * 3);
 		if (!env.env)
 			return (ft_printf_fd(2, "error allocating private path\n"), env);
 		env.env[0] = ft_strdup("PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/snap/bin:");
 		env.env[1] = ft_strjoin("PWD=", getcwd(buf, PATH_MAX));
-		//env.env[2] = ft_strdup("OLDPWD= ");
 		env.env[2] = NULL;
 	}
 	else
@@ -109,21 +102,20 @@ t_env	init_env(char **envp)
 	return (env);
 }
 
-//pids
-int    count_processes(t_jobs **jobs)//take double pointer
+int	count_processes(t_jobs **jobs)
 {
-    int		i;
-    t_jobs *job;
+	int		i;
+	t_jobs	*job;
 
-    i = 0;
-    job = *jobs;
-    while (job)
-    {
-        if (job->type == PIPE || job->job)
-            i++;
-        job = job->next;
-    }
-    return (i + 1);
+	i = 0;
+	job = *jobs;
+	while (job)
+	{
+		if (job->type == PIPE || job->job)
+			i++;
+		job = job->next;
+	}
+	return (i + 1);
 }
 
 void	*ft_calloc_pids(t_jobs *job)
@@ -144,4 +136,3 @@ void	*ft_calloc_pids(t_jobs *job)
 	}
 	return (dest);
 }
-
