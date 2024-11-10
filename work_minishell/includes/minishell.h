@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/01 18:26:38 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/09 18:13:19 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ typedef enum s_types
 	EXPORT
 }			t_types;
 
-typedef enum e_signal
+typedef enum e_signal//change name of variables
 {
 	ROOT_SIG,
 	CHILD_SIG,
@@ -158,7 +158,7 @@ int		parse_last_token(char **cmd_line, t_token **list, t_token **last);
 
 //executor
 void	start_executor(t_jobs *job, t_env *env);
-void	init_executor(t_jobs *job, t_env *env);
+bool	init_executor(t_jobs *job, t_env *env);
 void	executor_input(t_jobs *job, t_env *env);
 void	executor_output(t_jobs *job, t_env *env);
 void	do_child_process(t_jobs *job, t_env *env);
@@ -192,12 +192,8 @@ void	clean_up_build(t_token **list, char *cmd_line);
 void	free_all(t_token **list, char **array, char *message, int len);
 
 //signals:
-void	choose_sig(t_signal type);//goncalo
-void	sigquit(int sig);
-void	handle_signal_main(int sig);
-void	handle_signal_child(int sig);
-void	handle_signal_heredoc(int sig);
-void	ctrld(char *line, t_env *env);
+void	choose_sig(t_signal type);
+void	EOF_sig(char *line, t_env *env);
 
 //aux:
 char	*update_prompt(void);

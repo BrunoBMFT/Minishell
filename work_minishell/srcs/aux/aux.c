@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:15:54 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/01 02:52:25 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/10 00:45:50 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,16 @@
 
 int	ft_getpid(void)
 {
-	FILE	*fp;
+	int		fd;
+	char	buffer[256];
 	int		pid;
 
-	fp = fopen("/proc/self/stat", "r");
-	if (!fp)
+	fd = open("/proc/self/stat", O_RDONLY);
+	if (fd < 0)
 		return (ft_putendl_fd("minishell: getpid() error", 2), 0);
-	fscanf(fp, "%d", &pid);
-	fclose(fp);
+	read(fd, buffer, 255);
+	close (fd);
+	pid = ft_atoi(buffer);
 	return (pid);
 }
 
@@ -39,7 +41,6 @@ char	*update_prompt(void)
 	if (!folders)
 		return (free(folders), NULL);
 	i = 0;
-	//strdup because env frees this return
 	if (!folders[i])
 		return (free_array(folders), ft_strdup("/$ "));
 	while (folders[i])

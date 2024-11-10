@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 18:25:38 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/01 18:26:45 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/09 18:13:10 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,15 @@ void	executor_output(t_jobs *job, t_env *env)
 	close(redirected_output);
 }
 
-void	init_executor(t_jobs *job, t_env *env)
+bool	init_executor(t_jobs *job, t_env *env)
 {
+	if (!job)
+		return (false);
 	env->saved_stdin = dup(STDIN_FILENO);
 	env->saved_stdout = dup(STDOUT_FILENO);
 	env->pids = ft_calloc_pids(job);
 	if (!env->pids)
-		return ;
+		return (false);
 	env->piped = false;
+	return (true);
 }

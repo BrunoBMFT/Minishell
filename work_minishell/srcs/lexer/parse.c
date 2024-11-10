@@ -210,7 +210,6 @@ int parse(t_token **token)
 	return (0);
 }
 
-
 int	secondquote(char *line)//rather not use
 {
 	int		i;

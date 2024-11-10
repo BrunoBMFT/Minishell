@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/01 18:25:35 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/09 18:14:06 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,8 @@ void	start_pipe(t_jobs **job, t_env *env)
 
 void	start_executor(t_jobs *job, t_env *env)
 {
-	init_executor(job, env);
+	if (!init_executor(job, env))
+		return ;
 	while (job)
 	{
 		if (job->job)
