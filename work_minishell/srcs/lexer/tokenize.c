@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 01:39:10 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/28 17:57:53 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/11 19:56:31 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,28 +70,49 @@ int	count_words(char *str)
 	return (h.wc);
 }
 
-void	update_iterator(t_var_holder *h, char *str)
+void update_iterator(t_var_holder *h, char *str)
 {
-	while (str[h->i])
-	{
-		while (str[h->i] && (str[h->i] == ' ' || str[h->i] == '\t'
-				|| str[h->i] == '\n'))
-			h->i++;
-		h->j = h->i;
-		while (str[h->i] && !(str[h->i] == ' ' || str[h->i] == '\t'
-			|| str[h->i] == '\n'))
-		{
-			if (str[h->i] == '\'' || str[h->i] == '\"')
-				handle_quotes(h, str);
-			else
-				h->i++;
-		}
-		if (h->i > h->j)
-		{
-			h->array[h->k] = ft_substr(str, h->j, h->i - h->j);
-			h->k++;
-		}
-	}
+    int in_quote = 0;
+    char quote = '\0';
+    while (str[h->i])
+    {
+        if (in_quote && str[h->i] != quote)
+        {
+            h->i++;
+        }
+        else if (in_quote && str[h->i] == quote)
+        {
+            in_quote = 0;
+            quote = '\0';
+            h->i++;
+        }
+        else if (!in_quote && (str[h->i] == ' ' || str[h->i] == '\t' || str[h->i] == '\n'))
+        {
+            if (h->i > h->j)
+            {
+                h->array[h->k] = ft_substr(str, h->j, h->i - h->j);
+                h->k++;
+            }
+            while (str[h->i] && (str[h->i] == ' ' || str[h->i] == '\t' || str[h->i] == '\n'))
+                h->i++;
+            h->j = h->i;
+        }
+        else if (str[h->i] == '\'' || str[h->i] == '\"')
+        {
+            in_quote = 1;
+            quote = str[h->i];
+            h->i++;
+        }
+        else
+        {
+            h->i++;
+        }
+    }
+    if (!in_quote && h->i > h->j)
+    {
+        h->array[h->k] = ft_substr(str, h->j, h->i - h->j);
+        h->k++;
+    }
 }
 
 char	**token_array(char *str)

@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/09 18:13:19 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/11 21:19:56 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ typedef enum e_signal//change name of variables
 typedef struct s_env
 {
 	int		status;
-	char	*prompt;
 	char	**env;
 	bool	piped;
 	int		saved_stdin;

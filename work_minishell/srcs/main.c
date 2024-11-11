@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/10 00:47:40 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/11 21:22:15 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,7 @@ int	main(int ac, char **av, char **envp)
 	while (1)
 	{
 		choose_sig(ROOT_SIG);
-//		line = readline("Minishell> ");
-		env.prompt = update_prompt();//to remove
-		line = readline(env.prompt);//to remove
-		free(env.prompt);//to remove
+		line = readline("Minishell$ ");
 		if (!line)
 			EOF_sig(line, &env);
 		if (line && line[0])//remove if statement
