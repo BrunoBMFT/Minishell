@@ -56,7 +56,6 @@ int	main(int ac, char **av, char **envp)
 			ft_printf("error: unclosed quote\n");
 			continue ;
 		}
-		line = parse_quotes(line);//not working correctly?
 		jobs = build(line, &env);
 		if (!jobs)
 			continue ;

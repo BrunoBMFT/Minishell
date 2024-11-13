@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/31 18:08:31 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/11/08 05:30:34 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ typedef struct variable_holder
 	char	*expanded;
 	char	*result;
 	int		i;
+	int		len;
+	int		count;
 	int		start;
 	int		j;
 	int		wc;
@@ -127,6 +129,8 @@ t_token	*get_last_tok(t_token *lst);
 void	go_to_next(t_token **lst, t_token *new);
 
 //lexer:
+void	assign_values(t_jobs **new, t_token **cur, t_env *env);
+char	*filename(int i);
 t_jobs	*build(char *command_line, t_env *env);
 t_jobs	*addjob(void *content);
 t_jobs	*get_last_job(t_jobs *lst);
@@ -156,6 +160,8 @@ int		parse(t_token **token);
 char	*parse_quotes(char *line);
 int		secondquote(char *line);
 int		parse_last_token(char **cmd_line, t_token **list, t_token **last);
+int parse_token(t_token *t, bool *in_sq, bool *in_dq, t_var_holder *h);
+
 
 //executor
 void	start_executor(t_jobs *job, t_env *env);
@@ -177,6 +183,7 @@ int		caught_printenv(t_env *env);//not needed
 int		caught_exit(t_jobs *jobs, t_env *env, bool pipe);
 
 //redirections
+void    apply_redir(t_token *current, t_jobs *job, t_env *env);
 void	update_input(t_jobs *job);
 int		update_output(t_jobs *job, char **env, char **temp_vars);
 int		append_to_file(t_jobs *job, char **env, char **temp_vars);

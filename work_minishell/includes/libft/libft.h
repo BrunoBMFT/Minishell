@@ -109,5 +109,8 @@ char	*gnl_ft_strjoin(char *line, char *buf);
 char	*ft_strjoin3(char const *s1, char const *s2, char const *s3);
 int		ft_isalphaund(int input);
 int		ft_isalnumund(int input);
+void	replace_and_free(char **target, char *replacement);
+void	free_and_allocate(char **target, char *replacement, bool to_free);
+
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 03:18:24 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/16 20:20:37 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/11/11 12:00:29 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,9 @@ int	count_quotes(char *str, int *i)
 
 int	count_special_chars(char *str, int *i)
 {
-	int	count = 0;
-
+	int	count;
+	
+	count = 0;
 	while (str[*i] && (str[*i] == '&' || str[*i] == '|'
 			|| str[*i] == '<' || str[*i] == '>'))
 	{
