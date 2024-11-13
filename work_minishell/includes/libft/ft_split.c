@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 12:42:55 by yohan             #+#    #+#             */
-/*   Updated: 2024/08/22 17:58:23 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/11/12 17:39:33 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ int	ft_split_wordcount(char **split)
 {
 	int	i;
 
-	i = 0;
 	if (!split)
 		return (0);
+	i = 0;
 	while (split[i])
 		i++;
 	return (i);

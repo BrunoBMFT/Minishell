@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:15:54 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/01 02:52:25 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/13 18:06:54 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,41 +14,17 @@
 
 int	ft_getpid(void)
 {
-	FILE	*fp;
+	int		fd;
+	char	buffer[256];
 	int		pid;
 
-	fp = fopen("/proc/self/stat", "r");
-	if (!fp)
+	fd = open("/proc/self/stat", O_RDONLY);
+	if (fd < 0)
 		return (ft_putendl_fd("minishell: getpid() error", 2), 0);
-	fscanf(fp, "%d", &pid);
-	fclose(fp);
+	read(fd, buffer, 255);
+	close (fd);
+	pid = ft_atoi(buffer);
 	return (pid);
-}
-
-char	*update_prompt(void)
-{
-	char	cwd[PATH_MAX];
-	char	*prompt;
-	char	**folders;
-	int		i;
-
-	getcwd(cwd, PATH_MAX);
-	if (!*cwd)
-		return (ft_putendl_fd("getcwd() error", 2), NULL);
-	folders = ft_split(cwd, '/');
-	if (!folders)
-		return (free(folders), NULL);
-	i = 0;
-	//strdup because env frees this return
-	if (!folders[i])
-		return (free_array(folders), ft_strdup("/$ "));
-	while (folders[i])
-		i++;
-	prompt = ft_strjoin(folders[i - 1], "$ ");
-	free_array(folders);
-	if (!prompt)
-		return (NULL);
-	return (prompt);
 }
 
 char	**dup_env(char **envp)
@@ -72,7 +48,7 @@ char	**dup_env(char **envp)
 		else
 			new_env[i] = ft_strdup(envp[i]);
 		if (!new_env[i])
-			free_array(new_env);//check
+			return (free_array(new_env), NULL);
 		i++;
 	}
 	new_env[i] = NULL;
@@ -84,10 +60,8 @@ t_env	init_env(char **envp)
 	t_env	env;
 	char	buf[PATH_MAX];
 
-	env.prompt = NULL;
 	env.env = NULL;
 	env.status = 0;
-	env.redir_error_flag = false;
 	if (!envp || !envp[0])
 	{
 		env.env = malloc(sizeof (char *) * 3);

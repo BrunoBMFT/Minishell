@@ -6,29 +6,44 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 18:25:38 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/01 18:26:45 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/13 15:49:58 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	executor_input(t_jobs *job, t_env *env)
+bool	executor_input(t_jobs *job, t_env *env)
 {
-	int	redirected_input;
+	char	*temp;
+	int		redirected_input;
 
-	job->input = unquote_and_direct(job->input, env);
+	if (!job->input)
+		return (true);
+	temp = unquote_and_direct(job->input, env);
+	if (job->input)
+		free (job->input);
+	job->input = temp;
 	if (ft_strcmp(job->input, "/dev/null") == 0)
-		env->status = 1;
+		return (env->status = 1, false);
 	redirected_input = open(job->input, O_RDONLY);
 	dup2(redirected_input, STDIN_FILENO);
 	close(redirected_input);
+	return (true);
 }
 
-void	executor_output(t_jobs *job, t_env *env)
+bool	executor_output(t_jobs *job, t_env *env)
 {
-	int	redirected_output;
+	char	*temp;
+	int		redirected_output;
 
-	job->output = unquote_and_direct(job->output, env);
+	if (!job->output)
+		return (true);
+	temp = unquote_and_direct(job->output, env);
+	if (job->output)
+		free (job->output);
+	job->output = temp;
+	if (ft_strcmp(job->output, "/dev/null") == 0)
+		return (env->status = 1, false);
 	if (job->append)
 		redirected_output = open(job->output,
 				O_CREAT | O_APPEND | O_RDWR, 0644);
@@ -40,14 +55,18 @@ void	executor_output(t_jobs *job, t_env *env)
 	}
 	dup2(redirected_output, STDOUT_FILENO);
 	close(redirected_output);
+	return (true);
 }
 
-void	init_executor(t_jobs *job, t_env *env)
+bool	init_executor(t_jobs *job, t_env *env)
 {
+	if (!job)
+		return (false);
 	env->saved_stdin = dup(STDIN_FILENO);
 	env->saved_stdout = dup(STDOUT_FILENO);
 	env->pids = ft_calloc_pids(job);
 	if (!env->pids)
-		return ;
+		return (false);
 	env->piped = false;
+	return (true);
 }

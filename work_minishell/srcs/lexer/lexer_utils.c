@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 18:20:43 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/28 17:57:35 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/12 19:02:09 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ t_jobs	*addjob(void *content)
 	list->heredoc = 0;
 	list->heredoc_file = NULL;
 	list->delimiters = NULL;
-	list->mult_input_flag = 0;
 	list->input = NULL;
 	list->output = NULL;
 	list->next = NULL;

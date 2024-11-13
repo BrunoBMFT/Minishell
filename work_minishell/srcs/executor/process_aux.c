@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/01 02:42:40 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/13 18:07:05 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,9 @@ char	*find_command_path(char	**cmd, t_env *env)
 	path = ft_getenv("PATH", env->env);
 	path_array = ft_split(path, ':');
 	free (path);
-	if (!path_array)
-		return (NULL);
 	i = 0;
-	while (path_array[i] && cmd[0][0])
+	while (path_array && path_array[i] && cmd[0][0] &&
+			ft_strcmp(cmd[0], ".") && ft_strcmp(cmd[0], ".."))
 	{
 		path = ft_strjoin3(path_array[i], "/", cmd[0]);
 		if (!path)
@@ -73,6 +72,9 @@ char	*find_executable_path(t_jobs *job, t_env *env)
 	}
 	if (access(path, X_OK) == 0)
 		return (path);
+	else if (access(path, F_OK) == 0)
+		return (ft_printf_fd(2, " Permission denied\n"),
+			clean_exit(job, env, 126), free(path), NULL);
 	ft_printf_fd(2, "minishell: %s: No such file or directory\n", job->job[0]);
 	return (clean_exit(job, env, 127), free(path), NULL);
 }
@@ -94,6 +96,8 @@ void	execute_job(t_jobs *job, t_env *env)
 		execute_executable(job, env);
 	else if (job->job[0])
 		execute_command(job, env);
+/* 	else if (job->tried_to_expand_but_didnt_exist)//wrong, cause i need to compare only job.job[0] as tried_to_expand
+		clean_exit(job, env, 0); */
 	ft_printf_fd(2, "minishell: %s: command not found\n");
 	clean_exit(job, env, 127);
 }

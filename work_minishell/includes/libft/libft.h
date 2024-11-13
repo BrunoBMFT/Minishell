@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 12:58:00 by yohan             #+#    #+#             */
-/*   Updated: 2024/10/08 00:23:52 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/13 17:24:23 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,5 +109,7 @@ char	*gnl_ft_strjoin(char *line, char *buf);
 char	*ft_strjoin3(char const *s1, char const *s2, char const *s3);
 int		ft_isalphaund(int input);
 int		ft_isalnumund(int input);
+void	replace_and_free(char **target, char *replacement);
+void	free_and_allocate(char **target, char *replacement, bool to_free);
 
 #endif

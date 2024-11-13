@@ -1,42 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   parse3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/04 23:09:17 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/12 17:40:33 by bruno            ###   ########.fr       */
+/*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
+/*   Updated: 2024/11/13 17:17:40 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	caught_env(t_jobs *job, t_env *env)
+int	secondquote(char *line)//rather not use
 {
 	int		i;
-	int		j;
-	bool	print;
+	int		error;
+	int		inside;
+	char	quote;
 
 	i = 0;
-	if (job->job[1])
-		return (ft_printf_fd(2,
-				"env: '%s': Permission denied\n", job->job[1]), 126);
-	while (env->env[i])
+	error = 0;
+	inside = 0;
+	while (line[i])
 	{
-		j = 0;
-		print = 0;
-		while (env->env[i][j])
+		if (!inside && (line[i] == '\'' || line[i] == '\"'))
 		{
-			if (env->env[i][j++] == '=')
-			{
-				print = 1;
-				break ;
-			}
+			quote = line[i];
+			inside = 1;
+			error = 1;
 		}
-		if (print)
-			ft_printf("%s\n", env->env[i]);
+		else if (inside == 1 && line[i] == quote)
+		{
+			error = 0;
+			inside = 0;
+		}
 		i++;
 	}
-	return (0);
+	return (error);
 }

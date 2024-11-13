@@ -1,42 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   lexer_utils_2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/04 23:09:17 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/12 17:40:33 by bruno            ###   ########.fr       */
+/*   Created: 2024/11/13 15:03:22 by bruno             #+#    #+#             */
+/*   Updated: 2024/11/13 15:04:12 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	caught_env(t_jobs *job, t_env *env)
+char	*filename(int i)
 {
-	int		i;
-	int		j;
-	bool	print;
+	char *num;
+	char *full;
 
-	i = 0;
-	if (job->job[1])
-		return (ft_printf_fd(2,
-				"env: '%s': Permission denied\n", job->job[1]), 126);
-	while (env->env[i])
+	num = ft_itoa(i);
+	full = ft_strjoin(".heredoc_", num);
+	free(num);
+	return (full);
+}
+
+void	assign_values(t_jobs **new, t_token **cur, t_env *env)
+{
+	if ((*cur)->type > 0 && (*cur)->type < 4)
 	{
-		j = 0;
-		print = 0;
-		while (env->env[i][j])
-		{
-			if (env->env[i][j++] == '=')
-			{
-				print = 1;
-				break ;
-			}
-		}
-		if (print)
-			ft_printf("%s\n", env->env[i]);
-		i++;
+		(*new)->type = (*cur)->type;
+		(*new)->job = NULL;
 	}
-	return (0);
 }
