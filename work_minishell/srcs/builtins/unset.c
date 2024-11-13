@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 23:09:17 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/01 02:31:03 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/12 17:49:23 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	unset_aux(char **to_remove, char **env)
 	return (0);
 }
 
-int	caught_unset(t_jobs *job, t_env *env)//dont need aux
+int	caught_unset(t_jobs *job, t_env *env)
 {
 	if (!job->job[1])
 		return (0);

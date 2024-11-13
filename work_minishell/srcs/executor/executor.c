@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/09 18:14:06 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/12 20:23:15 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	executor_statements(t_jobs **job, t_env *env)
 	else if ((*job)->next && (*job)->next->type == OR)
 	{
 		env->piped = false;
-		if (env->status == 0) // TODO WRONG AS FUCK
+		if (env->status == 0) // TODO WRONG AS FUCK, maybe due to env.status updating somewhere?
 		{
 			while ((*job)->next && (*job)->next->type == OR)
 				*job = (*job)->next->next;
@@ -72,7 +72,7 @@ void	finish_executor(t_jobs *job, t_env *env)
 void	start_pipe(t_jobs **job, t_env *env)
 {
 	env->piped = true;
-	do_child_process((*job), env);
+	piped_process((*job), env);
 	*job = (*job)->next->next;
 }
 
@@ -84,20 +84,21 @@ void	start_executor(t_jobs *job, t_env *env)
 	{
 		if (job->job)
 			job->job = modify_array(job->job, env);
-		env->status = 0;//status reset, find a good place for this
-		if (job->input)
-			executor_input(job, env);
-		if (job->output)
-			executor_output(job, env);
+		env->status = 0;
+		if (!executor_input(job, env) || !executor_output(job, env))
+		{
+			job = job->next;
+			continue;
+		}
 		if (job->next && job->next->type == PIPE)
 		{
 			start_pipe(&job, env);
 			continue ;
 		}
 		else if (job->job && env->piped)
-			do_child_process(job, env);
+			piped_process(job, env);
 		else if (job->job)
-			do_simple_process(job, env);
+			simple_process(job, env);
 		job_reset(job, env);
 		executor_statements(&job, env);
 	}

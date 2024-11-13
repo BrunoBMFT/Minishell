@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:18:01 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/30 04:12:00 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/12 19:01:21 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,16 @@ void	clear_jobs(t_jobs **lst)
 	while (current)
 	{
 		temp = current->next;
-		free_array(current->job);
-		free(current->heredoc_file);
-		free(current->input);
-		free(current->output);
-		free(current->delimiters);
+		if (current->job)
+			free_array(current->job);
+		if (current->heredoc_file)
+			free(current->heredoc_file);
+		if (current->input)
+			free(current->input);
+		if (current->output)
+			free(current->output);
+		if (current->delimiters)
+			free(current->delimiters);
 		free(current);
 		current = temp;
 	}

@@ -25,7 +25,29 @@
 // 	//clearjobs right and left
 // }
 
-
+// char	*update_prompt(void)
+// {
+// 	char	cwd[PATH_MAX];
+// 	char	*prompt;
+// 	char	**folders;
+// 	int		i;
+// 	getcwd(cwd, PATH_MAX);
+// 	if (!*cwd)
+// 		return (ft_putendl_fd("getcwd() error", 2), NULL);
+// 	folders = ft_split(cwd, '/');
+// 	if (!folders)
+// 		return (free(folders), NULL);
+// 	i = 0;
+// 	if (!folders[i])
+// 		return (free_array(folders), ft_strdup("/$ "));
+// 	while (folders[i])
+// 		i++;
+// 	prompt = ft_strjoin(folders[i - 1], "$ ");
+// 	free_array(folders);
+// 	if (!prompt)
+// 		return (NULL);
+// 	return (prompt);
+// }
 
 // void	print_jobs(char *line, t_jobs *jobs)
 // {

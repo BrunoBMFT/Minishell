@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 00:13:28 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/31 17:14:59 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/13 00:06:02 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ t_jobs	*build(char *command_line, t_env *env)
 	free(command_line);
 	return (jobs);
 }
-void	apply_redir(t_token *current, t_jobs *job, t_env *env)
+
+void	apply_redir(t_token *current, t_jobs *job, t_env *env)//returns instead of elses
 {
 	int	fd;
 
@@ -82,41 +83,50 @@ void	apply_redir(t_token *current, t_jobs *job, t_env *env)
 		if (handle_heredoc(job, *env) < 0)
 			printf ("error handling heredocs\n");
 	}
-	if (current->type == INPUT)
+	else if (current->type == INPUT)
 	{
 		if (job->input)
-		{
-			job->mult_input_flag = 1;
 			free(job->input);
-		}
 		current->next->token = unquote_and_direct(current->next->token, env);
 		if (access(current->next->token, F_OK) != 0)
 		{
 			if (!env->redir_error_flag)//replace with status flag
-				ft_printf_fd(2, "bash: %s: No such file or directory\n", current->next->token);
-			env->redir_error_flag = true;
-			job->input = ft_strdup("/dev/null");
+				ft_printf_fd(2, "minishell: %s: No such file or directory\n", current->next->token);
+			env->redir_error_flag = true;//make this a single if
+			job->input = ft_strdup("/dev/null");//make this a single if
 		}
 		else if (job->input && (job->input[0] == '$'))
 		{
 			if (!env->redir_error_flag)//replace with status flag
 				ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", job->input);
-			env->redir_error_flag = true;
-			job->input = ft_strdup("/dev/null");
+			env->redir_error_flag = true;//make this a single if
+			job->input = ft_strdup("/dev/null");//make this a single if
 		}
-		else 
+		else
 			job->input = ft_strdup(current->next->token);
 	}
-	if (current->type == OUTPUT || current->type == APPEND_OUT)
+	else if (current->type == OUTPUT || current->type == APPEND_OUT)
 	{
-		current->next->token = unquote_and_direct(current->next->token, env);
-		fd = open(current->next->token, O_CREAT | O_RDWR, 0644);
-		close(fd);
-		if (current->type == APPEND_OUT)
-			job->append = 1;
 		if (job->output)
 			free(job->output);
-		job->output = ft_strdup(current->next->token);
+		current->next->token = unquote_and_direct(current->next->token, env);
+		fd = open(current->next->token, O_CREAT | O_RDWR, 0644);
+		if (fd > 0)
+			close (fd);
+		if (access(current->next->token, F_OK) != 0)
+		{
+			if (!env->redir_error_flag)
+				ft_printf_fd(2, "minishell: %s: No such file or directory\n", current->next->token);
+			env->redir_error_flag = true;
+			job->output = ft_strdup("/dev/null");
+			return ;
+		}
+		else
+		{
+			if (current->type == APPEND_OUT)
+				job->append = 1;
+			job->output = ft_strdup(current->next->token);
+		}
 	}
 }
 

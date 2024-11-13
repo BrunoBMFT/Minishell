@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:15:54 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/11 21:20:54 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/12 17:40:16 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,30 +26,6 @@ int	ft_getpid(void)
 	pid = ft_atoi(buffer);
 	return (pid);
 }
-
-// char	*update_prompt(void)
-// {
-// 	char	cwd[PATH_MAX];
-// 	char	*prompt;
-// 	char	**folders;
-// 	int		i;
-// 	getcwd(cwd, PATH_MAX);
-// 	if (!*cwd)
-// 		return (ft_putendl_fd("getcwd() error", 2), NULL);
-// 	folders = ft_split(cwd, '/');
-// 	if (!folders)
-// 		return (free(folders), NULL);
-// 	i = 0;
-// 	if (!folders[i])
-// 		return (free_array(folders), ft_strdup("/$ "));
-// 	while (folders[i])
-// 		i++;
-// 	prompt = ft_strjoin(folders[i - 1], "$ ");
-// 	free_array(folders);
-// 	if (!prompt)
-// 		return (NULL);
-// 	return (prompt);
-// }
 
 char	**dup_env(char **envp)
 {
@@ -72,7 +48,7 @@ char	**dup_env(char **envp)
 		else
 			new_env[i] = ft_strdup(envp[i]);
 		if (!new_env[i])
-			free_array(new_env);//check
+			return (free_array(new_env), NULL);
 		i++;
 	}
 	new_env[i] = NULL;

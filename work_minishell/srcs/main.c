@@ -6,21 +6,18 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/11 21:22:15 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/11 21:28:51 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	main(int ac, char **av, char **envp)
+void	minishell(char **envp)
 {
+	char	*line;
 	t_env	env;
 	t_jobs	*jobs;
-	char	*line;
 
-	(void)av;
-	if (ac != 1)
-		return (1);
 	env = init_env(envp);
 	while (1)
 	{
@@ -41,5 +38,13 @@ int	main(int ac, char **av, char **envp)
 		start_executor(jobs, &env);
 		clear_jobs(&jobs);
 	}
+}
+
+int	main(int ac, char **av, char **envp)
+{
+	(void)av;
+	if (ac != 1)
+		return (1);
+	minishell(envp);
 	return (0);
 }

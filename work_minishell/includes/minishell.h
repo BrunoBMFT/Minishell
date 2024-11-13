@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/11 21:19:56 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/13 00:06:46 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,6 @@ typedef struct s_jobs
 	int				append;
 	int				heredoc;
 	char			*heredoc_file;
-	int				mult_input_flag;
 	struct s_jobs	*next;
 }	t_jobs;
 
@@ -158,10 +157,10 @@ int		parse_last_token(char **cmd_line, t_token **list, t_token **last);
 //executor
 void	start_executor(t_jobs *job, t_env *env);
 bool	init_executor(t_jobs *job, t_env *env);
-void	executor_input(t_jobs *job, t_env *env);
-void	executor_output(t_jobs *job, t_env *env);
-void	do_child_process(t_jobs *job, t_env *env);
-void	do_simple_process(t_jobs *job, t_env *env);
+bool	executor_input(t_jobs *job, t_env *env);
+bool	executor_output(t_jobs *job, t_env *env);
+void	piped_process(t_jobs *job, t_env *env);
+void	simple_process(t_jobs *job, t_env *env);
 void	execute_job(t_jobs *job, t_env *env);
 
 

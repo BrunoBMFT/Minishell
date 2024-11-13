@@ -6,24 +6,11 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 23:09:17 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/01 02:32:34 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/12 17:40:33 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-int	caught_printenv(t_env *env)//not needed
-{
-	int		i;
-
-	i = 0;
-	while (env->env[i])
-	{
-		ft_printf("%s\n", env->env[i]);
-		i++;
-	}
-	return (0);
-}
 
 int	caught_env(t_jobs *job, t_env *env)
 {

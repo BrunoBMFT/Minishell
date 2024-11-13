@@ -6,29 +6,41 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 18:25:38 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/09 18:13:10 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/12 20:24:44 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-void	executor_input(t_jobs *job, t_env *env)
+bool	executor_input(t_jobs *job, t_env *env)
 {
 	int	redirected_input;
 
+	if (!job->input)
+		return (true);
 	job->input = unquote_and_direct(job->input, env);
 	if (ft_strcmp(job->input, "/dev/null") == 0)
+	{
 		env->status = 1;
+		return (false);
+	}
 	redirected_input = open(job->input, O_RDONLY);
 	dup2(redirected_input, STDIN_FILENO);
 	close(redirected_input);
+	return (true);
 }
 
-void	executor_output(t_jobs *job, t_env *env)
+bool	executor_output(t_jobs *job, t_env *env)
 {
 	int	redirected_output;
 
+	if (!job->output)
+		return (true);
 	job->output = unquote_and_direct(job->output, env);
+	if (ft_strcmp(job->output, "/dev/null") == 0)
+	{
+		env->status = 1;
+		return (false);
+	}
 	if (job->append)
 		redirected_output = open(job->output,
 				O_CREAT | O_APPEND | O_RDWR, 0644);
@@ -40,6 +52,7 @@ void	executor_output(t_jobs *job, t_env *env)
 	}
 	dup2(redirected_output, STDOUT_FILENO);
 	close(redirected_output);
+	return (true);
 }
 
 bool	init_executor(t_jobs *job, t_env *env)
