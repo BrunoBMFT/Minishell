@@ -6,17 +6,27 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/11 21:28:51 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/13 17:33:38 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
+void	print_jobs(char *line, t_jobs *jobs)
+{
+	ft_printf_fd(2, "line: %s\n", line);
+	int i = 0;
+	while (jobs->job[i])
+	{
+		ft_printf_fd(2, "job str %d: %s\n", i, jobs->job[i]);
+		i++;
+	}
+}
 void	minishell(char **envp)
 {
 	char	*line;
 	t_env	env;
 	t_jobs	*jobs;
+	t_jobs	*current;
 
 	env = init_env(envp);
 	while (1)
@@ -33,9 +43,9 @@ void	minishell(char **envp)
 			ft_printf("error: unclosed quote\n");
 			continue ;
 		}
-		line = parse_quotes(line);//not working correctly?
 		jobs = build(line, &env);
-		start_executor(jobs, &env);
+		current = jobs;
+		start_executor(current, &env);
 		clear_jobs(&jobs);
 	}
 }

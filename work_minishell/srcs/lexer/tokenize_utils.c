@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 16:52:00 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/30 15:01:56 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/13 17:42:32 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,41 +69,17 @@ int	define_type(char *str)
 	return (type);
 }
 
-char	**modify_array(char **array, t_env *env)
+void	modify_array(char **array, t_env *env)
 {
 	int		i;
 	char	*temp;
-	char	**new;
-	int		j = 0;
 
 	i = 0;
-	int k = 0;
 	while (array[i])
 	{
 		temp = unquote_and_direct(array[i], env);
-		if (temp && temp[0])
-			k++;
-		free(array[i]);//losing
+		free(array[i]);
 		array[i] = temp;
 		i++;
 	}
-	array[i] = NULL;
-	new = ft_calloc(sizeof(char *), k + 1);
-	if (!new)
-		return (array);
-	i = 0;
-	while (array[i])
-	{
-		if (array[i][0])
-		{
-			new[j] = ft_strdup(array[i]);
-			j++;
-		}
-		i++;
-	}
-	free_array(array);
-	new[j] = NULL;
-	return (new);
 }
-
-

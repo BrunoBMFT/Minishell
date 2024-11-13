@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 01:39:10 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/12 19:09:17 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/13 17:08:36 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	tokenize(t_token **list, char *str)
 {
 	int		i;
 	char	**array;
-	char	*temp;
 	t_token	*new_node;
 
 	i = 0;

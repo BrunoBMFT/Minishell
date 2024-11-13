@@ -6,23 +6,25 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 18:25:38 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/12 20:24:44 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/13 15:49:58 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
 bool	executor_input(t_jobs *job, t_env *env)
 {
-	int	redirected_input;
+	char	*temp;
+	int		redirected_input;
 
 	if (!job->input)
 		return (true);
-	job->input = unquote_and_direct(job->input, env);
+	temp = unquote_and_direct(job->input, env);
+	if (job->input)
+		free (job->input);
+	job->input = temp;
 	if (ft_strcmp(job->input, "/dev/null") == 0)
-	{
-		env->status = 1;
-		return (false);
-	}
+		return (env->status = 1, false);
 	redirected_input = open(job->input, O_RDONLY);
 	dup2(redirected_input, STDIN_FILENO);
 	close(redirected_input);
@@ -31,16 +33,17 @@ bool	executor_input(t_jobs *job, t_env *env)
 
 bool	executor_output(t_jobs *job, t_env *env)
 {
-	int	redirected_output;
+	char	*temp;
+	int		redirected_output;
 
 	if (!job->output)
 		return (true);
-	job->output = unquote_and_direct(job->output, env);
+	temp = unquote_and_direct(job->output, env);
+	if (job->output)
+		free (job->output);
+	job->output = temp;
 	if (ft_strcmp(job->output, "/dev/null") == 0)
-	{
-		env->status = 1;
-		return (false);
-	}
+		return (env->status = 1, false);
 	if (job->append)
 		redirected_output = open(job->output,
 				O_CREAT | O_APPEND | O_RDWR, 0644);

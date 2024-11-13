@@ -6,7 +6,7 @@
 #    By: bruno <bruno@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/23 16:39:56 by ycantin           #+#    #+#              #
-#    Updated: 2024/11/08 18:02:07 by bruno            ###   ########.fr        #
+#    Updated: 2024/11/13 17:19:38 by bruno            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,11 +21,10 @@ DEPS = -lreadline
 RM = rm -f
 
 AUX_SRCS = aux.c frees.c signal.c
-EXPAND_SRCS = expansion.c error_correction.c error_correction_utils.c 
-LEXER_SRCS = lexer.c lexer_utils.c tokenize.c tokenize_utils.c parse.c
+EXPAND_SRCS = expansion.c expansion_utils.c error_correction.c error_correction_utils.c 
+LEXER_SRCS = lexer.c lexer_utils.c lexer_utils_2.c redirections.c tokenize.c tokenize_utils.c parse.c parse2.c parse3.c
 EXECUTOR_SRCS = executor.c executor_aux.c process.c process_aux.c heredoc.c
 BUILTINS_SRCS = builtins.c export.c pwd.c env.c unset.c cd.c echo.c exit.c
-#redirections.c
 
 OBJS_DIR = ./objs
 OBJS = $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))

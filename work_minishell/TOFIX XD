@@ -1,41 +1,26 @@
 Signals
 
-FIX LEAKS!!! (redirs, job array, tokenize??)
-
-
 FIX:
-"" echo hi (leaks)
-echo hi > "" (leaks)
-apply redir leaks
-$empty vs ""
+ORs
+check open fds (one is open at the end)
+
+heredoc
+ctrl+c stops it
+ctrl+d stops it with text
+ctrl+\ doesnt do anything
+with things written ctrl+c stops it
+with things written ctrl+d does NOT stops it
+
 
 eval sheet:
 ctrl+c && ctrl+\ with blocking command (cat)
-redirections with strings
-	also fucked up going into unquote
+ctrl+\ prints quit core dumped
 
-# Should skip the empty argument, and print hello after spaces
-echo - "" "  " hello
 
 (weird ones)
 echo hello <> out
 export 1=a | echo hi
-
-make parse export better
-parse_export and variable duplicates need to be checked before calloc (leaks?)
-
-test with "" as commands (cat) (command not found, just a "")
-
-check error messages
-tests:
-	env -i
-	unset PATH (same fix as pipex)
-	fix leaks in normal cases (no errors)
-	fix leaks in error cases
-	fix leaks in NULL cases?
-test every malloc functions with NULLS and see if everything is freed and protected?
-# define malloc(x) NULL?
+"" echo hi (leaks)
+$empty vs ""
 
 norminette
-
-improve echo

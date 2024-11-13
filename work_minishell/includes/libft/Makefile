@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+         #
+#    By: bruno <bruno@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/24 12:26:26 by ycantin           #+#    #+#              #
-#    Updated: 2024/08/19 15:10:56 by brfernan         ###   ########.fr        #
+#    Updated: 2024/11/13 17:24:32 by bruno            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ ft_strjoin.c ft_strtrim.c ft_strmapi.c ft_striteri.c ft_itoa.c ft_split.c ft_str
 ft_printf_numbers.c ft_printf_str.c ft_printf.c ft_strcat.c ft_free_array.c ft_strcpy.c ft_lstnew.c \
 ft_lstadd_front.c ft_lstsize.c ft_lstlast.c ft_lstadd_back.c ft_lstdelone.c \
 ft_lstclear.c ft_lstiter.c ft_lstmap.c ft_is_even.c ft_nl.c ft_strrem.c ft_count_strings.c \
-ft_getenv.c ft_strndup.c get_next_line.c get_next_line_utils.c
+ft_getenv.c ft_strndup.c get_next_line.c get_next_line_utils.c ft_replace_free.c
 
 OBJDIR = ./objs
 OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))

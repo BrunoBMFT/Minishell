@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/13 00:06:46 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/13 18:06:46 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ typedef struct s_env
 	bool	piped;
 	int		saved_stdin;
 	int		saved_stdout;
-	bool	redir_error_flag;
 	pid_t	*pids;
 }				t_env;
 
@@ -81,6 +80,8 @@ typedef struct variable_holder
 	char	*expanded;
 	char	*result;
 	int		i;
+	int		len;
+	int		count;
 	int		start;
 	int		j;
 	int		wc;
@@ -116,7 +117,8 @@ typedef struct s_jobs
 //tokenizer:
 void	tokenize(t_token **list, char *str);
 char	**token_array(char *str);
-char	**modify_array(char **array, t_env *env);
+// char	**modify_array(char **array, t_env *env);
+void	modify_array(char **array, t_env *env);
 int		count_words(char *str);
 int		define_type(char *str);
 t_token	*addtok(void *content);
@@ -129,13 +131,16 @@ t_jobs	*addjob(void *content);
 t_jobs	*get_last_job(t_jobs *lst);
 void	go_to_next_job(t_jobs **lst, t_jobs *new);
 void	make_job_list(t_jobs **job_list, t_token **tok_list, t_env *env);
+void	assign_values(t_jobs **new, t_token **cur, t_env *env);
+char	*filename(int i);
+void	apply_redir(t_token *current, t_jobs *job, t_env *env);
 int		count_tokens_in_job(t_token *cur);
 
 //error_correction:
+char	*split_complex_args(char *str);
 int		count_quotes(char *str, int *i);
 int		count_normal_chars(char *str, int *i);
 int		count_special_chars(char *str, int *i);
-char	*split_complex_args(char *str);
 
 //expansions:
 char	*ft_env_var(char *str);
@@ -153,6 +158,7 @@ int		parse(t_token **token);
 char	*parse_quotes(char *line);
 int		secondquote(char *line);
 int		parse_last_token(char **cmd_line, t_token **list, t_token **last);
+int		parse_token(t_token *t, bool *in_sq, bool *in_dq, t_var_holder *h);
 
 //executor
 void	start_executor(t_jobs *job, t_env *env);

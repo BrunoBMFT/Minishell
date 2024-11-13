@@ -6,27 +6,11 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 21:01:01 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/12 19:52:29 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/13 16:05:59 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-void	clean_exit(t_jobs *jobs, t_env *env, int status)
-{
-	if (jobs->job)
-		clear_jobs(&jobs);
-	if (env->saved_stdin)
-		close (env->saved_stdin);
-	if (env->saved_stdout)
-		close (env->saved_stdout);
-	if (env->env)
-		free_array(env->env);
-	if (env->pids)
-		free (env->pids);
-	rl_clear_history();
-	exit (status);
-}
 
 bool	parse_digit(char *str)
 {

@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/12 20:23:15 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/13 17:40:40 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void	job_reset(t_jobs *job, t_env *env)
 	dup2(env->saved_stdout, STDOUT_FILENO);
 	if (job->heredoc_file && access(job->heredoc_file, F_OK) == 0)
 		remove(job->heredoc_file);
-	env->redir_error_flag = false;
 }
 
 void	executor_statements(t_jobs **job, t_env *env)
@@ -83,7 +82,7 @@ void	start_executor(t_jobs *job, t_env *env)
 	while (job)
 	{
 		if (job->job)
-			job->job = modify_array(job->job, env);
+			modify_array(job->job, env);
 		env->status = 0;
 		if (!executor_input(job, env) || !executor_output(job, env))
 		{
