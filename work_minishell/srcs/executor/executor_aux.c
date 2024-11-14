@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 18:25:38 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/14 00:17:40 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/14 17:47:27 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	finish_executor(t_jobs *job, t_env *env)
 	close(env->saved_stdin);
 	close(env->saved_stdout);
 	free (env->pids);
+	env->redir_error = false;
 }
 
 void	job_reset(t_jobs *job, t_env *env)

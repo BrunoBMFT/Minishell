@@ -6,11 +6,12 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/14 01:18:39 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/14 18:13:12 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
 void	print_jobs(char *line, t_jobs *jobs)
 {
 	ft_printf_fd(2, "line: %s\n", line);
@@ -21,6 +22,7 @@ void	print_jobs(char *line, t_jobs *jobs)
 		i++;
 	}
 }
+
 void	minishell(char **envp)
 {
 	char	*line;

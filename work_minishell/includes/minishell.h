@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/13 23:49:07 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/14 17:41:27 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ typedef struct s_env
 	int		saved_stdin;
 	int		saved_stdout;
 	pid_t	*pids;
+	bool	redir_error;
 }				t_env;
 
 typedef struct variable_holder

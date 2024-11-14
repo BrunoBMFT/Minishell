@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:46:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/13 23:22:47 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/14 17:41:57 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,14 @@ void	apply_heredoc(t_jobs *job, t_token *current, t_env *env)
 
 void	redir_error(t_jobs *job, bool in_not_out, t_env *env, char *str, int type)
 {
-	if (env->status != 1)
+	if (!env->redir_error)
 	{
 		if (type == 0)
 			ft_printf_fd(2, "minishell: %s: ambiguous redirect\n", str);
 		else if (type == 1)
 			ft_printf_fd(2, "minishell: %s: No such file or directory\n", str);
 	}
-	env->status = 1;
+	env->redir_error = true;
 	if (in_not_out)
 		job->input = ft_strdup("/dev/null");
 	else

@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:15:54 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/13 18:06:54 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/14 17:41:42 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ t_env	init_env(char **envp)
 
 	env.env = NULL;
 	env.status = 0;
+	env.redir_error = false;
 	if (!envp || !envp[0])
 	{
 		env.env = malloc(sizeof (char *) * 3);
