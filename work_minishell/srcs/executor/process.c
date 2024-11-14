@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/12 20:14:07 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/14 00:00:50 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	piped_process(t_jobs *job, t_env *env)// ! signals
 	int		fd[2];
 	pid_t	pid;
 
-	choose_sig(IGNORE_SIG);//correct?
+	setup_signal(IGNORE_SIG);//correct?
 	pipe(fd);
 	pid = new_fork(env);
 	if (pid < 0)
@@ -67,7 +67,7 @@ void	simple_process(t_jobs *job, t_env *env)
 	int		status;
 	pid_t	pid;
 
-	choose_sig(IGNORE_SIG);
+	setup_signal(IGNORE_SIG);
 	if (job->job[0] && ft_strcmp(job->job[0], "cd") == 0)
 		return (caught_cd(job, env));
 	status = try_builtins(job, env);//cant run if redirs fail

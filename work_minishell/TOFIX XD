@@ -1,7 +1,6 @@
 Signals
 
 FIX:
-ORs
 check open fds (one is open at the end)
 
 heredoc

@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/13 18:06:46 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/13 23:49:07 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,6 @@ typedef struct s_jobs
 //tokenizer:
 void	tokenize(t_token **list, char *str);
 char	**token_array(char *str);
-// char	**modify_array(char **array, t_env *env);
 void	modify_array(char **array, t_env *env);
 int		count_words(char *str);
 int		define_type(char *str);
@@ -161,10 +160,14 @@ int		parse_last_token(char **cmd_line, t_token **list, t_token **last);
 int		parse_token(t_token *t, bool *in_sq, bool *in_dq, t_var_holder *h);
 
 //executor
-void	start_executor(t_jobs *job, t_env *env);
+void	executor(t_jobs *job, t_env *env);
 bool	init_executor(t_jobs *job, t_env *env);
 bool	executor_input(t_jobs *job, t_env *env);
 bool	executor_output(t_jobs *job, t_env *env);
+void	start_pipe(t_jobs **job, t_env *env);
+void	job_reset(t_jobs *job, t_env *env);
+bool	executor_statements(t_jobs **job, t_env *env);
+void	finish_executor(t_jobs *job, t_env *env);
 void	piped_process(t_jobs *job, t_env *env);
 void	simple_process(t_jobs *job, t_env *env);
 void	execute_job(t_jobs *job, t_env *env);
@@ -172,13 +175,12 @@ void	execute_job(t_jobs *job, t_env *env);
 
 //builtins:
 int		try_builtins(t_jobs *job, t_env *env);
-int		caught_echo(t_jobs *job);
 void	caught_cd(t_jobs *job, t_env *env);
+int		caught_echo(t_jobs *job);
 int		caught_pwd(void);
 int		caught_export(t_jobs *job, t_env *env);
 int		caught_unset(t_jobs *job, t_env *env);
 int		caught_env(t_jobs *job, t_env *env);
-int		caught_printenv(t_env *env);//not needed
 int		caught_exit(t_jobs *jobs, t_env *env, bool pipe);
 
 //redirections
@@ -196,7 +198,7 @@ void	clean_up_build(t_token **list, char *cmd_line);
 void	free_all(t_token **list, char **array, char *message, int len);
 
 //signals:
-void	choose_sig(t_signal type);
+void	setup_signal(t_signal type);
 void	EOF_sig(char *line, t_env *env);
 
 //aux:

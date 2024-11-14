@@ -6,55 +6,75 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 18:25:38 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/13 15:49:58 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/14 00:17:40 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-bool	executor_input(t_jobs *job, t_env *env)
+void	run_waitpids(t_env *env)
 {
-	char	*temp;
-	int		redirected_input;
+	int	i;
+	int	status;
 
-	if (!job->input)
-		return (true);
-	temp = unquote_and_direct(job->input, env);
-	if (job->input)
-		free (job->input);
-	job->input = temp;
-	if (ft_strcmp(job->input, "/dev/null") == 0)
-		return (env->status = 1, false);
-	redirected_input = open(job->input, O_RDONLY);
-	dup2(redirected_input, STDIN_FILENO);
-	close(redirected_input);
-	return (true);
+	i = 0;
+	while (env->pids[i] != -1)
+	{
+		waitpid(env->pids[i], &status, 0);
+		env->pids[i] = -1;
+		env->status = WEXITSTATUS(status);
+		i++;
+	}
 }
 
-bool	executor_output(t_jobs *job, t_env *env)
+void	finish_executor(t_jobs *job, t_env *env)
 {
-	char	*temp;
-	int		redirected_output;
+	if (access(".heredoc", F_OK) == 0)
+		remove(".heredoc");
+	run_waitpids(env);
+	close(env->saved_stdin);
+	close(env->saved_stdout);
+	free (env->pids);
+}
 
-	if (!job->output)
-		return (true);
-	temp = unquote_and_direct(job->output, env);
-	if (job->output)
-		free (job->output);
-	job->output = temp;
-	if (ft_strcmp(job->output, "/dev/null") == 0)
-		return (env->status = 1, false);
-	if (job->append)
-		redirected_output = open(job->output,
-				O_CREAT | O_APPEND | O_RDWR, 0644);
-	else
+void	job_reset(t_jobs *job, t_env *env)
+{
+	dup2(env->saved_stdin, STDIN_FILENO);
+	dup2(env->saved_stdout, STDOUT_FILENO);
+	if (job->heredoc_file && access(job->heredoc_file, F_OK) == 0)
+		remove(job->heredoc_file);
+}
+
+bool	executor_statements(t_jobs **job, t_env *env)
+{
+	job_reset(*job, env);
+	if ((*job)->next && (*job)->next->type == AND)
 	{
-		if (access(job->output, F_OK) == 0)
-			remove(job->output);
-		redirected_output = open(job->output, O_CREAT | O_RDWR, 0644);
+		env->piped = false;
+		run_waitpids(env);
+		if (env->status == 0)
+			*job = (*job)->next->next;
+		else
+			return (false);
 	}
-	dup2(redirected_output, STDOUT_FILENO);
-	close(redirected_output);
+	else if ((*job)->next && (*job)->next->type == OR)
+	{
+		env->piped = false;
+		run_waitpids(env);
+		if (env->status == 0)
+		{
+			while ((*job)->next && (*job)->next->type == OR)
+				*job = (*job)->next->next;
+			if ((*job)->next)
+				*job = (*job)->next->next;
+			else
+				*job = (*job)->next;
+		}
+		else
+			*job = (*job)->next;
+	}
+	else
+		*job = (*job)->next;
 	return (true);
 }
 

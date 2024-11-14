@@ -6,13 +6,13 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 03:18:24 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/08 18:16:47 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/13 21:43:23 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	ignore_signal(struct sigaction *sa, int signal)
+void	ignore_signal(int SIG, struct sigaction *sa)
 {
 	struct sigaction	original_sa;
 	int					original_flags;
@@ -20,9 +20,8 @@ void	ignore_signal(struct sigaction *sa, int signal)
 	original_flags = sa->sa_flags;
 	sa->sa_handler = SIG_IGN;
 	sa->sa_flags |= SA_SIGINFO;
-	if (sigemptyset(&sa->sa_mask) != 0)
-		return ;
-	sigaction(signal, sa, &original_sa);
+	sigemptyset(&sa->sa_mask);
+	sigaction(SIG, sa, &original_sa);
 	sa->sa_flags = original_flags;
 }
 
@@ -32,10 +31,10 @@ void	root_handler(int signal, siginfo_t *info, void *context)
 	(void)context;
 	if (signal == SIGINT)
 	{
-		ft_printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
+		ft_printf("\n");//1
+		rl_on_new_line();//2
+		rl_replace_line("", 0);//3
+		rl_redisplay();//4
 	}
 }
 
@@ -56,36 +55,38 @@ void	signal_aux(t_signal type, struct sigaction sa)
 	{
 		sa.sa_sigaction = here_handler;
 		sa.sa_flags = SA_SIGINFO;
-		if (sigemptyset(&sa.sa_mask) != 0)
-			return ;
+		sigemptyset(&sa.sa_mask);
 		sigaction(SIGINT, &sa, NULL);
-		ignore_signal(&sa, SIGQUIT);
+		ignore_signal(SIGQUIT, &sa);
 	}
 	else if (type == IGNORE_SIG)
 	{
-		ignore_signal(&sa, SIGINT);
-		ignore_signal(&sa, SIGQUIT);
+		ignore_signal(SIGINT, &sa);
+		ignore_signal(SIGQUIT, &sa);
 	}
 }
-void	choose_sig(t_signal type)
+void	setup_signal(t_signal type)
 {
 	static struct sigaction	sa;
 
 	if (type == ROOT_SIG)
 	{
 		sa.sa_sigaction = root_handler;
-		sa.sa_flags = SA_SIGINFO;
-		if (sigemptyset(&sa.sa_mask) != 0)
-			return ;
+		sa.sa_flags = SA_SIGINFO;//additional info about the signal will be passed to handler
+	//inits the set, no additional signals are blocked while sigint is being handled
+		sigemptyset(&sa.sa_mask);
 		sigaction(SIGINT, &sa, NULL);
-		ignore_signal(&sa, SIGQUIT);
+		ignore_signal(SIGQUIT, &sa);
 	}
+//basically this child type is for signals to work how they usually work in shell, 
+//	thats why we default the handlers for sa. 
+//when sigaction is called, it will associate the sa (with handler) to the action (SIGINT etc)
 	else if (type == CHILD_SIG)
 	{
+// SIGFDFL puts every single back to default, instead of the changes we are making here
 		sa.sa_handler = SIG_DFL;
 		sa.sa_flags = 0;
-		if (sigemptyset(&sa.sa_mask) != 0)
-			return ;
+		sigemptyset(&sa.sa_mask);
 		sigaction(SIGINT, &sa, NULL);
 		sigaction(SIGQUIT, &sa, NULL);
 	}

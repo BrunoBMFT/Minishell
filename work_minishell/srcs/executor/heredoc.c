@@ -99,9 +99,8 @@ int	handle_heredoc(t_jobs *job, t_env env)
 	redirected_input = open(job->heredoc_file, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (redirected_input < 0)
 		return (-1);
-	choose_sig(HEREDOC_SIG);
-	choose_sig(IGNORE_SIG);
-	//heredoc_expand_check(&must_expand, &job, env);
+	setup_signal(HEREDOC_SIG);
+	setup_signal(IGNORE_SIG);
 	heredoc_expand_check(&must_expand, &job, env);
 	while (1)
 	{

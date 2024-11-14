@@ -6,76 +6,13 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/13 17:40:40 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/14 00:17:46 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	job_reset(t_jobs *job, t_env *env)
-{
-	dup2(env->saved_stdin, STDIN_FILENO);
-	dup2(env->saved_stdout, STDOUT_FILENO);
-	if (job->heredoc_file && access(job->heredoc_file, F_OK) == 0)
-		remove(job->heredoc_file);
-}
-
-void	executor_statements(t_jobs **job, t_env *env)
-{
-	if ((*job)->next && (*job)->next->type == AND)
-	{
-		env->piped = false;
-		if (env->status == 0)
-			*job = (*job)->next->next;
-	}
-	else if ((*job)->next && (*job)->next->type == OR)
-	{
-		env->piped = false;
-		if (env->status == 0) // TODO WRONG AS FUCK, maybe due to env.status updating somewhere?
-		{
-			while ((*job)->next && (*job)->next->type == OR)
-				*job = (*job)->next->next;
-			if ((*job)->next)
-				*job = (*job)->next->next;
-			else
-				*job = (*job)->next;
-		}
-		else
-			*job = (*job)->next;
-	}
-	else
-		*job = (*job)->next;
-}
-
-void	finish_executor(t_jobs *job, t_env *env)
-{
-	int	i;
-	int	status;
-
-	i = 0;
-	if (access(".heredoc", F_OK) == 0)
-		remove(".heredoc");
-	while (env->pids[i] != -1)
-	{
-		waitpid(env->pids[i], &status, 0);
-		env->pids[i] = -1;
-		if (env->status == 0)
-			env->status = WEXITSTATUS(status);
-		i++;
-	}
-	close(env->saved_stdin);
-	close(env->saved_stdout);
-	free (env->pids);
-}
-
-void	start_pipe(t_jobs **job, t_env *env)
-{
-	env->piped = true;
-	piped_process((*job), env);
-	*job = (*job)->next->next;
-}
-
-void	start_executor(t_jobs *job, t_env *env)
+void	executor(t_jobs *job, t_env *env)
 {
 	if (!init_executor(job, env))
 		return ;
@@ -83,11 +20,10 @@ void	start_executor(t_jobs *job, t_env *env)
 	{
 		if (job->job)
 			modify_array(job->job, env);
-		env->status = 0;
 		if (!executor_input(job, env) || !executor_output(job, env))
 		{
 			job = job->next;
-			continue;
+			continue ;
 		}
 		if (job->next && job->next->type == PIPE)
 		{
@@ -98,9 +34,63 @@ void	start_executor(t_jobs *job, t_env *env)
 			piped_process(job, env);
 		else if (job->job)
 			simple_process(job, env);
-		job_reset(job, env);
-		executor_statements(&job, env);
+		if (!executor_statements(&job, env))
+			break ;
 	}
 	finish_executor(job, env);
 	return ;
 }
+
+void	start_pipe(t_jobs **job, t_env *env)
+{
+	env->piped = true;
+	piped_process((*job), env);
+	*job = (*job)->next->next;
+}
+
+bool	executor_input(t_jobs *job, t_env *env)
+{
+	char	*temp;
+	int		redirected_input;
+
+	if (!job->input)
+		return (true);
+	temp = unquote_and_direct(job->input, env);
+	if (job->input)
+		free (job->input);
+	job->input = temp;
+	if (ft_strcmp(job->input, "/dev/null") == 0)
+		return (env->status = 1, false);
+	redirected_input = open(job->input, O_RDONLY);
+	dup2(redirected_input, STDIN_FILENO);
+	close(redirected_input);
+	return (true);
+}
+
+bool	executor_output(t_jobs *job, t_env *env)
+{
+	char	*temp;
+	int		redirected_output;
+
+	if (!job->output)
+		return (true);
+	temp = unquote_and_direct(job->output, env);
+	if (job->output)
+		free (job->output);
+	job->output = temp;
+	if (ft_strcmp(job->output, "/dev/null") == 0)
+		return (env->status = 1, false);
+	if (job->append)
+		redirected_output = open(job->output,
+				O_CREAT | O_APPEND | O_RDWR, 0644);
+	else
+	{
+		if (access(job->output, F_OK) == 0)
+			remove(job->output);
+		redirected_output = open(job->output, O_CREAT | O_RDWR, 0644);
+	}
+	dup2(redirected_output, STDOUT_FILENO);
+	close(redirected_output);
+	return (true);
+}
+

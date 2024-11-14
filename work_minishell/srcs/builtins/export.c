@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/01 02:35:17 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/14 00:13:21 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int	caught_export(t_jobs *job, t_env *env)
 	int		i;
 	int		parse;
 
-	if (!job->job[1] || !job->job[1][0])
+	if (!job->job[1])
 		return (export_no_execd(env->env));
 	i = 0;
 	parse = 0;

@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/13 17:33:38 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/14 01:18:39 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	minishell(char **envp)
 	env = init_env(envp);
 	while (1)
 	{
-		choose_sig(ROOT_SIG);
+		setup_signal(ROOT_SIG);
 		line = readline("Minishell$ ");
 		if (!line)
 			EOF_sig(line, &env);
@@ -40,12 +40,12 @@ void	minishell(char **envp)
 		if (secondquote(line) == 1)	//remove if you want to request additional info to finish prompt
 		{
 			free(line);
-			ft_printf("error: unclosed quote\n");
+			ft_printf("minishell: unclosed quote\n");
 			continue ;
 		}
 		jobs = build(line, &env);
 		current = jobs;
-		start_executor(current, &env);
+		executor(current, &env);
 		clear_jobs(&jobs);
 	}
 }

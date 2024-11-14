@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 16:52:00 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/13 17:42:32 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/14 00:17:52 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,4 +82,5 @@ void	modify_array(char **array, t_env *env)
 		array[i] = temp;
 		i++;
 	}
+	env->status = 0;
 }
