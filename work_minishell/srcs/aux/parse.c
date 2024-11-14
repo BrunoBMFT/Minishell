@@ -6,7 +6,11 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/10/31 19:24:18 by ycantin          ###   ########.fr       */
+=======
+/*   Updated: 2024/10/31 17:22:15 by ycantin          ###   ########.fr       */
+>>>>>>> origin/main
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,7 +267,11 @@ int	parse_last_token(char **cmd_line, t_token **list, t_token **last)
 	*cmd_line = new;
 	clear_list(list);
 	converted = split_complex_args(*cmd_line);
+<<<<<<< HEAD
 	tokenize(list, converted/* , this_has_to_exist_to_work */);
+=======
+	tokenize(list, converted, /* this_has_to_exist_to_work */);
+>>>>>>> origin/main
 	free(converted);
 	*last = get_last_tok(*list);
 	if (parse(list) == -1)

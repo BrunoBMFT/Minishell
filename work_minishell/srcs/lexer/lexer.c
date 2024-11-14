@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 00:13:28 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/08 05:05:12 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/11/13 17:56:20 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ t_token	*developed_cmdline_tokenization(char *command_line)
 	char	*simplified;
 	char	*error;
 	t_token	*list;
-	t_token	*temp;
+	t_token *temp;
 
 	list = NULL;
 	error = "Minishell: syntax error near unexpected token `newline'\n";
@@ -37,35 +37,6 @@ t_token	*developed_cmdline_tokenization(char *command_line)
 		temp = temp->next;
 	}
 	return (list);
-}
-
-t_jobs	*build(char *command_line, t_env *env)
-{
-	t_jobs	*jobs;
-	t_token	*list;
-	t_token	*last;
-
-	if (!command_line || !command_line[0])
-		return (NULL);
-	jobs = NULL;
-	list = NULL;
-	last = NULL;
-	list = developed_cmdline_tokenization(command_line);
-	if (!list)
-		return (NULL);
-	if (parse(&list) == -1)
-	{
-		free(command_line);
-		clear_list(&list);
-		return (NULL);
-	}
-	last = get_last_tok(list);
-	while (last && last->type >= PIPE && last->type <= OR && !last->next)
-		if (parse_last_token(&command_line, &list, &last) == -1)
-			return (NULL);
-	make_job_list(&jobs, &list, env);
-	clear_list(&list);
-	return (free(command_line), jobs);
 }
 
 char	**job_array(t_token **cur, t_jobs **job, t_env *env)
@@ -104,7 +75,6 @@ void	make_job_list(t_jobs **job_list, t_token **tok_list, t_env *env)
 	int		i;
 
 	i = 0;
-	env->redir_error_flag = false;
 	cur = *tok_list;
 	while (cur)
 	{
@@ -124,4 +94,33 @@ void	make_job_list(t_jobs **job_list, t_token **tok_list, t_env *env)
 		go_to_next_job(job_list, new);
 		i++;
 	}
+}
+
+t_jobs	*build(char *command_line, t_env *env)
+{
+	t_jobs	*jobs;
+	t_token	*list;
+	t_token	*last;
+
+	if (!command_line || !command_line[0])
+		return (NULL);
+	jobs = NULL;
+	list = NULL;
+	last = NULL;
+	list = developed_cmdline_tokenization(command_line);
+	if (!list)
+		return (NULL);
+	if (parse(&list) == -1)
+	{
+		free(command_line);
+		clear_list(&list);
+		return (NULL);
+	}
+	last = get_last_tok(list);
+	while (last && last->type >= PIPE && last->type <= OR && !last->next)
+		if (parse_last_token(&command_line, &list, &last) == -1)
+			return (NULL);
+	make_job_list(&jobs, &list, env);
+	clear_list(&list);
+	return (free(command_line), jobs);
 }

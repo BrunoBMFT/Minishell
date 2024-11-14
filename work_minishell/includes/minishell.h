@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/08 05:30:34 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/10/30 15:04:44 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-static volatile sig_atomic_t	sig = 0;//global var needs to start with g_
+//static volatile sig_atomic_t	sig = 0;//global var needs to start with g_
 
 # define WRITE 1
 # define READ 0
@@ -51,7 +51,7 @@ typedef enum s_types
 	EXPORT
 }			t_types;
 
-typedef enum e_signal
+typedef enum e_signal//change name of variables
 {
 	ROOT_SIG,
 	CHILD_SIG,
@@ -62,12 +62,10 @@ typedef enum e_signal
 typedef struct s_env
 {
 	int		status;
-	char	*prompt;
 	char	**env;
 	bool	piped;
 	int		saved_stdin;
 	int		saved_stdout;
-	bool	redir_error_flag;
 	pid_t	*pids;
 }				t_env;
 
@@ -112,7 +110,6 @@ typedef struct s_jobs
 	int				append;
 	int				heredoc;
 	char			*heredoc_file;
-	int				mult_input_flag;
 	struct s_jobs	*next;
 }	t_jobs;
 
@@ -136,13 +133,16 @@ t_jobs	*addjob(void *content);
 t_jobs	*get_last_job(t_jobs *lst);
 void	go_to_next_job(t_jobs **lst, t_jobs *new);
 void	make_job_list(t_jobs **job_list, t_token **tok_list, t_env *env);
+void	assign_values(t_jobs **new, t_token **cur, t_env *env);
+char	*filename(int i);
+void	apply_redir(t_token *current, t_jobs *job, t_env *env);
 int		count_tokens_in_job(t_token *cur);
 
 //error_correction:
+char	*split_complex_args(char *str);
 int		count_quotes(char *str, int *i);
 int		count_normal_chars(char *str, int *i);
 int		count_special_chars(char *str, int *i);
-char	*split_complex_args(char *str);
 
 //expansions:
 char	*ft_env_var(char *str);
@@ -160,16 +160,17 @@ int		parse(t_token **token);
 char	*parse_quotes(char *line);
 int		secondquote(char *line);
 int		parse_last_token(char **cmd_line, t_token **list, t_token **last);
-int parse_token(t_token *t, bool *in_sq, bool *in_dq, t_var_holder *h);
-
+int		parse_token(t_token *t, bool *in_sq, bool *in_dq, t_var_holder *h);
 
 //executor
 void	start_executor(t_jobs *job, t_env *env);
-void	child_process(t_jobs *job, t_env *env);
+bool	init_executor(t_jobs *job, t_env *env);
+bool	executor_input(t_jobs *job, t_env *env);
+bool	executor_output(t_jobs *job, t_env *env);
+void	piped_process(t_jobs *job, t_env *env);
 void	simple_process(t_jobs *job, t_env *env);
 void	execute_job(t_jobs *job, t_env *env);
-int		new_fork(void);
-void	panic(char *s);
+
 
 //builtins:
 int		try_builtins(t_jobs *job, t_env *env);
@@ -198,12 +199,8 @@ void	clean_up_build(t_token **list, char *cmd_line);
 void	free_all(t_token **list, char **array, char *message, int len);
 
 //signals:
-void	choose_sig(t_signal type);//goncalo
-void	sigquit(int sig);
-void	handle_signal_main(int sig);
-void	handle_signal_child(int sig);
-void	handle_signal_heredoc(int sig);
-void	ctrld(char *line, t_env *env);
+void	choose_sig(t_signal type);
+void	EOF_sig(char *line, t_env *env);
 
 //aux:
 char	*update_prompt(void);

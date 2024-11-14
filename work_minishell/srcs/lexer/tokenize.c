@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 01:39:10 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/11 14:54:27 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/11/13 17:08:36 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,11 @@ void	tokenize(t_token **list, char *str)
 	t_token	*new_node;
 
 	i = 0;
-	array = token_array(str); //error with dpaces because of here
+	array = token_array(str);
 	if (!array)
 		return ;
 	while (array[i])
 	{
-		printf("array[i]:	%s\n", array[i]);
 		new_node = addtok(ft_strdup(array[i]));
 		if (!new_node)
 			free_all(list, array, "Error\n", 6);
@@ -73,32 +72,6 @@ int	count_words(char *str)
 	}
 	return (h.wc);
 }
-
-// void	update_iterator(t_var_holder *h, char *str)
-// {
-// 	while (str[h->i])
-// 	{
-// 		while (str[h->i] && (str[h->i] == ' ' || str[h->i] == '\t'
-// 				|| str[h->i] == '\n'))
-// 			h->i++;
-// 		h->j = h->i;
-// 		while (str[h->i] && !(str[h->i] == ' ' || str[h->i] == '\t'
-// 				|| str[h->i] == '\n'))
-// 		{
-// 			printf("before:	%d\n", h->i);
-// 			if (str[h->i] == '\'' || str[h->i] == '\"')
-// 				handle_quotes(h, str);
-// 			else
-// 				h->i++;
-// 			printf("after: %d\n", h->i);
-// 		}
-// 		if (h->i > h->j)
-// 		{
-// 			h->array[h->k] = ft_substr(str, h->j, h->i - h->j);
-// 			h->k++;
-// 		}
-// 	}
-// }
 
 void update_iterator(t_var_holder *h, char *str)
 {

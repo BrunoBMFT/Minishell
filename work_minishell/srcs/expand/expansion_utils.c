@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/11 12:24:27 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/11/13 18:07:59 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,35 +67,6 @@ char	*expansion(char *str, t_var_holder *h, t_env *env)
 	return (h->result);
 }
 
-// char	*expansion_loop(char *str, t_var_holder *h, t_env *env)
-// {
-// 	while (str[h->i])
-// 	{
-// 		while (str[h->i] && str[h->i] != '$')
-// 			h->i++;
-// 		if (h->i > h->start)
-// 			h->result = no_expansion(str, *h);
-// 		if (str[h->i] == '$')
-// 		{
-// 			if (!str[h->i + 1] || str[h->i + 1] == '\''
-// 				|| str[h->i + 1] == '\"')
-// 			{
-// 				h->expanded = ft_strjoin(h->result, "$");
-// 				free(h->result);
-// 				h->result = h->expanded;
-// 				return (h->result);
-// 			}
-// 			else
-// 			{
-// 				h->start = h->i;
-// 				h->i++;
-// 				h->result = expansion(str, h, env);
-// 			}
-// 		}
-// 	}
-// 	return (h->result);
-// }
-
 char	*expansion_loop(char *str, t_var_holder *h, t_env *env)
 {
 	while (str[h->i])
@@ -131,38 +102,3 @@ char	*expand(char *str, t_env *env)
 	h.start = 0;
 	return (expansion_loop(str, &h, env));
 }
-
-// char	*expand(char *str, t_env *env)
-// {
-// 	t_var_holder	h;
-// 	h.expanded = NULL;
-// 	h.before = NULL;
-// 	h.temp = NULL;
-// 	h.result = NULL;
-// 	h.i = 0;
-// 	h.start = 0;
-// 	while (str[h.i])
-// 	{
-// 		while (str[h.i] && str[h.i] != '$')
-// 			h.i++;
-// 		if (h.i > h.start)
-// 			h.result = no_expansion(str, h);
-// 		if (str[h.i] == '$')
-// 		{
-// 			if (!str[h.i + 1] || str[h.i + 1] == '\'' || str[h.i + 1] == '\"')
-// 			{
-// 				h.expanded = ft_strjoin(h.result, "$");
-// 				free(h.result);
-// 				h.result = h.expanded;
-// 				return (h.result);
-// 			}
-// 			else
-// 			{
-// 				h.start = h.i;
-// 				h.i++;
-// 				h.result = expansion(str, &h, env);
-// 			}
-// 		}
-// 	}
-// 	return (h.result);
-// }

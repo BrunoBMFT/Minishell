@@ -6,14 +6,11 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 03:18:24 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/29 16:11:27 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/08 18:16:47 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-//goncalo
-//nao funciona
 
 void	ignore_signal(struct sigaction *sa, int signal)
 {
@@ -96,55 +93,12 @@ void	choose_sig(t_signal type)
 		signal_aux(type, sa);
 }
 
-//mine
-
-//can call clean_exit and maybe have exit print a line for why its closing
-void	ctrld(char *line, t_env *env)//receives line to free it
+void	EOF_sig(char *line, t_env *env)
 {
 	free (line);
 	printf("exit\n");
-	free_array(env->env);//if
+	if (env->env)
+		free_array(env->env);
 	rl_clear_history();
 	exit (env->status);
 }
-
-//old
-/* 
-void	sigquit(int sig)
-{
-	(void)sig;
-	write(1, "Quit:\n", 7);
-}
-
-void	setup_sigquit_handler(void)//not called
-{
-	struct sigaction	sa;
-
-	sigemptyset(&sa.sa_mask);
-	sa.sa_handler = SIG_IGN;
-	sa.sa_flags = 0;
-	sigaction(SIGQUIT, &sa, NULL);
-}
-
-// Example signal handlers
-void	handle_signal_main(int sig)
-{
-	(void)sig;
-	write(1, "\n", 1);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-}
-
-void	handle_signal_heredoc(int sig)
-{
-	(void)sig;
-	write(STDOUT_FILENO, "\n", 1);
-	close(STDIN_FILENO);
-}
-
-void	handle_signal_child(int sig)
-{
-	(void)sig;
-	write(STDOUT_FILENO, "\n", 1);
-} */

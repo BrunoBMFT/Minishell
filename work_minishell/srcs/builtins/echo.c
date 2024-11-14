@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 04:38:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/10/30 04:04:17 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/11 21:27:07 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,10 @@
 
 int	n_flag(char **strs)
 {
-	int 	i = 1;
-	int 	j;
+	int		i;
+	int		j;
 
+	i = 1;
 	while (strs[i])
 	{
 		if (strs[i][0] == '-' && strs[i][1] == 'n')
@@ -30,14 +31,14 @@ int	n_flag(char **strs)
 		else
 			break ;
 		i++;
-	} 
+	}
 	return (i);
 }
 
 int	caught_echo(t_jobs *job)
 {
 	int		i;
-	bool 	has_n_flag;
+	bool	has_n_flag;
 
 	if (!job->job[1])
 		return (ft_nl_fd(1), 0);
@@ -48,7 +49,7 @@ int	caught_echo(t_jobs *job)
 	while (job->job[i])
 	{
 		if (job->job[i][0])
-			ft_printf_fd(1, "%s", job->job[i]);//use putstr instead?
+			ft_printf_fd(1, "%s", job->job[i]);
 		if (job->job[i + 1])
 			ft_printf_fd(1, " ");
 		i++;
