@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/13 17:18:29 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/14 05:27:28 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,29 @@ int	start_string_parse(char *str, char delimiter, t_var_holder *h)
 	return (parse_string(str, h));
 }
 
+int	char_is_redir(t_token *t, t_var_holder *i, t_var_holder *h)
+{
+	i->j = i->i;
+	i->count = 0;
+	while (t->token[i->j] && t->token[i->j] == '>'
+		|| t->token[i->j] == '<')
+	{
+		i->j++;
+		i->count++;
+	}
+	if (i->count > 2)
+		return (ft_printf_fd(2, "%s%c\n", i->temp2
+				, t->token[i->count - 1]), -1);
+	i->len = ft_strlen(t->token) - 1;
+	if (i->len != 1 && (t->token[i->len] == '<'
+			|| t->token[i->len] == '>') && !t->next)
+		return (ft_printf_fd(2, "%s", i->temp), -1);
+	if (start_string_parse((t->token + (i->i + 1))
+			, t->token[i->i], h) == -1)
+		return (-1);
+	return (0);
+}
+
 int	parse_token(t_token *t, bool *in_sq, bool *in_dq, t_var_holder *h)
 {
 	t_var_holder	i;
@@ -135,6 +158,61 @@ int	parse_token(t_token *t, bool *in_sq, bool *in_dq, t_var_holder *h)
 	}
 	return (0);
 }
+
+// int	char_is_redir(t_token *t, t_var_holder *i, t_var_holder *h)
+// {
+// 	i->j = i->i;
+// 	i->count = 0;
+// 	while (t->token[i->j] && t->token[i->j] == '>'
+// 		|| t->token[i->j] == '<')
+// 	{
+// 		i->j++;
+// 		i->count++;
+// 	}
+// 	if (i->count > 2)
+// 		return (ft_printf_fd(2, "%s%c\n", i->temp2
+// 				, t->token[i->count - 1]), -1);
+// 	i->len = ft_strlen(t->token) - 1;
+// 	if (i->len != 1 && (t->token[i->len] == '<'
+// 			|| t->token[i->len] == '>') && !t->next)
+// 		return (ft_printf_fd(2, "%s", i->temp), -1);
+// 	if (start_string_parse((t->token + (i->i + 1))
+// 			, t->token[i->i], h) == -1)
+// 		return (-1);
+// 	return (0);
+// }
+
+// int	parse_token(t_token *t, bool *in_sq, bool *in_dq, t_var_holder *h)
+// {
+// 	t_var_holder	i;
+
+// 	i.temp = "minishell: syntax error near unexpected token `newline'\n";
+// 	i.temp2 = "minishell: syntax error near unexpected token `";
+// 	i.i = 0;
+// 	while (t->token[i.i])
+// 	{
+// 		if (t->token[i.i] == '\'' && !*in_dq)
+// 			*in_sq = !*in_sq;
+// 		else if (t->token[i.i] == '\"' && !*in_sq)
+// 			*in_dq = !*in_dq;
+// 		if (*in_sq || *in_dq)
+// 		{
+// 			i.i++;
+// 			continue ;
+// 		}
+// 		if (t->token[i.i] == '&' || t->token[i.i] == '|')
+// 		{
+// 			if (start_string_parse(t->token + (i.i + 1)
+// 					, t->token[i.i], h) == -1)
+// 				return (-1);
+// 		}
+// 		else if (t->token[i.i] == '<' || t->token[i.i] == '>')
+// 			char_is_redir(t, &i, h);
+// 		i.i++;
+// 	}
+// 	return (0);
+// }
+
 //handle case like echo<> or echo<"THERE"< as errors while still 
 //allowing echo<"THERE" -----> I might have to check my error 
 //correction function so that it splits when finding redirections 

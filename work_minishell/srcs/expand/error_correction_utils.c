@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_correction_utils.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 03:18:24 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/13 17:22:08 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/14 05:37:00 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	count_quotes(char *str, int *i)
 int	count_special_chars(char *str, int *i)
 {
 	int	count;
-	
+
 	count = 0;
 	while (str[*i] && (str[*i] == '&' || str[*i] == '|'
 			|| str[*i] == '<' || str[*i] == '>'))
@@ -43,13 +43,14 @@ int	count_special_chars(char *str, int *i)
 		count++;
 		(*i)++;
 	}
-	return count;
+	return (count);
 }
 
 int	count_normal_chars(char *str, int *i)
 {
-	int	count = 0;
+	int	count;
 
+	count = 0;
 	while (str[*i] && str[*i] != '&' && str[*i] != '|'
 		&& str[*i] != '<' && str[*i] != '>'
 		&& str[*i] != '\t' && str[*i] != ' ')
@@ -57,5 +58,19 @@ int	count_normal_chars(char *str, int *i)
 		count++;
 		(*i)++;
 	}
-	return count;
+	return (count);
+}
+
+bool	is_empty_arg(char *str, char end)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] && str[i] != end)
+	{
+		if (ft_isascii(str[i]) && str[i] != '\0')
+			return (true);
+		i++;
+	}
+	return (false);
 }

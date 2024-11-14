@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 00:13:28 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/13 17:56:20 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/14 04:41:12 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ t_token	*developed_cmdline_tokenization(char *command_line)
 	char	*simplified;
 	char	*error;
 	t_token	*list;
-	t_token *temp;
+	t_token	*temp;
 
 	list = NULL;
 	error = "Minishell: syntax error near unexpected token `newline'\n";

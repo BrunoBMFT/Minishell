@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:46:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/13 16:54:15 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/14 05:34:51 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ void	apply_output(t_jobs *job, t_token *current, t_env *env)
 	int		fd;
 
 	if (current->next->token && (current->next->token[0] == '$'))
-		return (redir_error(job, false, env, current->next->token, 0), (void)NULL);
+		return (redir_error(job, false, env, current->next->token, 0)
+			, (void) NULL);
 	temp = unquote_and_direct(current->next->token, env);
 	free(current->next->token);
 	current->next->token = temp;
@@ -86,7 +87,8 @@ void	apply_redir(t_token *current, t_jobs *job, t_env *env)
 	if (current->type == INPUT)
 	{
 		if (current->next->token && (current->next->token[0] == '$'))
-			return (redir_error(job, true, env, current->next->token, 0), (void)NULL);
+			return (redir_error(job, true, env
+					, current->next->token, 0), (void) NULL);
 		temp = unquote_and_direct(current->next->token, env);
 		free(current->next->token);
 		current->next->token = temp;

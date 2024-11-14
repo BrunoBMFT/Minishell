@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/10/30 15:04:44 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/14 04:40:15 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-//static volatile sig_atomic_t	sig = 0;//global var needs to start with g_
+static volatile sig_atomic_t	g_sig = 0;//global var needs to start with g_
 
 # define WRITE 1
 # define READ 0
@@ -113,7 +113,6 @@ typedef struct s_jobs
 	struct s_jobs	*next;
 }	t_jobs;
 
-
 //tokenizer:
 void	tokenize(t_token **list, char *str);
 char	**token_array(char *str);
@@ -154,7 +153,6 @@ char	*expansion(char *str, t_var_holder *h, t_env *env);
 char	*unquote_and_direct(char *str, t_env *env);
 bool	is_empty_arg(char *str, char end);
 
-
 //parser:
 int		parse(t_token **token);
 char	*parse_quotes(char *line);
@@ -171,7 +169,6 @@ void	piped_process(t_jobs *job, t_env *env);
 void	simple_process(t_jobs *job, t_env *env);
 void	execute_job(t_jobs *job, t_env *env);
 
-
 //builtins:
 int		try_builtins(t_jobs *job, t_env *env);
 int		caught_echo(t_jobs *job);
@@ -184,7 +181,7 @@ int		caught_printenv(t_env *env);//not needed
 int		caught_exit(t_jobs *jobs, t_env *env, bool pipe);
 
 //redirections
-void    apply_redir(t_token *current, t_jobs *job, t_env *env);
+void	apply_redir(t_token *current, t_jobs *job, t_env *env);
 void	update_input(t_jobs *job);
 int		update_output(t_jobs *job, char **env, char **temp_vars);
 int		append_to_file(t_jobs *job, char **env, char **temp_vars);
@@ -208,7 +205,6 @@ int		ft_getpid(void);
 char	**dup_env(char **envp);
 void	*ft_calloc_pids(t_jobs *job);
 t_env	init_env(char **envp);
-
 void	print_jobs(char *line, t_jobs *jobs);//to remove
 
 #endif

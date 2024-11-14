@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 17:53:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/13 18:04:12 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/14 05:36:45 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,20 +67,6 @@ char	*double_quotes(char *str, t_var_holder *h, t_env *env)
 		h->i++;
 	h->temp = no_quotes(str, h, env);
 	return (h->new);
-}
-
-bool	is_empty_arg(char *str, char end)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] && str[i] != end)
-	{
-		if (ft_isascii(str[i]) && str[i] != '\0')
-			return (true);
-		i++;
-	}
-	return (false);
 }
 
 void	init_var_holder(t_var_holder *holder)

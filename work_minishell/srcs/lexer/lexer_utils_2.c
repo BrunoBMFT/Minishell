@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils_2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 15:03:22 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/13 15:04:12 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/14 04:40:59 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 char	*filename(int i)
 {
-	char *num;
-	char *full;
+	char	*num;
+	char	*full;
 
 	num = ft_itoa(i);
 	full = ft_strjoin(".heredoc_", num);
