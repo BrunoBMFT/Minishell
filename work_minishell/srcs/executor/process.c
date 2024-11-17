@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/14 17:40:17 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/16 18:32:07 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	child(t_jobs *job, t_env *env, int fd[])
 	close(fd[READ]);
 	if (!job->output && job->next && job->next->type == PIPE)
 		dup2(fd[WRITE], STDOUT_FILENO);
-	else if (!job->output)
+	else if (!job->output)//last time it is called, since no more pipe after this
 		dup2(env->saved_stdout, STDOUT_FILENO);
 	close(fd[WRITE]);
 	env->status = try_builtins(job, env);

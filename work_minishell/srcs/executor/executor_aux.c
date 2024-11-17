@@ -6,11 +6,34 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 18:25:38 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/14 17:47:27 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/16 18:26:15 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+bool	init_executor(t_jobs *job, t_env *env)
+{
+	if (!job)
+		return (false);
+	env->saved_stdin = dup(STDIN_FILENO);
+	env->saved_stdout = dup(STDOUT_FILENO);
+	env->pids = ft_calloc_pids(job);
+	if (!env->pids)
+		return (false);
+	env->piped = false;
+	return (true);
+}
+
+void	job_reset(t_jobs *job, t_env *env)
+{
+	dup2(env->saved_stdin, STDIN_FILENO);
+	dup2(env->saved_stdout, STDOUT_FILENO);
+	close(env->saved_stdin);
+	close(env->saved_stdout);
+	if (job->heredoc_file && access(job->heredoc_file, F_OK) == 0)
+		remove(job->heredoc_file);
+}
 
 void	run_waitpids(t_env *env)
 {
@@ -25,25 +48,6 @@ void	run_waitpids(t_env *env)
 		env->status = WEXITSTATUS(status);
 		i++;
 	}
-}
-
-void	finish_executor(t_jobs *job, t_env *env)
-{
-	if (access(".heredoc", F_OK) == 0)
-		remove(".heredoc");
-	run_waitpids(env);
-	close(env->saved_stdin);
-	close(env->saved_stdout);
-	free (env->pids);
-	env->redir_error = false;
-}
-
-void	job_reset(t_jobs *job, t_env *env)
-{
-	dup2(env->saved_stdin, STDIN_FILENO);
-	dup2(env->saved_stdout, STDOUT_FILENO);
-	if (job->heredoc_file && access(job->heredoc_file, F_OK) == 0)
-		remove(job->heredoc_file);
 }
 
 bool	executor_statements(t_jobs **job, t_env *env)
@@ -79,15 +83,11 @@ bool	executor_statements(t_jobs **job, t_env *env)
 	return (true);
 }
 
-bool	init_executor(t_jobs *job, t_env *env)
+void	finish_executor(t_jobs *job, t_env *env)
 {
-	if (!job)
-		return (false);
-	env->saved_stdin = dup(STDIN_FILENO);
-	env->saved_stdout = dup(STDOUT_FILENO);
-	env->pids = ft_calloc_pids(job);
-	if (!env->pids)
-		return (false);
-	env->piped = false;
-	return (true);
+	if (access(".heredoc", F_OK) == 0)
+		remove(".heredoc");
+	run_waitpids(env);
+	free (env->pids);
+	env->redir_error = false;
 }

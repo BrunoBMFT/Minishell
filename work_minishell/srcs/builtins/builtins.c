@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/14 20:27:12 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/16 18:21:04 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	try_builtins(t_jobs *job, t_env *env)
 		status = caught_env(job, env);
 	else if (ft_strcmp(job->job[0], "exit") == 0)
 		status = caught_exit(job, env, env->piped);
-	if (env->piped && status != 200)
-		clean_exit(job, env, status);
+/* 	if (env->piped && status != 200)
+		clean_exit(job, env, status); */
 	return (status);
 }
