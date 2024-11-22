@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 00:13:28 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/14 04:41:12 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/11/22 10:15:43 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,15 +111,14 @@ t_jobs	*build(char *command_line, t_env *env)
 	if (!list)
 		return (NULL);
 	if (parse(&list) == -1)
-	{
-		free(command_line);
-		clear_list(&list);
-		return (NULL);
-	}
+		return (env->status = 2, free(command_line), clear_list(&list), NULL);
 	last = get_last_tok(list);
-	while (last && last->type >= PIPE && last->type <= OR && !last->next)
-		if (parse_last_token(&command_line, &list, &last) == -1)
-			return (NULL);
+	if (last && last->type >= PIPE && last->type <= OR && !last->next)
+	{
+		ft_printf_fd(2, "minishell: syntax error near unexpected token `%s\'\n",
+			last->token);
+		return (env->status = 2, free(command_line), clear_list(&list), NULL);
+	}
 	make_job_list(&jobs, &list, env);
 	clear_list(&list);
 	return (free(command_line), jobs);

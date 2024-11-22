@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/14 05:19:51 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/11/22 10:17:10 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	parse_seps_and_redirs(t_token **token, t_token *cur)
 			if (flag != 0)
 				return (-1);
 		}
-		if (cur->type >= PIPE && cur->type <= OR)
+		else if (cur->type >= PIPE && cur->type <= OR)
 		{
 			flag = parse_separators(token, cur, flag);
 			if (flag != 0)
@@ -73,6 +73,14 @@ int	parse_seps_and_redirs(t_token **token, t_token *cur)
 		cur = cur->next;
 	}
 	return (0);
+}
+
+int	syntax_error(t_token *cur, t_token **token, t_var_holder *h)
+{
+	h->temp = "minishell: syntax error near unexpected token `";
+	ft_printf_fd(2, "%s%s\'\n", h->temp, cur->token);
+	clear_list(token);
+	return (-1);
 }
 
 int	parse(t_token **token)
@@ -86,12 +94,7 @@ int	parse(t_token **token)
 	cur = *token;
 	flag = 0;
 	if (cur && cur->type >= PIPE && cur->type <= OR)
-	{
-		h.temp = "minishell: syntax error near unexpected token `";
-		ft_printf_fd(2, "s%s\'\n", h.temp, cur->token);
-		clear_list(token);
-		return (-1);
-	}
+		return (syntax_error(cur, token, &h));
 	if (parse_seps_and_redirs(token, cur) == -1)
 		return (-1);
 	cur = *token;
@@ -104,37 +107,31 @@ int	parse(t_token **token)
 		cur = cur->next;
 	}
 	if (cur && cur->type >= PIPE && cur->type <= OR)
-	{
-		h.temp = "minishell: syntax error near unexpected token `";
-		ft_printf_fd(2, "%s%s\'\n", h.temp, cur->token);
-		clear_list(token);
-		return (-1);
-	}
+		return (syntax_error(cur, token, &h));
 	return (0);
 }
+// int	parse_last_token(char **cmd_line, t_token **list, t_token **last)
+// {
+// 	char	*line;
+// 	char	*new;
+// 	char	*converted;
 
-int	parse_last_token(char **cmd_line, t_token **list, t_token **last)
-{
-	char	*line;
-	char	*new;
-	char	*converted;
-
-	line = readline("> ");
-	if (!line)
-		return (clean_up_build(list, *cmd_line), -1);
-	new = ft_strjoin(*cmd_line, line);
-	free(*cmd_line);
-	free(line);
-	*cmd_line = new;
-	clear_list(list);
-	converted = split_complex_args(*cmd_line);
-	tokenize(list, converted);
-	free(converted);
-	*last = get_last_tok(*list);
-	if (parse(list) == -1)
-	{
-		clean_up_build(list, *cmd_line);
-		return (-1);
-	}
-	return (0);
-}
+// 	line = readline("> ");
+// 	if (!line)
+// 		return (clean_up_build(list, *cmd_line), -1);
+// 	new = ft_strjoin(*cmd_line, line);
+// 	free(*cmd_line);
+// 	free(line);
+// 	*cmd_line = new;
+// 	clear_list(list);
+// 	converted = split_complex_args(*cmd_line);
+// 	tokenize(list, converted);
+// 	free(converted);
+// 	*last = get_last_tok(*list);
+// 	if (parse(list) == -1)
+// 	{
+// 		clean_up_build(list, *cmd_line);
+// 		return (-1);
+// 	}
+// 	return (0);
+// }

@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 01:39:10 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/14 05:31:36 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/11/22 10:48:01 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,14 +90,13 @@ void	update_iterator(t_var_holder *h, char *str)
 			quote = '\0';
 			h->i++;
 		}
-		else if (!in_quote && (str[h->i] == ' ' || str[h->i] == '\t' || str[h->i] == '\n'))
+		else if (!in_quote && (str[h->i] == ' '
+				|| str[h->i] == '\t' || str[h->i] == '\n'))
 		{
 			if (h->i > h->j)
-			{
-				h->array[h->k] = ft_substr(str, h->j, h->i - h->j);
-				h->k++;
-			}
-			while (str[h->i] && (str[h->i] == ' ' || str[h->i] == '\t' || str[h->i] == '\n'))
+				h->array[h->k++] = ft_substr(str, h->j, h->i - h->j);
+			while (str[h->i] && (str[h->i] == ' '
+					|| str[h->i] == '\t' || str[h->i] == '\n'))
 				h->i++;
 			h->j = h->i;
 		}
@@ -111,10 +110,7 @@ void	update_iterator(t_var_holder *h, char *str)
 			h->i++;
 	}
 	if (!in_quote && h->i > h->j)
-	{
-		h->array[h->k] = ft_substr(str, h->j, h->i - h->j);
-		h->k++;
-	}
+		h->array[h->k++] = ft_substr(str, h->j, h->i - h->j);
 }
 
 char	**token_array(char *str)

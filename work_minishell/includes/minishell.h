@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/14 04:40:15 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/11/22 10:31:47 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ typedef enum s_types
 	HEREDOC,
 	APPEND_OUT,
 	EXPORT
-}			t_types;
+}						t_types;
 
 typedef enum e_signal//change name of variables
 {
@@ -58,6 +58,15 @@ typedef enum e_signal//change name of variables
 	HEREDOC_SIG,
 	IGNORE_SIG,
 }						t_signal;
+
+typedef enum e_redir_type
+{
+	REDIR_IN_AMBIGUOUS,
+	REDIR_IN_NO_FILE,
+	REDIR_OUT_AMBIGUOUS,
+	REDIR_OUT_NO_FILE
+}						t_redir_type;
+
 
 typedef struct s_env
 {
@@ -125,6 +134,7 @@ t_token	*get_last_tok(t_token *lst);
 void	go_to_next(t_token **lst, t_token *new);
 
 //lexer:
+int		start_string_parse(char *str, char delimiter, t_var_holder *h);
 void	assign_values(t_jobs **new, t_token **cur, t_env *env);
 char	*filename(int i);
 t_jobs	*build(char *command_line, t_env *env);
@@ -134,7 +144,6 @@ void	go_to_next_job(t_jobs **lst, t_jobs *new);
 void	make_job_list(t_jobs **job_list, t_token **tok_list, t_env *env);
 void	assign_values(t_jobs **new, t_token **cur, t_env *env);
 char	*filename(int i);
-void	apply_redir(t_token *current, t_jobs *job, t_env *env);
 int		count_tokens_in_job(t_token *cur);
 
 //error_correction:
@@ -187,6 +196,8 @@ int		update_output(t_jobs *job, char **env, char **temp_vars);
 int		append_to_file(t_jobs *job, char **env, char **temp_vars);
 int		handle_heredoc(t_jobs *job, t_env env);
 void	print_file(int fd);
+void	set_input(t_jobs *job, char *new_input);
+void	set_output(t_jobs *job, char *new_output); 
 
 //free:
 void	clean_exit(t_jobs *jobs, t_env *env, int status);
