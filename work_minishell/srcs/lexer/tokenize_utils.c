@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 16:52:00 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/14 05:33:07 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/11/22 06:26:39 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,4 +82,5 @@ void	modify_array(char **array, t_env *env)
 		array[i] = temp;
 		i++;
 	}
+	env->status = 0;
 }
