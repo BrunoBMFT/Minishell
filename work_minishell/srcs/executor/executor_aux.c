@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 18:25:38 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/16 18:26:15 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/22 22:44:46 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,8 @@ bool	init_executor(t_jobs *job, t_env *env)
 
 void	job_reset(t_jobs *job, t_env *env)
 {
-	dup2(env->saved_stdin, STDIN_FILENO);
-	dup2(env->saved_stdout, STDOUT_FILENO);
-	close(env->saved_stdin);
-	close(env->saved_stdout);
+	dup2(env->saved_stdin, STDIN_FILENO);//fd leaking
+	dup2(env->saved_stdout, STDOUT_FILENO);//fd leaking
 	if (job->heredoc_file && access(job->heredoc_file, F_OK) == 0)
 		remove(job->heredoc_file);
 }
@@ -53,6 +51,7 @@ void	run_waitpids(t_env *env)
 bool	executor_statements(t_jobs **job, t_env *env)
 {
 	job_reset(*job, env);
+	t_jobs *temp = *job;
 	if ((*job)->next && (*job)->next->type == AND)
 	{
 		env->piped = false;
@@ -60,7 +59,7 @@ bool	executor_statements(t_jobs **job, t_env *env)
 		if (env->status == 0)
 			*job = (*job)->next->next;
 		else
-			return (false);
+			return (clear_single_job(&temp), false);
 	}
 	else if ((*job)->next && (*job)->next->type == OR)
 	{
@@ -80,6 +79,7 @@ bool	executor_statements(t_jobs **job, t_env *env)
 	}
 	else
 		*job = (*job)->next;
+	clear_single_job(&temp);
 	return (true);
 }
 
@@ -88,6 +88,8 @@ void	finish_executor(t_jobs *job, t_env *env)
 	if (access(".heredoc", F_OK) == 0)
 		remove(".heredoc");
 	run_waitpids(env);
+	close(env->saved_stdin);
+	close(env->saved_stdout);
 	free (env->pids);
 	env->redir_error = false;
 }

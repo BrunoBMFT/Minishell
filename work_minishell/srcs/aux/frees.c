@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:18:01 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/13 23:53:56 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/22 22:43:52 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,8 @@ void	clean_exit(t_jobs *jobs, t_env *env, int status)
 {
 	if (jobs->job)
 		clear_jobs(&jobs);
-	if (env->saved_stdin)
-		close (env->saved_stdin);
-	if (env->saved_stdout)
-		close (env->saved_stdout);
+	close (env->saved_stdin);
+	close (env->saved_stdout);
 	if (env->env)
 		free_array(env->env);
 	if (env->pids)
@@ -48,6 +46,21 @@ void	clear_list(t_token **lst)
 		current = temp;
 	}
 	*lst = NULL;
+}
+
+void	clear_single_job(t_jobs **job)
+{
+	if ((*job)->job)
+		free_array((*job)->job);
+	if ((*job)->heredoc_file)
+		free((*job)->heredoc_file);
+	if ((*job)->input)
+		free((*job)->input);
+	if ((*job)->output)
+		free((*job)->output);
+	if ((*job)->delimiters)
+		free((*job)->delimiters);
+	free (*job);
 }
 
 void	clear_jobs(t_jobs **lst)

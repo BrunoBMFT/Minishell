@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/14 17:41:27 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/22 22:53:24 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,6 @@ char	*expansion(char *str, t_var_holder *h, t_env *env);
 char	*unquote_and_direct(char *str, t_env *env);
 bool	is_empty_arg(char *str, char end);
 
-
 //parser:
 int		parse(t_token **token);
 char	*parse_quotes(char *line);
@@ -172,7 +171,6 @@ void	finish_executor(t_jobs *job, t_env *env);
 void	piped_process(t_jobs *job, t_env *env);
 void	simple_process(t_jobs *job, t_env *env);
 void	execute_job(t_jobs *job, t_env *env);
-
 
 //builtins:
 int		try_builtins(t_jobs *job, t_env *env);
@@ -194,6 +192,7 @@ void	print_file(int fd);
 //free:
 void	clean_exit(t_jobs *jobs, t_env *env, int status);
 void	clear_jobs(t_jobs **lst);
+void	clear_single_job(t_jobs **job);
 void	clear_list(t_token **lst);
 void	clean_up_build(t_token **list, char *cmd_line);
 void	free_all(t_token **list, char **array, char *message, int len);
