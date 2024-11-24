@@ -109,7 +109,7 @@ int	handle_heredoc(t_jobs *job, t_env env)
 		{
 			//do output
 			//output error
-			free(line);
+			free (line);
 			break ;
 		}
 		if (ft_strcmp(line, job->delimiters) == 0)

@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/22 22:53:23 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/24 03:05:31 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,15 +43,16 @@ void	executor(t_jobs *job, t_env *env)
 
 void	start_pipe(t_jobs **job, t_env *env)
 {
-	t_jobs *next_job;
+	t_jobs *temp1;
 	t_jobs *temp2;
 
-	next_job = (*job)->next->next;
+	temp1 = (*job);
+	temp2 = (*job)->next;
 	env->piped = true;
 	piped_process((*job), env);
-	clear_single_job(job);
-	clear_single_job(&(*job)->next);
-	*job = next_job;
+	*job = (*job)->next->next;
+	clear_single_job(&temp1);
+	clear_single_job(&temp2);
 }
 
 bool	executor_input(t_jobs *job, t_env *env)
