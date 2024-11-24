@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/13 17:33:38 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/23 06:53:53 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	minishell(char **envp)
 		choose_sig(ROOT_SIG);
 		line = readline("Minishell$ ");
 		if (!line)
-			EOF_sig(line, &env);
+			eof_sig(line, &env);
 		if (line && line[0])//remove if statement
 			add_history(line);
 		if (secondquote(line) == 1)	//remove if you want to request additional info to finish prompt

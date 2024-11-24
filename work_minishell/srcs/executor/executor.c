@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/22 08:34:00 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/11/24 07:47:51 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	executor_statements(t_jobs **job, t_env *env)
 	else if ((*job)->next && (*job)->next->type == OR)
 	{
 		env->piped = false;
-		if (env->status == 0) // TODO WRONG AS FUCK, maybe due to env.status updating somewhere?
+		if (env->status == 0)
 		{
 			while ((*job)->next && (*job)->next->type == OR)
 				*job = (*job)->next->next;
@@ -87,7 +87,7 @@ void	start_executor(t_jobs *job, t_env *env)
 		if (!executor_input(job, env) || !executor_output(job, env))
 		{
 			job = job->next;
-			continue;
+			continue ;
 		}
 		if (job->next && job->next->type == PIPE)
 		{
@@ -101,6 +101,5 @@ void	start_executor(t_jobs *job, t_env *env)
 		job_reset(job, env);
 		executor_statements(&job, env);
 	}
-	finish_executor(job, env);
-	return ;
+	return (finish_executor(job, env), (void) NULL);
 }

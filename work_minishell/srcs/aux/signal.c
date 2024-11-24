@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 03:18:24 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/08 18:16:47 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/23 06:52:46 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void	signal_aux(t_signal type, struct sigaction sa)
 		ignore_signal(&sa, SIGQUIT);
 	}
 }
+
 void	choose_sig(t_signal type)
 {
 	static struct sigaction	sa;
@@ -91,14 +92,4 @@ void	choose_sig(t_signal type)
 	}
 	else
 		signal_aux(type, sa);
-}
-
-void	EOF_sig(char *line, t_env *env)
-{
-	free (line);
-	printf("exit\n");
-	if (env->env)
-		free_array(env->env);
-	rl_clear_history();
-	exit (env->status);
 }

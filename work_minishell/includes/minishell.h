@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/22 10:31:47 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/11/24 07:45:24 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ typedef enum e_redir_type
 	REDIR_OUT_AMBIGUOUS,
 	REDIR_OUT_NO_FILE
 }						t_redir_type;
-
 
 typedef struct s_env
 {
@@ -197,7 +196,7 @@ int		append_to_file(t_jobs *job, char **env, char **temp_vars);
 int		handle_heredoc(t_jobs *job, t_env env);
 void	print_file(int fd);
 void	set_input(t_jobs *job, char *new_input);
-void	set_output(t_jobs *job, char *new_output); 
+void	set_output(t_jobs *job, char *new_output);
 
 //free:
 void	clean_exit(t_jobs *jobs, t_env *env, int status);
@@ -208,7 +207,7 @@ void	free_all(t_token **list, char **array, char *message, int len);
 
 //signals:
 void	choose_sig(t_signal type);
-void	EOF_sig(char *line, t_env *env);
+void	eof_sig(char *line, t_env *env);
 
 //aux:
 char	*update_prompt(void);

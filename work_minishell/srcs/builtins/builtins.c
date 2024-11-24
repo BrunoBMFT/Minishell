@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:45 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/12 17:40:29 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/24 07:54:00 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int	try_builtins(t_jobs *job, t_env *env)
 	status = 200;
 	if (!job->job[0])
 		return (status);
-
 	if (job->input && (ft_strcmp(job->input, "/dev/null") == 0))
 		return (1);
 	if (ft_strcmp(job->job[0], "echo") == 0)

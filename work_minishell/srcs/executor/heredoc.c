@@ -22,7 +22,7 @@ char	*no_quotes_hd(char *str, t_var_holder *h, t_env *env, int **expand_flag)
 	if (!h->before)
 		return (h->new);
 	if (!h->new)
-		h->new = ft_strdup(h->before);//this is leaked in export????
+		h->new = ft_strdup(h->before);
 	else
 	{
 		h->temp = ft_strjoin(h->new, h->before);
@@ -36,7 +36,8 @@ char	*no_quotes_hd(char *str, t_var_holder *h, t_env *env, int **expand_flag)
 	return (h->new);
 }
 
-char	*single_quotes_hd(char *str, t_var_holder *h, char quote, int **expand_flag)
+char	*single_quotes_hd(char *str, t_var_holder *h
+		, char quote, int **expand_flag)
 {
 	if (!h->new)
 		h->new = ft_strdup("");
@@ -57,19 +58,24 @@ char	*single_quotes_hd(char *str, t_var_holder *h, char quote, int **expand_flag
 	return (h->new);
 }
 
+void	init_holder_hd(t_var_holder *h)
+{
+	h->new = NULL;
+	h->before = NULL;
+	h->quoted = NULL;
+	h->after = NULL;
+	h->temp = NULL;
+	h->i = 0;
+	h->start = 0;
+}
+
 void	heredoc_expand_check(int *expand_flag, t_jobs **job, t_env env)
 {
 	char			*str;
 	t_var_holder	h;
 
+	init_holder_hd(&h);
 	str = (*job)->delimiters;
-	h.new = NULL;
-	h.before = NULL;
-	h.quoted = NULL;
-	h.after = NULL;
-	h.temp = NULL;
-	h.i = 0;
-	h.start = 0;
 	if (is_empty_arg(str, '\'') || is_empty_arg(str, '\"'))
 		h.new = ft_strdup("");
 	while (str[h.i])
@@ -96,20 +102,17 @@ int	handle_heredoc(t_jobs *job, t_env env)
 	char	*temp;
 
 	must_expand = 1;
-	redirected_input = open(job->heredoc_file, O_CREAT | O_RDWR | O_TRUNC, 0644);
+	redirected_input = open(job->heredoc_file,
+			O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (redirected_input < 0)
 		return (-1);
-	choose_sig(HEREDOC_SIG);
-	choose_sig(IGNORE_SIG);
-	//heredoc_expand_check(&must_expand, &job, env);
+	choose_sig(HEREDOC_SIG); //not working properly
 	heredoc_expand_check(&must_expand, &job, env);
 	while (1)
 	{
 		line = readline("heredoc>");
 		if (!line)
 		{
-			//do output
-			//output error
 			free(line);
 			break ;
 		}

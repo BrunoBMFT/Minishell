@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/14 05:21:50 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/11/24 07:53:28 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,6 @@ void	execute_job(t_jobs *job, t_env *env)
 		execute_executable(job, env);
 	else if (job->job[0])
 		execute_command(job, env);
-/* 	else if (job->tried_to_expand_but_didnt_exist)//wrong, cause i need to compare only job.job[0] as tried_to_expand
-		clean_exit(job, env, 0); */
 	ft_printf_fd(2, "minishell: %s: command not found\n");
 	clean_exit(job, env, 127);
 }

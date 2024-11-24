@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/12 20:14:07 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/24 07:52:45 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	piped_process(t_jobs *job, t_env *env)// ! signals
 	int		fd[2];
 	pid_t	pid;
 
-	choose_sig(IGNORE_SIG);//correct?
+	choose_sig(IGNORE_SIG);
 	pipe(fd);
 	pid = new_fork(env);
 	if (pid < 0)
@@ -70,7 +70,7 @@ void	simple_process(t_jobs *job, t_env *env)
 	choose_sig(IGNORE_SIG);
 	if (job->job[0] && ft_strcmp(job->job[0], "cd") == 0)
 		return (caught_cd(job, env));
-	status = try_builtins(job, env);//cant run if redirs fail
+	status = try_builtins(job, env);
 	if (status != 200)
 		return (env->status = status, (void) NULL);
 	pid = new_fork(env);

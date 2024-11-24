@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   aux.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:15:54 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/13 18:06:54 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/23 06:58:30 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,15 +59,18 @@ t_env	init_env(char **envp)
 {
 	t_env	env;
 	char	buf[PATH_MAX];
+	char	*path;
 
 	env.env = NULL;
 	env.status = 0;
+	path = "PATH=/bin:/sbin:/usr/bin:/usr/sbin:";
 	if (!envp || !envp[0])
 	{
 		env.env = malloc(sizeof (char *) * 3);
 		if (!env.env)
 			return (ft_printf_fd(2, "error allocating private path\n"), env);
-		env.env[0] = ft_strdup("PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/snap/bin:");
+		env.env[0] = ft_strjoin(path,
+				"/usr/local/bin:/usr/local/sbin:/snap/bin:");
 		env.env[1] = ft_strjoin("PWD=", getcwd(buf, PATH_MAX));
 		env.env[2] = NULL;
 	}
