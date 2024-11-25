@@ -6,24 +6,11 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 18:25:38 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/22 22:44:46 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/24 18:34:10 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-bool	init_executor(t_jobs *job, t_env *env)
-{
-	if (!job)
-		return (false);
-	env->saved_stdin = dup(STDIN_FILENO);
-	env->saved_stdout = dup(STDOUT_FILENO);
-	env->pids = ft_calloc_pids(job);
-	if (!env->pids)
-		return (false);
-	env->piped = false;
-	return (true);
-}
 
 void	job_reset(t_jobs *job, t_env *env)
 {
@@ -47,49 +34,73 @@ void	run_waitpids(t_env *env)
 		i++;
 	}
 }
-
-bool	executor_statements(t_jobs **job, t_env *env)
+//make a func that does the job.next.next while clearing the 2 jobs that are skipped
+bool	run_and(t_jobs **job, t_env *env)
 {
-	job_reset(*job, env);
-	t_jobs *temp = *job;
-	if ((*job)->next && (*job)->next->type == AND)
+	t_jobs *temp1;//make func
+	t_jobs *temp2;//make func
+
+	temp1 = *job;//make func
+	temp2 = (*job)->next;//make func
+	env->piped = false;
+	if (env->status == 0)
 	{
-		env->piped = false;
-		run_waitpids(env);
-		if (env->status == 0)
-			*job = (*job)->next->next;
-		else
-			return (clear_single_job(&temp), false);
-	}
-	else if ((*job)->next && (*job)->next->type == OR)
-	{
-		env->piped = false;
-		run_waitpids(env);
-		if (env->status == 0)
-		{
-			while ((*job)->next && (*job)->next->type == OR)
-				*job = (*job)->next->next;
-			if ((*job)->next)
-				*job = (*job)->next->next;
-			else
-				*job = (*job)->next;
-		}
-		else
-			*job = (*job)->next;
+		*job = (*job)->next->next;//make func
+		clear_single_job(&temp1);//make func
+		clear_single_job(&temp2);//make func
 	}
 	else
-		*job = (*job)->next;
-	clear_single_job(&temp);
+		return (clear_jobs(job), false);//leaks
 	return (true);
 }
 
-void	finish_executor(t_jobs *job, t_env *env)
+void	run_or(t_jobs **job, t_env *env)
 {
-	if (access(".heredoc", F_OK) == 0)
-		remove(".heredoc");
+	t_jobs *temp1;
+	t_jobs *temp2;
+
+	env->piped = false;
+	if (env->status == 0)
+	{
+		temp1 = (*job);
+		temp2 = (*job)->next;
+		while ((*job)->next && (*job)->next->type == OR)
+		{
+			*job = (*job)->next->next;
+		}
+		if ((*job)->next && (*job)->next->type == OR)
+		{
+			*job = (*job)->next->next;
+			// clear_single_job(&temp1);//make func
+			// clear_single_job(&temp2);//make func
+		}
+		else
+		{
+			// *job = (*job)->next;
+		}
+	}
+	else
+		*job = (*job)->next;
+}
+
+bool	loop_executor(t_jobs **job, t_env *env)
+{
+	t_jobs *temp;
+
+	temp = *job;
 	run_waitpids(env);
-	close(env->saved_stdin);
-	close(env->saved_stdout);
-	free (env->pids);
-	env->redir_error = false;
+	job_reset(*job, env);
+	if ((*job)->next && (*job)->next->type == AND)
+	{
+		if (!run_and(job, env))
+			return (false);
+	}
+	else if ((*job)->next && (*job)->next->type == OR)
+		run_or(job, env);
+	else
+	{
+		*job = (*job)->next;
+		clear_single_job(&temp);
+	}
+	return (true);
 }

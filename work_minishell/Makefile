@@ -6,7 +6,7 @@
 #    By: bruno <bruno@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/23 16:39:56 by ycantin           #+#    #+#              #
-#    Updated: 2024/11/13 17:19:38 by bruno            ###   ########.fr        #
+#    Updated: 2024/11/24 16:40:34 by bruno            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ RM = rm -f
 AUX_SRCS = aux.c frees.c signal.c
 EXPAND_SRCS = expansion.c expansion_utils.c error_correction.c error_correction_utils.c 
 LEXER_SRCS = lexer.c lexer_utils.c lexer_utils_2.c redirections.c tokenize.c tokenize_utils.c parse.c parse2.c parse3.c
-EXECUTOR_SRCS = executor.c executor_aux.c process.c process_aux.c heredoc.c
+EXECUTOR_SRCS = executor.c executor_aux.c executor_redirs.c process.c process_aux.c heredoc.c
 BUILTINS_SRCS = builtins.c export.c pwd.c env.c unset.c cd.c echo.c exit.c
 
 OBJS_DIR = ./objs

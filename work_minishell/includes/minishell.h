@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/22 22:53:24 by bruno            ###   ########.fr       */
+/*   Updated: 2024/11/24 16:33:19 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,13 +161,13 @@ int		parse_token(t_token *t, bool *in_sq, bool *in_dq, t_var_holder *h);
 
 //executor
 void	executor(t_jobs *job, t_env *env);
-bool	init_executor(t_jobs *job, t_env *env);
 bool	executor_input(t_jobs *job, t_env *env);
 bool	executor_output(t_jobs *job, t_env *env);
 void	start_pipe(t_jobs **job, t_env *env);
-void	job_reset(t_jobs *job, t_env *env);
-bool	executor_statements(t_jobs **job, t_env *env);
-void	finish_executor(t_jobs *job, t_env *env);
+bool	loop_executor(t_jobs **job, t_env *env);
+
+
+
 void	piped_process(t_jobs *job, t_env *env);
 void	simple_process(t_jobs *job, t_env *env);
 void	execute_job(t_jobs *job, t_env *env);
