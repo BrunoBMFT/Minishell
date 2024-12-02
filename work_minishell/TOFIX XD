@@ -1,3 +1,30 @@
+
+
+
+
+
+
+
+
+TEST:
+every builtin with valgrind, with every exit code and error possibility✅
+pipex testing ("" and errors in different parts of pipe)🟡 (2nd com waits)
+redirections (working, missing, ambiguous)
+expansions with valgrind
+signals
+heredoc
+
+
+
+
+
+
+
+
+
+
+
+
 Signals
 
 FIX:

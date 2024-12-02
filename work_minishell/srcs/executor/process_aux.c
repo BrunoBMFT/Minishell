@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/14 17:40:13 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/02 16:00:42 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,10 +94,8 @@ void	execute_job(t_jobs *job, t_env *env)
 	setup_signal(CHILD_SIG);
 	if (job->job[0] && ft_strchr(job->job[0], '/'))
 		execute_executable(job, env);
-	else if (job->job[0])//check for $var and ""
+	else if (job->job[0])
 		execute_command(job, env);
-/* 	else if (job->tried_to_expand_but_didnt_exist)//wrong, cause i need to compare only job.job[0] as tried_to_expand
-		clean_exit(job, env, 0); */
 	ft_printf_fd(2, "minishell: %s: command not found\n");
 	clean_exit(job, env, 127);
 }

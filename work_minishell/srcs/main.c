@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/24 03:02:34 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/02 15:59:30 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	minishell(char **envp)
 		line = readline("Minishell$ ");
 		if (!line)
 			EOF_sig(line, &env);
-		if (line && line[0])//remove if statement
+		if (line && line[0])//remove if statement?
 			add_history(line);
 		if (secondquote(line) == 1)	//remove if you want to request additional info to finish prompt
 		{
@@ -48,7 +48,6 @@ void	minishell(char **envp)
 		jobs = build(line, &env);
 		current = jobs;
 		executor(current, &env);
-		// clear_jobs(&jobs);
 	}
 }
 

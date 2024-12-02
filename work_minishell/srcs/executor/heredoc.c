@@ -22,7 +22,7 @@ char	*no_quotes_hd(char *str, t_var_holder *h, t_env *env, int **expand_flag)
 	if (!h->before)
 		return (h->new);
 	if (!h->new)
-		h->new = ft_strdup(h->before);//this is leaked in export????
+		h->new = ft_strdup(h->before);
 	else
 	{
 		h->temp = ft_strjoin(h->new, h->before);
@@ -107,8 +107,6 @@ int	handle_heredoc(t_jobs *job, t_env env)
 		line = readline("heredoc>");
 		if (!line)
 		{
-			//do output
-			//output error
 			free (line);
 			break ;
 		}

@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/24 16:41:29 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/02 16:00:32 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,27 @@ void	finish_executor(t_jobs *job, t_env *env)
 	env->redir_error = false;
 }
 
+void	skip_job(t_jobs **job)
+{
+	t_jobs *temp;
+
+	temp = *job;
+	*job = (*job)->next;
+	clear_single_job(&temp);
+}
+
+void	skip_job_2(t_jobs **job)
+{
+	t_jobs *temp1;
+	t_jobs *temp2;
+
+	temp1 = *job;
+	temp2 = (*job)->next;
+	*job = (*job)->next->next;
+	clear_single_job(&temp1);
+	clear_single_job(&temp2);
+}
+
 void	executor(t_jobs *job, t_env *env)
 {
 	if (!init_executor(job, env))
@@ -45,7 +66,7 @@ void	executor(t_jobs *job, t_env *env)
 			modify_array(job->job, env);
 		if (!executor_input(job, env) || !executor_output(job, env))
 		{
-			job = job->next;
+			skip_job(&job);
 			continue ;
 		}
 		if (job->next && job->next->type == PIPE)

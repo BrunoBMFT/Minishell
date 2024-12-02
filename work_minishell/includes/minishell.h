@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/24 16:33:19 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/02 14:21:19 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,8 @@ bool	executor_input(t_jobs *job, t_env *env);
 bool	executor_output(t_jobs *job, t_env *env);
 void	start_pipe(t_jobs **job, t_env *env);
 bool	loop_executor(t_jobs **job, t_env *env);
+void	skip_job(t_jobs **job);
+void	skip_job_2(t_jobs **job);
 
 
 

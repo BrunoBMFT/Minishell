@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:18:01 by ycantin           #+#    #+#             */
-/*   Updated: 2024/11/24 18:31:56 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/02 15:59:12 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	clear_list(t_token **lst)
 	*lst = NULL;
 }
 
-void	clear_single_job(t_jobs **job)//make function to skip to job.next.next while freeing whats necessary
+void	clear_single_job(t_jobs **job)
 {
 	if ((*job)->job)
 		free_array((*job)->job);

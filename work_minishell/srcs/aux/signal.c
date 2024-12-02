@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 03:18:24 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/14 17:40:05 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/02 15:59:05 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ void	root_handler(int signal, siginfo_t *info, void *context)
 	(void)context;
 	if (signal == SIGINT)
 	{
-		ft_printf("\n");//1
-		rl_on_new_line();//2
-		rl_replace_line("", 0);//3
-		rl_redisplay();//4
+		ft_printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
 	}
 }
 
@@ -72,18 +72,13 @@ void	setup_signal(t_signal type)
 	if (type == ROOT_SIG)
 	{
 		sa.sa_sigaction = root_handler;
-		sa.sa_flags = SA_SIGINFO;//additional info about the signal will be passed to handler
-	//inits the set, no additional signals are blocked while sigint is being handled
+		sa.sa_flags = SA_SIGINFO;
 		sigemptyset(&sa.sa_mask);
 		sigaction(SIGINT, &sa, NULL);
 		ignore_signal(SIGQUIT, &sa);
 	}
-//basically this child type is for signals to work how they usually work in shell, 
-//	thats why we default the handlers for sa. 
-//when sigaction is called, it will associate the sa (with handler) to the action (SIGINT etc)
 	else if (type == CHILD_SIG)
 	{
-// SIGFDFL puts every single back to default, instead of the changes we are making here
 		sa.sa_handler = SIG_DFL;
 		sa.sa_flags = 0;
 		sigemptyset(&sa.sa_mask);

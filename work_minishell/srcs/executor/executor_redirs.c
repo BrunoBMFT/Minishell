@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 16:40:37 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/24 17:45:29 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/02 14:15:23 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,14 +60,7 @@ bool	executor_output(t_jobs *job, t_env *env)
 
 void	start_pipe(t_jobs **job, t_env *env)
 {
-	t_jobs *temp1;//make func
-	t_jobs *temp2;//make func
-
-	temp1 = (*job);//make func
-	temp2 = (*job)->next;//make func
 	env->piped = true;
 	piped_process((*job), env);
-	*job = (*job)->next->next;
-	clear_single_job(&temp1);//make func
-	clear_single_job(&temp2);//make func
+	skip_job_2(job);
 }
