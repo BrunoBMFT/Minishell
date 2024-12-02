@@ -6,18 +6,29 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 18:25:38 by bruno             #+#    #+#             */
-/*   Updated: 2024/12/02 16:00:14 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/02 23:27:21 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	job_reset(t_jobs *job, t_env *env)
+void	*ft_calloc_pids(t_jobs *job)
 {
-	dup2(env->saved_stdin, STDIN_FILENO);
-	dup2(env->saved_stdout, STDOUT_FILENO);
-	if (job->heredoc_file && access(job->heredoc_file, F_OK) == 0)
-		remove(job->heredoc_file);
+	int		*dest;
+	int		i;
+	int		size;
+
+	size = count_processes(&job);
+	dest = malloc(sizeof(pid_t) * size);
+	if (!dest)
+		return (NULL);
+	i = 0;
+	while (i < size)
+	{
+		dest[i] = -1;
+		i++;
+	}
+	return (dest);
 }
 
 void	run_waitpids(t_env *env)
@@ -47,7 +58,6 @@ bool	run_and(t_jobs **job, t_env *env)
 
 void	run_or(t_jobs **job, t_env *env)
 {
-
 	env->piped = false;
 	if (env->status == 0)
 	{

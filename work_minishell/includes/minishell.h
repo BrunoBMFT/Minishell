@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/12/02 14:21:19 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/02 23:30:41 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,9 +167,6 @@ void	start_pipe(t_jobs **job, t_env *env);
 bool	loop_executor(t_jobs **job, t_env *env);
 void	skip_job(t_jobs **job);
 void	skip_job_2(t_jobs **job);
-
-
-
 void	piped_process(t_jobs *job, t_env *env);
 void	simple_process(t_jobs *job, t_env *env);
 void	execute_job(t_jobs *job, t_env *env);
@@ -201,7 +198,7 @@ void	free_all(t_token **list, char **array, char *message, int len);
 
 //signals:
 void	setup_signal(t_signal type);
-void	EOF_sig(char *line, t_env *env);
+void	eof_sig(char *line, t_env *env);
 
 //aux:
 char	*update_prompt(void);

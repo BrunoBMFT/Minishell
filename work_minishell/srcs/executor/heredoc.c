@@ -36,7 +36,8 @@ char	*no_quotes_hd(char *str, t_var_holder *h, t_env *env, int **expand_flag)
 	return (h->new);
 }
 
-char	*single_quotes_hd(char *str, t_var_holder *h, char quote, int **expand_flag)
+char	*single_quotes_hd(char *str, t_var_holder *h,
+		char quote, int **expand_flag)
 {
 	if (!h->new)
 		h->new = ft_strdup("");
@@ -57,19 +58,24 @@ char	*single_quotes_hd(char *str, t_var_holder *h, char quote, int **expand_flag
 	return (h->new);
 }
 
+void	init_heredoc(t_var_holder *h)
+{
+	h->new = NULL;
+	h->before = NULL;
+	h->quoted = NULL;
+	h->after = NULL;
+	h->temp = NULL;
+	h->i = 0;
+	h->start = 0;
+}
+
 void	heredoc_expand_check(int *expand_flag, t_jobs **job, t_env env)
 {
 	char			*str;
 	t_var_holder	h;
 
 	str = (*job)->delimiters;
-	h.new = NULL;
-	h.before = NULL;
-	h.quoted = NULL;
-	h.after = NULL;
-	h.temp = NULL;
-	h.i = 0;
-	h.start = 0;
+	init_heredoc(&h);
 	if (is_empty_arg(str, '\'') || is_empty_arg(str, '\"'))
 		h.new = ft_strdup("");
 	while (str[h.i])
@@ -88,15 +94,37 @@ void	heredoc_expand_check(int *expand_flag, t_jobs **job, t_env env)
 	(*job)->delimiters = h.new;
 }
 
+bool	heredoc_proc(t_jobs *job, t_env env, int exp, int redirect)
+{
+	char	*line;	
+	char	*temp;
+
+	line = readline("heredoc>");
+	if (!line || ft_strcmp(line, job->delimiters) == 0)
+	{
+		free (line);
+		return (false);
+	}
+	if (exp)
+	{
+		temp = expand(line, &env);
+		ft_putendl_fd(temp, redirect);
+		free(temp);
+	}
+	else
+		ft_putendl_fd(line, redirect);
+	free (line);
+	return (true);
+}
+
 int	handle_heredoc(t_jobs *job, t_env env)
 {
 	int		redirected_input;
-	char	*line;
 	int		must_expand;
-	char	*temp;
 
 	must_expand = 1;
-	redirected_input = open(job->heredoc_file, O_CREAT | O_RDWR | O_TRUNC, 0644);
+	redirected_input = open(job->heredoc_file,
+			O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (redirected_input < 0)
 		return (-1);
 	setup_signal(HEREDOC_SIG);
@@ -104,26 +132,8 @@ int	handle_heredoc(t_jobs *job, t_env env)
 	heredoc_expand_check(&must_expand, &job, env);
 	while (1)
 	{
-		line = readline("heredoc>");
-		if (!line)
-		{
-			free (line);
+		if (!heredoc_proc(job, env, must_expand, redirected_input))
 			break ;
-		}
-		if (ft_strcmp(line, job->delimiters) == 0)
-		{
-			free(line);
-			break ;
-		}
-		if (must_expand)
-		{
-			temp = expand(line, &env);
-			ft_putendl_fd(temp, redirected_input);
-			free(temp);
-		}
-		else
-			ft_putendl_fd(line, redirected_input);
-		free (line);
 	}
 	close (redirected_input);
 	return (0);

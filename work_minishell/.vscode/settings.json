@@ -18,7 +18,8 @@
 		"types.h": "c",
 		"history.h": "c",
 		"limits.h": "c",
-		"stdlib.h": "c"
+		"stdlib.h": "c",
+		"typeinfo": "c"
 	},
 	"makefile.configureOnOpen": false
 }

@@ -1,32 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_replace_free.c                                  :+:      :+:    :+:   */
+/*   signals_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/03 17:44:53 by bruno             #+#    #+#             */
-/*   Updated: 2024/12/02 23:00:03 by bruno            ###   ########.fr       */
+/*   Created: 2024/12/02 23:20:22 by bruno             #+#    #+#             */
+/*   Updated: 2024/12/02 23:26:24 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../includes/minishell.h"
 
-void	replace_and_free(char **target, char *replacement)
+void	eof_sig(char *line, t_env *env)
 {
-	if (*target)
-		free(*target);
-	*target = replacement;
-}
-
-void	free_and_allocate(char **target, char *replacement, bool to_free)
-{
-	if (*target)
-		free(*target);
-	if (!replacement)
-		*target = NULL;
-	else
-		*target = ft_strdup(replacement);
-	if (to_free && replacement)
-		free(replacement);
+	free (line);
+	printf("exit\n");
+	if (env->env)
+		free_array(env->env);
+	rl_clear_history();
+	exit (env->status);
 }

@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 00:13:28 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/13 17:56:20 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/02 23:17:25 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ t_token	*developed_cmdline_tokenization(char *command_line)
 	char	*simplified;
 	char	*error;
 	t_token	*list;
-	t_token *temp;
+	t_token	*temp;
 
 	list = NULL;
 	error = "Minishell: syntax error near unexpected token `newline'\n";
@@ -87,7 +87,7 @@ void	make_job_list(t_jobs **job_list, t_token **tok_list, t_env *env)
 			continue ;
 		}
 		if (new->heredoc_file)
-    		free(new->heredoc_file);
+			free(new->heredoc_file);
 		new->heredoc_file = filename(i);
 		new->job = job_array(&cur, &new, env);
 		new->type = WORD;

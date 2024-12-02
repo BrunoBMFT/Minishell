@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/12/02 16:00:32 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/02 23:27:25 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,25 +35,12 @@ void	finish_executor(t_jobs *job, t_env *env)
 	env->redir_error = false;
 }
 
-void	skip_job(t_jobs **job)
+void	job_reset(t_jobs *job, t_env *env)
 {
-	t_jobs *temp;
-
-	temp = *job;
-	*job = (*job)->next;
-	clear_single_job(&temp);
-}
-
-void	skip_job_2(t_jobs **job)
-{
-	t_jobs *temp1;
-	t_jobs *temp2;
-
-	temp1 = *job;
-	temp2 = (*job)->next;
-	*job = (*job)->next->next;
-	clear_single_job(&temp1);
-	clear_single_job(&temp2);
+	dup2(env->saved_stdin, STDIN_FILENO);
+	dup2(env->saved_stdout, STDOUT_FILENO);
+	if (job->heredoc_file && access(job->heredoc_file, F_OK) == 0)
+		remove(job->heredoc_file);
 }
 
 void	executor(t_jobs *job, t_env *env)
@@ -84,4 +71,3 @@ void	executor(t_jobs *job, t_env *env)
 	finish_executor(job, env);
 	return ;
 }
-

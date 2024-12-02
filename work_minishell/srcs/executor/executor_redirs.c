@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 16:40:37 by bruno             #+#    #+#             */
-/*   Updated: 2024/12/02 14:15:23 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/02 23:37:53 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,25 @@ void	start_pipe(t_jobs **job, t_env *env)
 	env->piped = true;
 	piped_process((*job), env);
 	skip_job_2(job);
+}
+
+void	skip_job(t_jobs **job)
+{
+	t_jobs	*temp;
+
+	temp = *job;
+	*job = (*job)->next;
+	clear_single_job(&temp);
+}
+
+void	skip_job_2(t_jobs **job)
+{
+	t_jobs	*temp1;
+	t_jobs	*temp2;
+
+	temp1 = *job;
+	temp2 = (*job)->next;
+	*job = (*job)->next->next;
+	clear_single_job(&temp1);
+	clear_single_job(&temp2);
 }

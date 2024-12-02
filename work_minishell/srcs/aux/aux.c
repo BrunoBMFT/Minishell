@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:15:54 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/16 18:25:02 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/02 23:32:56 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,23 +55,33 @@ char	**dup_env(char **envp)
 	return (new_env);
 }
 
+t_env	no_env(void)
+{
+	t_env	new_env;
+	char	*temp;
+	char	buf[PATH_MAX];
+
+	new_env.env = malloc(sizeof (char *) * 3);
+	if (!new_env.env)
+		return (ft_printf_fd(2, "error allocating private path\n"), new_env);
+	temp = ft_strjoin("PATH=/bin:/sbin:/usr/bin:/usr/sbin:",
+			"/usr/local/bin:/usr/local/sbin:/snap/bin:");
+	new_env.env[0] = ft_strdup(temp);
+	free (temp);
+	new_env.env[1] = ft_strjoin("PWD=", getcwd(buf, PATH_MAX));
+	new_env.env[2] = NULL;
+	return (new_env);
+}
+
 t_env	init_env(char **envp)
 {
 	t_env	env;
-	char	buf[PATH_MAX];
 
 	env.env = NULL;
 	env.status = 0;
 	env.redir_error = false;
 	if (!envp || !envp[0])
-	{
-		env.env = malloc(sizeof (char *) * 3);
-		if (!env.env)
-			return (ft_printf_fd(2, "error allocating private path\n"), env);
-		env.env[0] = ft_strdup("PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/snap/bin:");
-		env.env[1] = ft_strjoin("PWD=", getcwd(buf, PATH_MAX));
-		env.env[2] = NULL;
-	}
+		return (no_env());
 	else
 		env.env = dup_env(envp);
 	return (env);
@@ -91,23 +101,4 @@ int	count_processes(t_jobs **jobs)
 		job = job->next;
 	}
 	return (i + 1);
-}
-
-void	*ft_calloc_pids(t_jobs *job)
-{
-	int		*dest;
-	int		i;
-	int		size;
-
-	size = count_processes(&job);
-	dest = malloc(sizeof(pid_t) * size);
-	if (!dest)
-		return (NULL);
-	i = 0;
-	while (i < size)
-	{
-		dest[i] = -1;
-		i++;
-	}
-	return (dest);
 }
