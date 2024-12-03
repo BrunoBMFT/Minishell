@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/12/03 15:32:02 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/03 19:40:53 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int	parse_token(t_token *t, bool *in_sq, bool *in_dq, t_var_holder *h)
 			i.j = i.i;
 			i.count = 0;
 			while (t->token[i.j] && (t->token[i.j] == '>'
-				|| t->token[i.j] == '<'))
+					|| t->token[i.j] == '<'))
 			{
 				i.j++;
 				i.count++;
@@ -135,6 +135,3 @@ int	parse_token(t_token *t, bool *in_sq, bool *in_dq, t_var_holder *h)
 	}
 	return (0);
 }
-//handle case like echo<> or echo<"THERE"< as errors while still 
-//allowing echo<"THERE" -----> I might have to check my error 
-//correction function so that it splits when finding redirections 
