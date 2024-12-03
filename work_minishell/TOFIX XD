@@ -3,32 +3,17 @@
 
 
 
-
-
-
 TEST:
 every builtin with valgrind, with every exit code and error possibility✅
-pipex testing ("" and errors in different parts of pipe)🟡 (2nd com waits)
-redirections (working, missing, ambiguous)
-expansions with valgrind
-signals
-heredoc
-
-
-
-
-
-
-
-
-
+pipex testing ("" and errors in different parts of pipe)🟡 (2nd com waits?)
+redirections (working, missing, ambiguous)✅
+expansions with valgrind✅
+signals✅
+heredoc✅
 
 
 
 Signals
-
-FIX:
-check open fds (one is open at the end)
 
 heredoc
 ctrl+c stops it
@@ -41,12 +26,5 @@ with things written ctrl+d does NOT stops it
 eval sheet:
 ctrl+c && ctrl+\ with blocking command (cat)
 ctrl+\ prints quit core dumped
+ctrl+c makes exit code 130
 
-
-(weird ones)
-echo hello <> out
-export 1=a | echo hi
-"" echo hi (leaks)
-$empty vs ""
-
-norminette

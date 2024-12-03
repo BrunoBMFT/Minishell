@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:43:23 by ycantin           #+#    #+#             */
-/*   Updated: 2024/12/02 23:22:16 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/03 15:34:53 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	minishell(char **envp)
 			eof_sig(line, &env);
 		if (line && line[0])
 			add_history(line);
-		if (secondquote(line) == 1)//remove if you want to request additional info to finish prompt
+		if (secondquote(line) == 1)
 		{
 			free(line);
 			ft_printf("minishell: unclosed quote\n");

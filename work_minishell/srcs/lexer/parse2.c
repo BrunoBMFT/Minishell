@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/13 17:18:29 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/03 15:32:02 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,8 @@ int	parse_token(t_token *t, bool *in_sq, bool *in_dq, t_var_holder *h)
 		{
 			i.j = i.i;
 			i.count = 0;
-			while (t->token[i.j] && t->token[i.j] == '>'
-				|| t->token[i.j] == '<')
+			while (t->token[i.j] && (t->token[i.j] == '>'
+				|| t->token[i.j] == '<'))
 			{
 				i.j++;
 				i.count++;

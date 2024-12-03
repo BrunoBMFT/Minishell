@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/13 17:18:26 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/03 15:31:33 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,10 @@ int	parse(t_token **token)
 {
 	t_var_holder	h;
 	t_token			*cur;
-	int				flag;
 	bool			in_sq;
 	bool			in_dq;
 
 	cur = *token;
-	flag = 0;
 	if (cur && cur->type >= PIPE && cur->type <= OR)
 	{
 		h.temp = "minishell: syntax error near unexpected token `";

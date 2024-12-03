@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/12/02 23:27:25 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/03 15:32:55 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ bool	init_executor(t_jobs *job, t_env *env)
 	return (true);
 }
 
-void	finish_executor(t_jobs *job, t_env *env)
+void	finish_executor(t_env *env)
 {
 	if (access(".heredoc", F_OK) == 0)
 		remove(".heredoc");
@@ -68,6 +68,6 @@ void	executor(t_jobs *job, t_env *env)
 		if (!loop_executor(&job, env))
 			break ;
 	}
-	finish_executor(job, env);
+	finish_executor(env);
 	return ;
 }

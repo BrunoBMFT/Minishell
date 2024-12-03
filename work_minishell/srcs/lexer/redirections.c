@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:46:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/12/02 23:33:14 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/03 15:31:04 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ void	apply_output(t_jobs *job, t_token *current, t_env *env)
 
 void	apply_redir(t_token *current, t_jobs *job, t_env *env)
 {
-	int		fd;
 	char	*temp;
 
 	if (current->type == HEREDOC)

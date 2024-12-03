@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/12/02 23:30:41 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/03 15:35:54 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@
 # include <dirent.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-
-static volatile sig_atomic_t	sig = 0;//global var needs to start with g_
 
 # define WRITE 1
 # define READ 0
@@ -114,7 +112,6 @@ typedef struct s_jobs
 	struct s_jobs	*next;
 }	t_jobs;
 
-
 //tokenizer:
 void	tokenize(t_token **list, char *str);
 char	**token_array(char *str);
@@ -165,6 +162,7 @@ bool	executor_input(t_jobs *job, t_env *env);
 bool	executor_output(t_jobs *job, t_env *env);
 void	start_pipe(t_jobs **job, t_env *env);
 bool	loop_executor(t_jobs **job, t_env *env);
+void	job_reset(t_jobs *job, t_env *env);
 void	skip_job(t_jobs **job);
 void	skip_job_2(t_jobs **job);
 void	piped_process(t_jobs *job, t_env *env);
@@ -186,7 +184,7 @@ void	update_input(t_jobs *job);
 int		update_output(t_jobs *job, char **env, char **temp_vars);
 int		append_to_file(t_jobs *job, char **env, char **temp_vars);
 int		handle_heredoc(t_jobs *job, t_env env);
-void	print_file(int fd);
+void	heredoc_expand_check(int *expand_flag, t_jobs **job, t_env env);
 
 //free:
 void	clean_exit(t_jobs *jobs, t_env *env, int status);
@@ -204,6 +202,7 @@ void	eof_sig(char *line, t_env *env);
 char	*update_prompt(void);
 int		ft_getpid(void);
 char	**dup_env(char **envp);
+int		count_processes(t_jobs **jobs);
 void	*ft_calloc_pids(t_jobs *job);
 t_env	init_env(char **envp);
 

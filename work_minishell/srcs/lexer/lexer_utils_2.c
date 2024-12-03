@@ -6,7 +6,7 @@
 /*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 15:03:22 by bruno             #+#    #+#             */
-/*   Updated: 2024/12/02 23:06:54 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/03 15:30:45 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ char	*filename(int i)
 
 void	assign_values(t_jobs **new, t_token **cur, t_env *env)
 {
+	(void)env;
 	if ((*cur)->type > 0 && (*cur)->type < 4)
 	{
 		(*new)->type = (*cur)->type;
