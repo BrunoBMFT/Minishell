@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bruno <bruno@student.42.fr>                +#+  +:+       +#+         #
+#    By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/23 16:39:56 by ycantin           #+#    #+#              #
-#    Updated: 2024/12/03 15:30:01 by bruno            ###   ########.fr        #
+#    Updated: 2024/12/03 20:32:35 by ycantin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ RM = rm -f
 
 AUX_SRCS = aux.c frees.c signal.c signals_utils.c
 EXPAND_SRCS = expansion.c expansion_utils.c expansion_utils_2.c error_correction.c error_correction_utils.c 
-LEXER_SRCS = lexer.c lexer_utils.c lexer_utils_2.c redirections.c tokenize.c tokenize_utils.c parse.c parse2.c parse3.c
+LEXER_SRCS = lexer.c lexer_utils.c lexer_utils_2.c redirections.c tokenize.c tokenize_utils.c tokenize_utils2.c parse.c parse2.c parse3.c parse4.c
 EXECUTOR_SRCS = executor.c executor_aux.c executor_redirs.c process.c process_aux.c heredoc.c heredoc_exp.c
 BUILTINS_SRCS = builtins.c export.c pwd.c env.c unset.c cd.c echo.c exit.c
 

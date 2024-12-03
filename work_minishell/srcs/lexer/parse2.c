@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/12/03 19:40:53 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/03 20:30:26 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,52 +86,76 @@ int	start_string_parse(char *str, char delimiter, t_var_holder *h)
 	return (parse_string(str, h));
 }
 
+// int	parse_token(t_token *t, bool *in_sq, bool *in_dq, t_var_holder *h)
+// {
+// 	t_var_holder	i;
+
+// 	i.temp = "minishell: syntax error near unexpected token `newline'\n";
+// 	i.temp2 = "minishell: syntax error near unexpected token `";
+// 	i.i = 0;
+// 	while (t->token[i.i])
+// 	{
+// 		if (t->token[i.i] == '\'' && !*in_dq)
+// 			*in_sq = !*in_sq;
+// 		else if (t->token[i.i] == '\"' && !*in_sq)
+// 			*in_dq = !*in_dq;
+// 		if (*in_sq || *in_dq)
+// 		{
+// 			i.i++;
+// 			continue ;
+// 		}
+// 		if (t->token[i.i] == '&' || t->token[i.i] == '|')
+// 		{
+// 			if (start_string_parse(t->token + (i.i + 1)
+// 					, t->token[i.i], h) == -1)
+// 				return (-1);
+// 		}
+// 		else if (t->token[i.i] == '<' || t->token[i.i] == '>')
+// 		{
+// 			i.j = i.i;
+// 			i.count = 0;
+// 			while (t->token[i.j] && (t->token[i.j] == '>'
+// 					|| t->token[i.j] == '<'))
+// 			{
+// 				i.j++;
+// 				i.count++;
+// 			}
+// 			if (i.count > 2)
+// 				return (ft_printf_fd(2, "%s%c\n", i.temp2
+// 						, t->token[i.count - 1]), -1);
+// 			i.len = ft_strlen(t->token) - 1;
+// 			if (i.len != 1 && (t->token[i.len] == '<'
+// 					|| t->token[i.len] == '>') && !t->next)
+// 				return (ft_printf_fd(2, "%s", i.temp), -1);
+// 			if (start_string_parse((t->token + (i.i + 1))
+// 					, t->token[i.i], h) == -1)
+// 				return (-1);
+// 		}
+// 		i.i++;
+// 	}
+// 	return (0);
+// }
+
 int	parse_token(t_token *t, bool *in_sq, bool *in_dq, t_var_holder *h)
 {
-	t_var_holder	i;
+	int	i;
 
-	i.temp = "minishell: syntax error near unexpected token `newline'\n";
-	i.temp2 = "minishell: syntax error near unexpected token `";
-	i.i = 0;
-	while (t->token[i.i])
+	i = 0;
+	while (t->token[i])
 	{
-		if (t->token[i.i] == '\'' && !*in_dq)
-			*in_sq = !*in_sq;
-		else if (t->token[i.i] == '\"' && !*in_sq)
-			*in_dq = !*in_dq;
-		if (*in_sq || *in_dq)
+		if (update_quote_status(t->token[i], in_sq, in_dq))
 		{
-			i.i++;
+			i++;
 			continue ;
 		}
-		if (t->token[i.i] == '&' || t->token[i.i] == '|')
+		if (handle_special_chars(t, i, h) == -1)
+			return (-1);
+		if (t->token[i] == '<' || t->token[i] == '>')
 		{
-			if (start_string_parse(t->token + (i.i + 1)
-					, t->token[i.i], h) == -1)
+			if (handle_redirects(t, i, h) == -1)
 				return (-1);
 		}
-		else if (t->token[i.i] == '<' || t->token[i.i] == '>')
-		{
-			i.j = i.i;
-			i.count = 0;
-			while (t->token[i.j] && (t->token[i.j] == '>'
-					|| t->token[i.j] == '<'))
-			{
-				i.j++;
-				i.count++;
-			}
-			if (i.count > 2)
-				return (ft_printf_fd(2, "%s%c\n", i.temp2
-						, t->token[i.count - 1]), -1);
-			i.len = ft_strlen(t->token) - 1;
-			if (i.len != 1 && (t->token[i.len] == '<'
-					|| t->token[i.len] == '>') && !t->next)
-				return (ft_printf_fd(2, "%s", i.temp), -1);
-			if (start_string_parse((t->token + (i.i + 1))
-					, t->token[i.i], h) == -1)
-				return (-1);
-		}
-		i.i++;
+		i++;
 	}
 	return (0);
 }
