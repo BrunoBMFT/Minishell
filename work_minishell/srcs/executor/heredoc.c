@@ -18,8 +18,6 @@ bool	heredoc_proc(t_jobs *job, t_env env, int exp, int redirect)
 	char	*temp;
 
 	line = readline("heredoc>");
-	if (g_sig == 1)
-		return (free (line), false);
 	if (!line || ft_strcmp(line, job->delimiters) == 0)
 		return (free (line), false);
 	if (exp)
@@ -38,19 +36,26 @@ int	handle_heredoc(t_jobs *job, t_env env)
 {
 	int		redirected_input;
 	int		must_expand;
+	pid_t	pid;
 
 	must_expand = 1;
 	redirected_input = open(job->heredoc_file,
 			O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (redirected_input < 0)
 		return (-1);
-	setup_signal(HEREDOC_SIG);
 	heredoc_expand_check(&must_expand, &job, env);
-	while (1)
+	pid = fork();
+	setup_signal(IGNORE_SIG);
+	if (pid == 0)
 	{
-		if (!heredoc_proc(job, env, must_expand, redirected_input))
-			break ;
+		setup_signal(HEREDOC_SIG);
+		while (1)
+		{
+			if (!heredoc_proc(job, env, must_expand, redirected_input))
+				break ;
+		}
 	}
 	close (redirected_input);
-	return (0);
+	waitpid(pid, &env.status, 0);
+	return (env.status);
 }

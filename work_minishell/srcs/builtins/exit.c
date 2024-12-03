@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 21:01:01 by bruno             #+#    #+#             */
-/*   Updated: 2024/11/13 16:05:59 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/03 22:15:54 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ bool	parse_digit(char *str)
 int	caught_exit(t_jobs *job, t_env *env, bool piped)
 {
 	if (!piped)
-		printf("exit\n");
+		ft_printf("exit\n");
 	if (job->job[1])
 	{
 		if (!parse_digit(job->job[1]))

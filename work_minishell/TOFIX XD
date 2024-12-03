@@ -13,14 +13,6 @@ heredoc✅
 
 
 
-Signals
-
-heredoc
-ctrl+c stops it
-ctrl+d stops it with text
-ctrl+\ doesnt do anything
-with things written ctrl+c stops it
-with things written ctrl+d does NOT stops it
 
 
 eval sheet:

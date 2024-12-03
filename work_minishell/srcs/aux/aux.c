@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   aux.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:15:54 by bruno             #+#    #+#             */
-/*   Updated: 2024/12/02 23:32:56 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/03 22:18:23 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,8 @@ t_env	init_env(char **envp)
 	t_env	env;
 
 	env.env = NULL;
-	env.status = 0;
 	env.redir_error = false;
+	env.status = 0;
 	if (!envp || !envp[0])
 		return (no_env());
 	else

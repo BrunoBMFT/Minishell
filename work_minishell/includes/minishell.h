@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/12/03 21:33:38 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/12/03 22:12:51 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@
 # include <dirent.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-
-static int	g_sig = 0;
 
 # define WRITE 1
 # define READ 0
@@ -181,6 +179,7 @@ void	skip_job(t_jobs **job);
 void	skip_job_2(t_jobs **job);
 void	piped_process(t_jobs *job, t_env *env);
 void	simple_process(t_jobs *job, t_env *env);
+int		new_fork(t_env *env);
 void	execute_job(t_jobs *job, t_env *env);
 
 //builtins:

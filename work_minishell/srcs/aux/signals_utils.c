@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 23:20:22 by bruno             #+#    #+#             */
-/*   Updated: 2024/12/02 23:26:24 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/03 22:15:46 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	eof_sig(char *line, t_env *env)
 {
 	free (line);
-	printf("exit\n");
+	ft_printf("exit\n");
 	if (env->env)
 		free_array(env->env);
 	rl_clear_history();
