@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse3.c                                           :+:      :+:    :+:   */
+/*   parse4.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/12/02 23:07:02 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/03 21:18:42 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,14 @@ void	clean_up_build(t_token **list, char *cmd_line)
 {
 	clear_list(list);
 	free(cmd_line);
+}
+
+int	syntax_error(t_token *cur, t_token **token, t_var_holder *h)
+{
+	h->temp = "minishell: syntax error near unexpected token `";
+	ft_printf_fd(2, "%s%s\'\n", h->temp, cur->token);
+	clear_list(token);
+	return (-1);
 }
 
 int	secondquote(char *line)//rather not use

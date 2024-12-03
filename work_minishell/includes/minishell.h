@@ -6,7 +6,7 @@
 /*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/12/03 20:36:25 by ycantin          ###   ########.fr       */
+/*   Updated: 2024/12/03 21:19:24 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,13 +159,14 @@ int		start_string_parse(char *str, char delimiter, t_var_holder *h);
 bool	update_quote_status(char c, bool *in_sq, bool *in_dq);
 int		handle_special_chars(t_token *t, int i, t_var_holder *h);
 int		handle_redirects(t_token *t, int i, t_var_holder *h);
+int		syntax_error(t_token *cur, t_token **token, t_var_holder *h);
 
 //tokenizer utils:
-void	take_care_quotes(t_var_holder *h, char *str, int *in_quote, char *quote);
+void	take_care_quotes(t_var_holder *h,
+			char *str, int *in_quote, char *quote);
 void	handle_whitespace(t_var_holder *h, char *str);
 void	add_last_segment(t_var_holder *h, char *str);
 void	process_char(t_var_holder *h, char *str, int *in_quote, char *quote);
-
 
 //executor
 void	executor(t_jobs *job, t_env *env);

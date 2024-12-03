@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ycantin <ycantin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/12/03 15:31:33 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/03 21:18:31 by ycantin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,17 +79,14 @@ int	parse(t_token **token)
 {
 	t_var_holder	h;
 	t_token			*cur;
+	int				flag;
 	bool			in_sq;
 	bool			in_dq;
 
 	cur = *token;
+	flag = 0;
 	if (cur && cur->type >= PIPE && cur->type <= OR)
-	{
-		h.temp = "minishell: syntax error near unexpected token `";
-		ft_printf_fd(2, "s%s\'\n", h.temp, cur->token);
-		clear_list(token);
-		return (-1);
-	}
+		return (syntax_error(cur, token, &h));
 	if (parse_seps_and_redirs(token, cur) == -1)
 		return (-1);
 	cur = *token;
@@ -102,12 +99,7 @@ int	parse(t_token **token)
 		cur = cur->next;
 	}
 	if (cur && cur->type >= PIPE && cur->type <= OR)
-	{
-		h.temp = "minishell: syntax error near unexpected token `";
-		ft_printf_fd(2, "%s%s\'\n", h.temp, cur->token);
-		clear_list(token);
-		return (-1);
-	}
+		return (syntax_error(cur, token, &h));
 	return (0);
 }
 
