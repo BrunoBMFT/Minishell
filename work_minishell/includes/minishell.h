@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:38:21 by ycantin           #+#    #+#             */
-/*   Updated: 2024/12/03 15:35:54 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/03 21:33:38 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@
 # include <dirent.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+
+static int	g_sig = 0;
 
 # define WRITE 1
 # define READ 0
@@ -155,6 +157,18 @@ char	*parse_quotes(char *line);
 int		secondquote(char *line);
 int		parse_last_token(char **cmd_line, t_token **list, t_token **last);
 int		parse_token(t_token *t, bool *in_sq, bool *in_dq, t_var_holder *h);
+int		start_string_parse(char *str, char delimiter, t_var_holder *h);
+bool	update_quote_status(char c, bool *in_sq, bool *in_dq);
+int		handle_special_chars(t_token *t, int i, t_var_holder *h);
+int		handle_redirects(t_token *t, int i, t_var_holder *h);
+int		syntax_error(t_token *cur, t_token **token, t_var_holder *h);
+
+//tokenizer utils:
+void	take_care_quotes(t_var_holder *h,
+			char *str, int *in_quote, char *quote);
+void	handle_whitespace(t_var_holder *h, char *str);
+void	add_last_segment(t_var_holder *h, char *str);
+void	process_char(t_var_holder *h, char *str, int *in_quote, char *quote);
 
 //executor
 void	executor(t_jobs *job, t_env *env);

@@ -3,45 +3,56 @@
 /*                                                        :::      ::::::::   */
 /*   parse3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/11 17:26:33 by bruno             #+#    #+#             */
-/*   Updated: 2024/12/02 23:07:02 by bruno            ###   ########.fr       */
+/*   Created: 2024/12/03 20:29:18 by ycantin           #+#    #+#             */
+/*   Updated: 2024/12/03 20:43:57 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	clean_up_build(t_token **list, char *cmd_line)
+bool	update_quote_status(char c, bool *in_sq, bool *in_dq)
 {
-	clear_list(list);
-	free(cmd_line);
+	if (c == '\'' && !(*in_dq))
+		*in_sq = !(*in_sq);
+	else if (c == '\"' && !(*in_sq))
+		*in_dq = !(*in_dq);
+	return (*in_sq || *in_dq);
 }
 
-int	secondquote(char *line)//rather not use
+int	handle_special_chars(t_token *t, int i, t_var_holder *h)
 {
-	int		i;
-	int		error;
-	int		inside;
-	char	quote;
-
-	i = 0;
-	error = 0;
-	inside = 0;
-	while (line[i])
+	if (t->token[i] == '&' || t->token[i] == '|')
 	{
-		if (!inside && (line[i] == '\'' || line[i] == '\"'))
-		{
-			quote = line[i];
-			inside = 1;
-			error = 1;
-		}
-		else if (inside == 1 && line[i] == quote)
-		{
-			error = 0;
-			inside = 0;
-		}
-		i++;
+		if (start_string_parse(t->token + (i + 1), t->token[i], h) == -1)
+			return (-1);
 	}
-	return (error);
+	return (0);
+}
+
+int	handle_redirects(t_token *t, int i, t_var_holder *h)
+{
+	t_var_holder	tmp;
+
+	tmp.temp = "minishell: syntax error near unexpected token `newline'\n";
+	tmp.temp2 = "minishell: syntax error near unexpected token `";
+	tmp.j = i;
+	tmp.count = 0;
+	while (t->token[tmp.j] && (t->token[tmp.j] == '<'
+			|| t->token[tmp.j] == '>'))
+	{
+		tmp.j++;
+		tmp.count++;
+	}
+	if (tmp.count > 2)
+		return (ft_printf_fd(2, "%s%c\n"
+				, tmp.temp2, t->token[tmp.count - 1]), -1);
+	tmp.len = ft_strlen(t->token) - 1;
+	if (tmp.len != 1 && (t->token[tmp.len] == '<' || t->token[tmp.len] == '>')
+		&& !t->next)
+		return (ft_printf_fd(2, "%s", tmp.temp), -1);
+	if (start_string_parse(t->token + (i + 1), t->token[i], h) == -1)
+		return (-1);
+	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 19:13:31 by bruno             #+#    #+#             */
-/*   Updated: 2024/12/03 15:34:18 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/03 20:53:47 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ void	piped_process(t_jobs *job, t_env *env)
 	pid_t	pid;
 
 	setup_signal(IGNORE_SIG);
+	if (job->job[0] && ft_strcmp(job->job[0], "cd") == 0)
+		return ;
 	pipe(fd);
 	pid = new_fork(env);
 	if (pid < 0)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_aux.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
+/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 18:25:38 by bruno             #+#    #+#             */
-/*   Updated: 2024/12/02 23:27:21 by bruno            ###   ########.fr       */
+/*   Updated: 2024/12/03 20:56:14 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,14 @@ void	run_or(t_jobs **job, t_env *env)
 	if (env->status == 0)
 	{
 		while ((*job)->next && (*job)->next->type == OR)
-			*job = (*job)->next->next;
+			skip_job_2(job);
 		if ((*job)->next && (*job)->next->type == OR)
 			skip_job_2(job);
 		else
 			skip_job(job);
 	}
 	else
-		*job = (*job)->next;
+		skip_job(job);
 }
 
 bool	loop_executor(t_jobs **job, t_env *env)
