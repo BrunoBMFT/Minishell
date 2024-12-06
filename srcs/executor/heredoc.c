@@ -19,7 +19,10 @@ bool	heredoc_proc(t_jobs *job, t_env env, int exp, int redirect)
 
 	line = readline("heredoc>");
 	if (!line || ft_strcmp(line, job->delimiters) == 0)
-		return (free (line), false);
+	{
+		free (line);
+		exit (0);
+	}
 	if (exp)
 	{
 		temp = expand(line, &env);

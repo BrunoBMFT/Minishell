@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno <bruno@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:46:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/12/03 21:31:19 by brfernan         ###   ########.fr       */
+/*   Updated: 2024/12/06 00:47:49 by bruno            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	apply_redir(t_token *current, t_jobs *job, t_env *env)
 		current->next->token = temp;
 		if (access(current->next->token, F_OK) != 0)
 			redir_error(&job->input, env, current->next->token, 1);
-		else
+		else if (!env->redir_error)
 		{
 			if (job->input)
 				free(job->input);
