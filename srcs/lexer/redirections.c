@@ -6,7 +6,7 @@
 /*   By: brfernan <brfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:46:14 by bruno             #+#    #+#             */
-/*   Updated: 2024/12/03 21:31:19 by brfernan         ###   ########.fr       */
+/*   Updated: 2025/02/10 21:34:35 by brfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	apply_redir(t_token *current, t_jobs *job, t_env *env)
 		current->next->token = temp;
 		if (access(current->next->token, F_OK) != 0)
 			redir_error(&job->input, env, current->next->token, 1);
-		else if (!env.redir_error)
+		else if (!env->redir_error)
 		{
 			if (job->input)
 				free(job->input);
